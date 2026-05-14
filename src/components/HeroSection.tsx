@@ -63,16 +63,8 @@ export const HeroSection = () => {
     >
       {/* Background Layer: Sticky container for 100vh/dvh */}
       <div className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden bg-[#F2F2F2]">
-        <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gray-100">
-          <video
-            ref={videoRef}
-            src="/assets/hero-video.mp4"
-            muted
-            playsInline
-            preload="metadata"
-            className="absolute inset-0 w-full h-full object-cover hidden md:block"
-            style={{ transform: 'scaleX(-1)' }}
-          />
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#F2F2F2]">
+          {/* Video removed for mobile compatibility testing */}
         </div>
 
         {/* Foreground Layer: Content at bottom-left within 1320px container */}
