@@ -66,7 +66,7 @@ export const HeroSection = () => {
             src="/assets/hero-video.mp4"
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
             className="absolute inset-0 w-full h-full object-cover"
             style={{ transform: 'scaleX(-1)' }}
           />
