@@ -2,7 +2,6 @@
 
 import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Button } from './ui/button';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Sparkles, Mouse } from 'lucide-react';
 
@@ -15,7 +14,6 @@ export const HeroSection = () => {
     offset: ["start start", "end end"]
   });
 
-  // Smooth out the scroll progress
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -25,9 +23,6 @@ export const HeroSection = () => {
   const mouseOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
   useEffect(() => {
-    // Disable heavy scroll-video sync on mobile/touch devices
-    if (window.matchMedia("(max-width: 768px)").matches) return;
-
     const video = videoRef.current;
     if (!video) return;
 
@@ -38,12 +33,9 @@ export const HeroSection = () => {
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
     if (video.readyState >= 1) handleLoadedMetadata();
 
-    // Use smoothProgress to update video time
     const unsubscribe = smoothProgress.on("change", (latest) => {
       if (video.duration && video.readyState >= 2) {
-        // Calculate target time
         const targetTime = latest * video.duration;
-        // Only update if difference is significant to avoid micro-stutters
         if (Math.abs(video.currentTime - targetTime) > 0.01) {
           video.currentTime = targetTime;
         }
@@ -59,15 +51,21 @@ export const HeroSection = () => {
   return (
     <section 
       ref={containerRef}
-      className="relative h-[120vh] md:h-[200vh] w-full"
+      className="relative h-[200vh] w-full"
     >
-      {/* Background Layer: Sticky container for 100vh/dvh */}
       <div className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden bg-[#F2F2F2]">
-        <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#F2F2F2]">
-          {/* Video removed for mobile compatibility testing */}
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center">
+          <video
+            ref={videoRef}
+            src="/assets/hero-video.mp4"
+            muted
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ transform: 'scaleX(-1)' }}
+          />
         </div>
 
-        {/* Foreground Layer: Content at bottom-left within 1320px container */}
         <div className="absolute inset-0 z-20 pointer-events-none">
           <div className="max-w-[1320px] mx-auto h-full px-6 flex flex-col justify-end pb-10 md:pb-40">
             <div className="max-w-2xl pointer-events-auto">
@@ -75,7 +73,7 @@ export const HeroSection = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
-                className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium text-[#1A2233] bg-white border border-gray-200 rounded-full"
+                className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium text-[#1A2233] bg-white/50 backdrop-blur-sm rounded-full border border-gray-200"
               >
                 <Sparkles className="w-4 h-4 text-[#1A2233]" />
                 <span>ИИ-ассистент для автовладельцев</span>
@@ -100,7 +98,6 @@ export const HeroSection = () => {
                 обслуживания, которой доверяют покупатели и которую приятно вести
               </motion.p>
 
-
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -123,7 +120,6 @@ export const HeroSection = () => {
           </div>
         </div>
 
-        {/* Scroll Indicator - Hidden on mobile, visible on desktop */}
         <motion.div 
           style={{ opacity: mouseOpacity }}
           className="hidden md:flex absolute bottom-10 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-[#1A2233]/40 w-full"
