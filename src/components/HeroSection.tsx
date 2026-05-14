@@ -22,34 +22,44 @@ export const HeroSection = () => {
 
   const mouseOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
 
-useEffect(() => {
-  // Disable heavy scroll-video sync on mobile/touch devices
-  if (window.matchMedia("(max-width: 768px)").matches) return;
+  // Using a state to handle client-side media query to avoid hydration mismatch
+  const [isDesktop, setIsDesktop] = React.useState(false);
 
-  const video = videoRef.current;
-  if (!video) return;
+  useEffect(() => {
+    const checkIsDesktop = () => {
+      setIsDesktop(window.matchMedia("(min-width: 769px)").matches);
+    };
+    
+    checkIsDesktop();
+    window.addEventListener('resize', checkIsDesktop);
+    
+    if (!isDesktop) return;
 
-  const handleLoadedMetadata = () => {
-    video.currentTime = 0.001;
-  };
+    const video = videoRef.current;
+    if (!video) return;
 
-  video.addEventListener('loadedmetadata', handleLoadedMetadata);
-  if (video.readyState >= 1) handleLoadedMetadata();
+    const handleLoadedMetadata = () => {
+      video.currentTime = 0.001;
+    };
 
-  const unsubscribe = smoothProgress.on("change", (latest) => {
-    if (video.duration && video.readyState >= 2) {
-      const targetTime = latest * video.duration;
-      if (Math.abs(video.currentTime - targetTime) > 0.01) {
-        video.currentTime = targetTime;
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    if (video.readyState >= 1) handleLoadedMetadata();
+
+    const unsubscribe = smoothProgress.on("change", (latest) => {
+      if (video.duration && video.readyState >= 2) {
+        const targetTime = latest * video.duration;
+        if (Math.abs(video.currentTime - targetTime) > 0.01) {
+          video.currentTime = targetTime;
+        }
       }
-    }
-  });
+    });
 
-  return () => {
-    video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-    unsubscribe();
-  };
-}, [smoothProgress]);
+    return () => {
+      window.removeEventListener('resize', checkIsDesktop);
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      unsubscribe();
+    };
+  }, [smoothProgress, isDesktop]);
 
 return (
   <section 
@@ -58,15 +68,25 @@ return (
   >
     <div className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden bg-[#F2F2F2]">
       <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#F2F2F2]">
-        <video
-          ref={videoRef}
-          src="https://storage.yandexcloud.net/autolog-docs/assets/hero-video.mp4"
-          muted
-          playsInline
-          preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ transform: 'scaleX(-1)' }}
-        />
+        {isDesktop ? (
+          <video
+            ref={videoRef}
+            src="https://storage.yandexcloud.net/autolog-docs/assets/hero-video.mp4"
+            muted
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ transform: 'scaleX(-1)' }}
+          />
+        ) : (
+          <div 
+            className="absolute inset-0 w-full h-full bg-cover bg-center"
+            style={{ 
+              backgroundImage: 'url(/assets/hero-poster.png)',
+              transform: 'scaleX(-1)'
+            }}
+          />
+        )}
       </div>
 
         <div className="absolute inset-0 z-20 pointer-events-none">
