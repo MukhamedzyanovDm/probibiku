@@ -19,52 +19,59 @@ export const HeroSection = () => {
     damping: 30,
     restDelta: 0.001
   });
+/* 
+useEffect(() => {
+  // Disable heavy scroll-video sync on mobile/touch devices
+  if (window.matchMedia("(max-width: 768px)").matches) return;
 
-  const mouseOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
+  const video = videoRef.current;
+  if (!video) return;
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+  const handleLoadedMetadata = () => {
+    video.currentTime = 0.001;
+  };
 
-    const handleLoadedMetadata = () => {
-      video.currentTime = 0.001;
-    };
+  video.addEventListener('loadedmetadata', handleLoadedMetadata);
+  if (video.readyState >= 1) handleLoadedMetadata();
 
-    video.addEventListener('loadedmetadata', handleLoadedMetadata);
-    if (video.readyState >= 1) handleLoadedMetadata();
-
-    const unsubscribe = smoothProgress.on("change", (latest) => {
-      if (video.duration && video.readyState >= 2) {
-        const targetTime = latest * video.duration;
-        if (Math.abs(video.currentTime - targetTime) > 0.01) {
-          video.currentTime = targetTime;
-        }
+  const unsubscribe = smoothProgress.on("change", (latest) => {
+    if (video.duration && video.readyState >= 2) {
+      const targetTime = latest * video.duration;
+      if (Math.abs(video.currentTime - targetTime) > 0.01) {
+        video.currentTime = targetTime;
       }
-    });
+    }
+  });
 
-    return () => {
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      unsubscribe();
-    };
-  }, [smoothProgress]);
+  return () => {
+    video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    unsubscribe();
+  };
+}, [smoothProgress]);
+*/
 
-  return (
-    <section 
-      ref={containerRef}
-      className="relative h-[200vh] w-full"
-    >
-      <div className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden bg-[#F2F2F2]">
-        <div className="absolute inset-0 w-full h-full flex items-center justify-center">
-          <video
-            ref={videoRef}
-            src="/assets/hero-video.mp4"
-            muted
-            playsInline
-            preload="metadata"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ transform: 'scaleX(-1)' }}
-          />
+return (
+  <section 
+    ref={containerRef}
+    className="relative h-[200vh] w-full"
+  >
+    <div className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden bg-[#F2F2F2]">
+      <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#F2F2F2]">
+        {/* 
+        <video
+          ref={videoRef}
+          src="/assets/hero-video.mp4"
+          muted
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ transform: 'scaleX(-1)' }}
+        />
+        */}
+        <div className="w-full h-full bg-gradient-to-br from-[#f8fafc] to-[#e2e8f0] flex items-center justify-center">
+          <span className="text-[#94a3b8] font-display font-medium text-sm">Видео временно отключено для оптимизации</span>
         </div>
+      </div>
 
         <div className="absolute inset-0 z-20 pointer-events-none">
           <div className="max-w-[1320px] mx-auto h-full px-6 flex flex-col justify-end pb-10 md:pb-40">
