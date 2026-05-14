@@ -34,6 +34,14 @@ yarn-error.log*
 /autobackup/
 **/autobackup/
 /Example frontend/
+/research/
+/docs/
+/scripts/
+/FRONTEND_TODO.md
+/GEMINI.md
+/AGENTS.md
+/CLAUDE.md
+/Yandex communication.md
 
 # env files (can opt-in for committing if needed)
 .env*
