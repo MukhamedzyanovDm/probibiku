@@ -1,4 +1,3 @@
-import { drizzle } from "drizzle-orm/pg-lite"; // Note: Project uses 'pg', will fix below
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import * as dotenv from "dotenv";

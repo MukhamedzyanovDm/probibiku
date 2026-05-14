@@ -34,6 +34,7 @@
     "node_modules", 
     "Example frontend", 
     "**/autobackup", 
-    "scripts"
+    "scripts",
+    "src/imports"
   ]
 }
