@@ -19,6 +19,8 @@ export const HeroSection = () => {
     damping: 30,
     restDelta: 0.001
   });
+
+  const mouseOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
 /* 
 useEffect(() => {
   // Disable heavy scroll-video sync on mobile/touch devices
