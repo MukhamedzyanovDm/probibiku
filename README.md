@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Пробибику (ProBibiku) 🚗
 
-## Getting Started
+Умный бортовой журнал и сервисная книжка вашего автомобиля. Сервис, который помогает оцифровать историю обслуживания, превращая бумажные чеки и накладные в структурированные данные с помощью ИИ.
 
-First, run the development server:
+## 🚀 Основные возможности
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **AI-оцифровка накладных**: Просто сфотографируйте заказ-наряд. Система сама распознает работы, запчасти, цены и пробег.
+- **Гараж**: Удобное управление парком автомобилей.
+- **Хронология обслуживания**: Наглядная лента всех событий с автомобилем.
+- **Техническая база**: Сохранение артикулов запчастей и регламентов работ для будущего обслуживания.
+- **Безопасность**: Все данные и фото чеков надежно хранятся в Yandex Cloud (S3).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Технологический стек
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
+- **Язык**: TypeScript
+- **Стилизация**: Tailwind CSS v4 + Framer Motion
+- **База данных**: PostgreSQL (Supabase) + [Drizzle ORM](https://orm.drizzle.team/)
+- **ИИ-инфраструктура**: 
+  - Yandex Vision (OCR)
+  - YandexGPT (Структурирование данных)
+  - Yandex Object Storage (S3 для хранения оригиналов)
+- **Аутентификация**: NextAuth.js
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Начало работы
 
-## Learn More
+### Предварительные условия
 
-To learn more about Next.js, take a look at the following resources:
+- Node.js 18+ 
+- Установленный `npm` или `pnpm`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Установка
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Клонируйте репозиторий.
+2. Установите зависимости:
+   ```bash
+   npm install
+   ```
+3. Создайте файл `.env` на основе `.env.example` (если он есть) и заполните ключи Yandex Cloud и параметры БД.
+4. Запустите сервер разработки:
+   ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+## 🏗 Структура проекта
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `src/app/` — Страницы и макеты (App Router).
+- `src/components/` — UI-компоненты (дизайнерские блоки лендинга и интерфейса).
+- `src/db/` — Схема базы данных и конфигурация Drizzle.
+- `src/imports/` — Ресурсы и иконки, экспортированные из дизайн-системы.
+- `scripts/` — Утилиты для тестирования OCR и миграций БД.
+- `docs/` — Подробная документация и история разработки.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 Документация
+
+- [Журнал разработки (DEVLOG.md)](docs/DEVLOG.md) — Хронология принятия решений и этапы развития.
+- [Архитектурные принципы](GEMINI.md) — Правила и стандарты разработки проекта.
