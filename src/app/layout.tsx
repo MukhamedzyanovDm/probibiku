@@ -1,9 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Пробибику — Умный журнал обслуживания вашего автомобиля",
   description: "Автоматический учет расходов, сервисная книжка и история обслуживания в одном приложении.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -13,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body className="antialiased overflow-x-hidden">
+      <body className="antialiased">
         {children}
       </body>
     </html>

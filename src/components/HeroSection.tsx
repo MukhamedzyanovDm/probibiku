@@ -25,6 +25,9 @@ export const HeroSection = () => {
   const mouseOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
   useEffect(() => {
+    // Disable heavy scroll-video sync on mobile/touch devices
+    if (window.matchMedia("(max-width: 768px)").matches) return;
+
     const video = videoRef.current;
     if (!video) return;
 
@@ -56,7 +59,7 @@ export const HeroSection = () => {
   return (
     <section 
       ref={containerRef}
-      className="relative h-[200vh] w-full"
+      className="relative h-[120vh] md:h-[200vh] w-full"
     >
       {/* Background Layer: Sticky container for 100vh/dvh */}
       <div className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden bg-[#F2F2F2]">
@@ -80,7 +83,7 @@ export const HeroSection = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
-                className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium text-[#1A2233] bg-white/50 backdrop-blur-sm rounded-full border border-gray-200"
+                className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium text-[#1A2233] bg-white border border-gray-200 rounded-full"
               >
                 <Sparkles className="w-4 h-4 text-[#1A2233]" />
                 <span>ИИ-ассистент для автовладельцев</span>
