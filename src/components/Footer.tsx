@@ -99,11 +99,11 @@ export function Footer() {
           </p>
 
           <div className="flex items-center gap-4 text-xs text-slate-400 font-light">
-            <a href="#" className="hover:text-blue-600 transition-colors">
+            <a href="/terms" className="hover:text-blue-600 transition-colors">
               Условия использования
             </a>
             <span className="w-1 h-1 rounded-full bg-slate-300" />
-            <a href="#" className="hover:text-blue-600 transition-colors">
+            <a href="/privacy" className="hover:text-blue-600 transition-colors">
               Конфиденциальность
             </a>
             <span className="w-1 h-1 rounded-full bg-slate-300" />
