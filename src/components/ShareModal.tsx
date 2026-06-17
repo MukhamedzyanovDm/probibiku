@@ -1,5 +1,5 @@
 "use client";
-import { Icon } from "@iconify/react";
+import { XCircle } from "lucide-react";
 
 import React, { useState } from "react";
 import { Car } from "@/utils/garageStore";
@@ -41,7 +41,7 @@ export default function ShareModal({ isOpen, onClose, car }: ShareModalProps) {
             onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
           >
-            <Icon icon="solar:close-circle-linear" className="text-[28px]" />
+            <XCircle className="w-7 h-7" />
           </button>
         </div>
 

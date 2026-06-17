@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { ArrowLeft, Calendar, Zap, ArrowRight } from "lucide-react";
 import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -78,7 +78,7 @@ export default async function MaintenancePage({ params }: PageProps) {
             href="/"
             className="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-blue-500 transition-colors"
           >
-            <Icon icon="solar:arrow-left-linear" />
+            <ArrowLeft className="w-4 h-4" />
             Назад на главную
           </a>
         </div>
@@ -97,7 +97,7 @@ export default async function MaintenancePage({ params }: PageProps) {
           {/* Maintenance intervals table */}
           <div className="mt-10">
             <h2 className="text-xl font-normal text-slate-900 mb-4 flex items-center gap-2">
-              <Icon icon="solar:calendar-mark-linear" className="text-blue-500" />
+              <Calendar className="w-5 h-5 text-blue-500" />
               График регламентных работ
             </h2>
             <div className="border border-slate-200/80 rounded-2xl overflow-hidden bg-white/50">
@@ -127,7 +127,7 @@ export default async function MaintenancePage({ params }: PageProps) {
           {/* Frequent wear items */}
           <div className="mt-10">
             <h2 className="text-xl font-normal text-slate-900 mb-4 flex items-center gap-2">
-              <Icon icon="solar:bolt-circle-linear" className="text-blue-500" />
+              <Zap className="w-5 h-5 text-blue-500" />
               Расходные материалы и частые замены
             </h2>
             <div className="grid sm:grid-cols-3 gap-4">
@@ -154,7 +154,7 @@ export default async function MaintenancePage({ params }: PageProps) {
               className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 bg-white text-slate-900 text-sm font-normal shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-300"
             >
               Оцифровать чек бесплатно
-              <Icon icon="solar:arrow-right-linear" />
+              <ArrowRight className="w-4 h-4" />
             </a>
           </div>
 

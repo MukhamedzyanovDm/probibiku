@@ -1,5 +1,6 @@
 "use client";
-import { Icon } from "@iconify/react";
+
+import { XCircle, Send } from "lucide-react";
 
 import React, { useState, useEffect, useRef } from "react";
 
@@ -171,7 +172,7 @@ export default function AIChat({ isOpen, onClose }: AIChatProps) {
             className="text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl p-1.5 transition-all flex items-center justify-center cursor-pointer"
             aria-label="Закрыть чат"
           >
-            <Icon icon="solar:close-circle-linear" className="text-2xl" />
+            <XCircle className="w-6 h-6" />
           </button>
         </div>
 
@@ -252,7 +253,7 @@ export default function AIChat({ isOpen, onClose }: AIChatProps) {
               className="flex items-center justify-center w-10 h-10 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white disabled:bg-slate-100 disabled:text-slate-400 shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 active:scale-95 disabled:scale-100 transition-all cursor-pointer"
               aria-label="Отправить сообщение"
             >
-              <Icon icon="solar:send-bold" className="text-lg" />
+              <Send className="w-5 h-5" />
             </button>
           </form>
         </div>

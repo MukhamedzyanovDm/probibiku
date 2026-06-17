@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { Sparkles, CheckCircle2, ArrowRight, ShieldCheck, Database, RotateCcw } from "lucide-react";
 import React from "react";
 
 export default function FinalCTA() {
@@ -41,11 +41,7 @@ export default function FinalCTA() {
           <div className="rounded-2xl bg-white border border-white px-4 py-3 shadow-[0_28px_60px_-24px_rgba(15,23,42,0.52),inset_0_1px_0_white] min-w-[12.5rem]">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                <Icon
-                  icon="solar:sun-2-linear"
-                  style={{ strokeWidth: 1.5 }}
-                  className="text-lg text-blue-500"
-                />
+                <Sparkles className="w-5 h-5 text-blue-500" />
               </div>
               <div>
                 <p className="text-xs text-slate-900 font-normal">
@@ -64,11 +60,7 @@ export default function FinalCTA() {
           <div className="rounded-2xl bg-white border border-white px-4 py-3 shadow-[0_28px_60px_-24px_rgba(15,23,42,0.52),inset_0_1px_0_white] min-w-[12.5rem]">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                <Icon
-                  icon="solar:check-circle-linear"
-                  style={{ strokeWidth: 1.5 }}
-                  className="text-lg text-emerald-500"
-                />
+                <CheckCircle2 className="w-5 h-5 text-emerald-500" />
               </div>
               <div>
                 <p className="text-xs text-slate-900 font-normal">
@@ -106,11 +98,7 @@ export default function FinalCTA() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 bg-gradient-to-b from-white to-blue-50 border border-white text-blue-600 text-sm font-normal shadow-[0_14px_30px_rgba(15,23,42,0.18),inset_0_1px_0_white] hover:from-white hover:to-white hover:-translate-y-0.5 active:shadow-[inset_0_2px_4px_rgba(15,23,42,0.08)] transition-all duration-300"
             >
               Попробовать бесплатно
-              <Icon
-                icon="solar:arrow-right-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-lg"
-              />
+              <ArrowRight className="w-5 h-5" />
             </a>
             <a
               href="#demo"
@@ -123,29 +111,17 @@ export default function FinalCTA() {
           {/* Small Trust Row */}
           <div className="mt-8 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 text-xs text-blue-50/78 font-light">
             <span className="inline-flex items-center gap-2">
-              <Icon
-                icon="solar:shield-check-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-base text-white"
-              />
+              <ShieldCheck className="w-4 h-4 text-white" />
               Конфиденциально
             </span>
             <span className="hidden sm:block w-1 h-1 rounded-full bg-white/40" />
             <span className="inline-flex items-center gap-2">
-              <Icon
-                icon="solar:database-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-base text-white"
-              />
+              <Database className="w-4 h-4 text-white" />
               Управление данными
             </span>
             <span className="hidden sm:block w-1 h-1 rounded-full bg-white/40" />
             <span className="inline-flex items-center gap-2">
-              <Icon
-                icon="solar:restart-circle-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-base text-white"
-              />
+              <RotateCcw className="w-4 h-4 text-white" />
               Сброс в 1 клик
             </span>
           </div>

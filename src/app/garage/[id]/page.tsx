@@ -1,5 +1,19 @@
 "use client";
-import { Icon } from "@iconify/react";
+
+import {
+  Loader2,
+  ArrowLeft,
+  PlusCircle,
+  Share2,
+  Compass,
+  Sparkles,
+  FileText,
+  ClipboardList,
+  Settings,
+  Search,
+  Trash2,
+  MessageCircle
+} from "lucide-react";
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -43,7 +57,7 @@ export default function CarDetailPage() {
     return (
       <div className="min-h-screen flex items-center justify-center font-sans">
         <div className="text-center">
-          <Icon icon="solar:spinner-linear" className="text-4xl text-blue-500 animate-spin" />
+          <Loader2 className="text-4xl text-blue-500 animate-spin mx-auto" />
           <p className="text-sm text-slate-500 font-light mt-3">Загрузка информации об автомобиле...</p>
         </div>
       </div>
@@ -162,7 +176,7 @@ export default function CarDetailPage() {
             href="/garage"
             className="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-blue-500 transition-colors"
           >
-            <Icon icon="solar:arrow-left-linear" />
+            <ArrowLeft className="w-4 h-4" />
             Назад в гараж
           </Link>
 
@@ -170,7 +184,7 @@ export default function CarDetailPage() {
             onClick={() => setIsAddRecordOpen(true)}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-blue-500 hover:bg-blue-600 border border-blue-700 text-white text-xs font-normal px-4 py-2 shadow-[0_2px_8px_rgba(59,130,246,0.15)] transition-colors cursor-pointer"
           >
-            <Icon icon="solar:add-circle-linear" />
+            <PlusCircle className="w-4 h-4" />
             Добавить запись
           </button>
         </div>
@@ -188,7 +202,7 @@ export default function CarDetailPage() {
                 onClick={() => setIsShareOpen(true)}
                 className="inline-flex items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 text-[10px] font-normal px-3 py-1 transition-colors cursor-pointer"
               >
-                <Icon icon="solar:share-linear" />
+                <Share2 className="w-3.5 h-3.5" />
                 Поделиться историей
               </button>
             </div>
@@ -200,7 +214,7 @@ export default function CarDetailPage() {
                 {car.licensePlate || "Без госномера"}
               </span>
               <span className="inline-flex items-center gap-1">
-                <Icon icon="solar:compass-linear" />
+                <Compass className="w-4 h-4" />
                 Пробег: <strong className="font-mono text-slate-800 font-normal">{car.mileage.toLocaleString("ru-RU")} км</strong>
               </span>
             </div>
@@ -237,13 +251,13 @@ export default function CarDetailPage() {
             {/* 1. AI Insights Panel */}
             <div className="rounded-[2rem] bg-white border border-slate-200/80 p-6 shadow-[0_12px_36px_-18px_rgba(15,23,42,0.05)]">
               <div className="flex items-center gap-2 border-b border-slate-100 pb-4 mb-4">
-                <Icon icon="solar:stars-linear" className="text-xl text-blue-500" />
+                <Sparkles className="w-5 h-5 text-blue-500" />
                 <h3 className="text-base font-medium text-slate-900">Умный помощник</h3>
               </div>
 
               {car.serviceHistory.length === 0 ? (
                 <div className="flex flex-col items-center justify-center text-center py-8 px-4 bg-slate-50/40 border border-dashed border-slate-200 rounded-2xl">
-                  <Icon icon="solar:stars-minimalistic-linear" className="text-3xl text-blue-400 mb-2 animate-pulse" />
+                  <Sparkles className="w-8 h-8 text-blue-400 mb-2 animate-pulse" />
                   <h4 className="text-xs font-medium text-slate-800">Рекомендации формируются</h4>
                   <p className="text-[11px] text-slate-500 font-light mt-1.5 max-w-md">
                     Умный помощник начнет анализировать состояние автомобиля и давать персональные советы, как только вы добавите первую запись об обслуживании или расходах
@@ -252,7 +266,7 @@ export default function CarDetailPage() {
                     onClick={() => setIsAddRecordOpen(true)}
                     className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-normal text-xs px-4 py-2.5 transition-colors cursor-pointer shadow-[0_2px_8px_rgba(59,130,246,0.15)] animate-in fade-in zoom-in-95 duration-300"
                   >
-                    <Icon icon="solar:add-circle-linear" />
+                    <PlusCircle className="w-4 h-4" />
                     Добавить запись
                   </button>
                 </div>
@@ -349,7 +363,7 @@ export default function CarDetailPage() {
             <div className="rounded-[2rem] bg-white border border-slate-200/80 p-6 shadow-[0_12px_36px_-18px_rgba(15,23,42,0.05)]">
               <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between border-b border-slate-100 pb-4 mb-6">
                 <h3 className="text-base font-medium text-slate-900 flex items-center gap-2">
-                  <Icon icon="solar:document-text-linear" className="text-blue-500" />
+                  <FileText className="w-5 h-5 text-blue-500" />
                   История обслуживания
                 </h3>
                 
@@ -363,7 +377,7 @@ export default function CarDetailPage() {
 
               {car.serviceHistory.length === 0 ? (
                 <div className="text-center py-10 text-slate-400 text-xs font-light">
-                  <Icon icon="solar:checklist-minimalistic-linear" className="text-3xl mb-2" />
+                  <ClipboardList className="w-8 h-8 mb-2 mx-auto" />
                   <p>Записей обслуживания не найдено. Загрузите первый чек!</p>
                 </div>
               ) : (
@@ -392,7 +406,7 @@ export default function CarDetailPage() {
                       
                       {rec.parts && (
                         <div className="flex flex-wrap items-center gap-2 mt-2 pt-3 border-t border-slate-100 text-[10px] text-slate-400 font-mono uppercase">
-                          <Icon icon="solar:settings-linear" className="text-xs" />
+                          <Settings className="w-3.5 h-3.5" />
                           <span>Запчасти:</span>
                           <span className="text-slate-600 lowercase font-sans normal-case truncate">{rec.parts}</span>
                         </div>
@@ -436,7 +450,7 @@ export default function CarDetailPage() {
                           className="w-7 h-7 rounded-full bg-slate-50 hover:bg-blue-50 hover:text-blue-500 text-slate-400 flex items-center justify-center transition-colors"
                           title="Найти в поиске"
                         >
-                          <Icon icon="solar:magnifer-linear" className="text-xs" />
+                          <Search className="w-3.5 h-3.5" />
                         </a>
                         
                         {/* Delete Part Button */}
@@ -446,7 +460,7 @@ export default function CarDetailPage() {
                           className="w-7 h-7 rounded-full bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 flex items-center justify-center transition-colors cursor-pointer"
                           title="Удалить деталь"
                         >
-                          <Icon icon="solar:trash-bin-minimalistic-linear" className="text-xs" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
@@ -487,7 +501,7 @@ export default function CarDetailPage() {
             <div className="rounded-[2rem] bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-700 p-6 text-white relative overflow-hidden shadow-[0_15px_35px_-10px_rgba(59,130,246,0.25)]">
               <div className="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-white/10 blur-2xl pointer-events-none" />
               <h3 className="text-base font-normal mb-2 flex items-center gap-2">
-                <Icon icon="solar:stars-linear" />
+                <Sparkles className="w-4 h-4" />
                 Прогноз ТО готов
               </h3>
               <p className="text-xs text-blue-100 font-light mb-6 leading-relaxed">
@@ -498,7 +512,7 @@ export default function CarDetailPage() {
                 onClick={() => alert("Уведомления успешно подключены в Telegram!")}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-full px-3 py-3 bg-white text-slate-800 text-[11px] sm:text-xs font-normal shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer whitespace-normal text-center"
               >
-                <Icon icon="solar:chat-round-dots-linear" className="text-sm text-blue-500" />
+                <MessageCircle className="w-4 h-4 text-blue-500" />
                 Включить уведомления в Telegram
               </button>
             </div>
@@ -534,7 +548,7 @@ export default function CarDetailPage() {
             <div className="relative w-full max-w-sm rounded-[2rem] bg-white border border-slate-200/80 shadow-2xl p-6 z-10 animate-in zoom-in-95 duration-200">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-500 mb-4 shadow-[0_4px_12px_rgba(239,68,68,0.1)]">
-                  <Icon icon="solar:trash-bin-trash-bold" className="text-xl" />
+                  <Trash2 className="w-5 h-5" />
                 </div>
                 <h3 className="text-sm font-semibold text-slate-900">Удалить запчасть?</h3>
                 <p className="text-xs text-slate-500 font-light mt-2 leading-relaxed">

@@ -1,5 +1,5 @@
 "use client";
-import { Icon } from "@iconify/react";
+import { Sparkles, ArrowRight, PlayCircle, Wand2 } from "lucide-react";
 import React from "react";
 
 export default function HeroWithAI() {
@@ -12,11 +12,7 @@ export default function HeroWithAI() {
           {/* Hero Label */}
           <div className="inline-flex items-center gap-2 rounded-full bg-white/75 border border-white px-3.5 py-2 shadow-[0_6px_18px_-12px_rgba(15,23,42,0.3),inset_0_1px_0_white] mb-8">
             <span className="w-7 h-7 rounded-full bg-gradient-to-b from-blue-50 to-white border border-blue-100 shadow-[inset_0_1px_0_white] flex items-center justify-center">
-              <Icon
-                icon="solar:stars-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-base text-blue-500"
-              />
+              <Sparkles className="w-4 h-4 text-blue-500" />
             </span>
             <span className="font-mono text-xs font-medium tracking-[-0.04em] text-slate-500">
               Умный помощник автовладельца
@@ -42,22 +38,14 @@ export default function HeroWithAI() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal shadow-[0_10px_24px_rgba(59,130,246,0.26),inset_0_1px_0_rgba(255,255,255,0.35)] hover:from-blue-400 hover:to-blue-500 hover:-translate-y-0.5 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.18)] transition-all duration-300"
             >
               Попробовать бесплатно
-              <Icon
-                icon="solar:arrow-right-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-lg"
-              />
+              <ArrowRight className="w-5 h-5" />
             </a>
 
             <a
               href="#demo"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 bg-gradient-to-b from-white to-slate-50 border border-slate-200 text-slate-700 text-sm font-normal shadow-[0_4px_12px_rgba(15,23,42,0.05),inset_0_1px_0_white] hover:from-slate-50 hover:to-slate-100 hover:-translate-y-0.5 transition-all duration-300"
             >
-              <Icon
-                icon="solar:play-circle-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-lg text-blue-500"
-              />
+              <PlayCircle className="w-5 h-5 text-blue-500" />
               Как это работает
             </a>
           </div>
@@ -170,12 +158,12 @@ export default function HeroWithAI() {
                 {/* Simulated Input Area */}
                 <div className="mt-4 border-t border-slate-100 pt-3.5 flex items-center justify-between text-[11px] text-slate-400 font-light">
                   <div className="flex items-center gap-1.5">
-                    <Icon icon="solar:magic-stick-2-linear" className="text-sm text-blue-500 animate-pulse" />
+                    <Wand2 className="w-4 h-4 text-blue-500 animate-pulse" />
                     <span>Связан с базой ТО</span>
                   </div>
                   <div className="rounded-full bg-white px-3 py-1.5 flex items-center gap-1.5 border border-slate-200 shadow-sm cursor-text hover:bg-slate-50 transition-colors">
                     <span className="text-slate-400">Спросить ИИ...</span>
-                    <Icon icon="solar:arrow-right-linear" className="text-blue-500" />
+                    <ArrowRight className="w-4 h-4 text-blue-500" />
                   </div>
                 </div>
               </div>

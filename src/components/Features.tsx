@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { Sparkles, Camera, Fuel, FileText, MessageSquare, Database, Moon } from "lucide-react";
 import React from "react";
 
 export default function Features() {
@@ -24,11 +24,7 @@ export default function Features() {
         <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-              <Icon
-                icon="solar:sun-2-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-2xl text-blue-500"
-              />
+              <Sparkles className="w-6 h-6 text-blue-500" />
             </div>
             <span className="font-mono text-[10px] text-blue-500 bg-blue-50 border border-blue-100 rounded-full px-2.5 py-1">
               Сводка по авто готова
@@ -46,11 +42,7 @@ export default function Features() {
         <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-              <Icon
-                icon="solar:microphone-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-2xl text-blue-500"
-              />
+              <Camera className="w-6 h-6 text-blue-500" />
             </div>
             <span className="font-mono text-[10px] text-slate-500 bg-white border border-slate-200 rounded-full px-2.5 py-1 shadow-[inset_0_1px_0_white]">
               Распознавание за 3 сек
@@ -68,11 +60,7 @@ export default function Features() {
         <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-              <Icon
-                icon="solar:gas-station-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-2xl text-blue-500"
-              />
+              <Fuel className="w-6 h-6 text-blue-500" />
             </div>
             <span className="font-mono text-[10px] text-blue-500 bg-blue-50 border border-blue-100 rounded-full px-2.5 py-1">
               Статистика заправок
@@ -91,11 +79,7 @@ export default function Features() {
         <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-              <Icon
-                icon="solar:document-text-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-2xl text-blue-500"
-              />
+              <FileText className="w-6 h-6 text-blue-500" />
             </div>
             <span className="font-mono text-[10px] text-blue-500 bg-blue-50 border border-blue-100 rounded-full px-2.5 py-1">
               Страховка
@@ -113,11 +97,7 @@ export default function Features() {
         <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-              <Icon
-                icon="solar:chat-round-dots-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-2xl text-blue-500"
-              />
+              <MessageSquare className="w-6 h-6 text-blue-500" />
             </div>
             <span className="font-mono text-[10px] text-blue-500 bg-blue-50 border border-blue-100 rounded-full px-2.5 py-1">
               Прогноз износа активен
@@ -135,11 +115,7 @@ export default function Features() {
         <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-              <Icon
-                icon="solar:database-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-2xl text-slate-600"
-              />
+              <Database className="w-6 h-6 text-slate-600" />
             </div>
             <span className="font-mono text-[10px] text-slate-500 bg-white border border-slate-200 rounded-full px-2.5 py-1 shadow-[inset_0_1px_0_white]">
               Профиль сохранен
@@ -198,11 +174,7 @@ export default function Features() {
                   </p>
                 </div>
                 <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center">
-                  <Icon
-                    icon="solar:moon-stars-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-xl text-blue-500"
-                  />
+                  <Moon className="w-5 h-5 text-blue-500" />
                 </div>
               </div>
 

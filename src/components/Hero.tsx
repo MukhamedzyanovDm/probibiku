@@ -1,4 +1,15 @@
-import { Icon } from "@iconify/react";
+import {
+  Sparkles,
+  ArrowRight,
+  PlayCircle,
+  Bell,
+  FileText,
+  Calendar,
+  MessageSquare,
+  ClipboardList,
+  Lock,
+  ShieldCheck
+} from "lucide-react";
 import React from "react";
 
 export default function Hero() {
@@ -10,11 +21,7 @@ export default function Hero() {
           {/* Hero Label */}
           <div className="inline-flex items-center gap-2 rounded-full bg-white/75 border border-white px-3.5 py-2 shadow-[0_6px_18px_-12px_rgba(15,23,42,0.3),inset_0_1px_0_white] mb-8">
             <span className="w-7 h-7 rounded-full bg-gradient-to-b from-blue-50 to-white border border-blue-100 shadow-[inset_0_1px_0_white] flex items-center justify-center">
-              <Icon
-                icon="solar:stars-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-base text-blue-500"
-              />
+              <Sparkles className="w-4 h-4 text-blue-500" />
             </span>
             <span className="font-mono text-xs font-medium tracking-[-0.04em] text-slate-500">
               Умный помощник автовладельца
@@ -40,22 +47,14 @@ export default function Hero() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal shadow-[0_10px_24px_rgba(59,130,246,0.26),inset_0_1px_0_rgba(255,255,255,0.35)] hover:from-blue-400 hover:to-blue-500 hover:-translate-y-0.5 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.18)] transition-all duration-300"
             >
               Попробовать бесплатно
-              <Icon
-                icon="solar:arrow-right-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-lg"
-              />
+              <ArrowRight className="w-5 h-5" />
             </a>
 
             <a
               href="#demo"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 bg-gradient-to-b from-white to-slate-50 border border-slate-200 text-slate-700 text-sm font-normal shadow-[0_4px_12px_rgba(15,23,42,0.05),inset_0_1px_0_white] hover:from-slate-50 hover:to-slate-100 hover:-translate-y-0.5 transition-all duration-300"
             >
-              <Icon
-                icon="solar:play-circle-linear"
-                style={{ strokeWidth: 1.5 }}
-                className="text-lg text-blue-500"
-              />
+              <PlayCircle className="w-5 h-5 text-blue-500" />
               Как это работает
             </a>
           </div>
@@ -103,11 +102,7 @@ export default function Hero() {
               <div className="aura-float-bubble absolute -right-7 top-10 rounded-2xl bg-white/90 backdrop-blur border border-white px-4 py-3 shadow-[0_18px_38px_-20px_rgba(15,23,42,0.45),inset_0_1px_0_white] min-w-[12rem]">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center">
-                    <Icon
-                      icon="solar:bell-bing-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-lg text-emerald-500"
-                    />
+                    <Bell className="w-5 h-5 text-emerald-500" />
                   </div>
                   <div>
                     <p className="text-xs text-slate-900 font-normal">
@@ -124,11 +119,7 @@ export default function Hero() {
               <div className="aura-float-bubble absolute -right-7 top-[35%] rounded-2xl bg-white/90 backdrop-blur border border-white px-4 py-3 shadow-[0_18px_38px_-20px_rgba(15,23,42,0.45),inset_0_1px_0_white] min-w-[12rem]">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
-                    <Icon
-                      icon="solar:document-text-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-lg text-blue-500"
-                    />
+                    <FileText className="w-5 h-5 text-blue-500" />
                   </div>
                   <div>
                     <p className="text-xs text-slate-900 font-normal font-sans">
@@ -145,11 +136,7 @@ export default function Hero() {
               <div className="aura-float-bubble absolute -right-7 bottom-[26%] rounded-2xl bg-white/90 backdrop-blur border border-white px-4 py-3 shadow-[0_18px_38px_-20px_rgba(15,23,42,0.45),inset_0_1px_0_white] min-w-[12rem]">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center">
-                    <Icon
-                      icon="solar:calendar-mark-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-lg text-indigo-500"
-                    />
+                    <Calendar className="w-5 h-5 text-indigo-500" />
                   </div>
                   <div>
                     <p className="text-xs text-slate-900 font-normal">
@@ -166,11 +153,7 @@ export default function Hero() {
               <div className="aura-float-bubble absolute left-8 -bottom-6 rounded-2xl bg-white/90 backdrop-blur border border-white px-4 py-3 shadow-[0_18px_38px_-20px_rgba(15,23,42,0.45),inset_0_1px_0_white] min-w-[12rem]">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-                    <Icon
-                      icon="solar:chat-round-dots-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-lg text-slate-600"
-                    />
+                    <MessageSquare className="w-5 h-5 text-slate-600" />
                   </div>
                   <div>
                     <p className="text-xs text-slate-900 font-normal">
@@ -207,11 +190,7 @@ export default function Hero() {
                     </h2>
                   </div>
                   <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shadow-[inset_0_1px_0_white]">
-                    <Icon
-                      icon="solar:stars-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-2xl"
-                    />
+                    <Sparkles className="w-6 h-6 text-blue-600" />
                   </div>
                 </div>
 
@@ -220,11 +199,7 @@ export default function Hero() {
                   <div className="aura-hero-card rounded-2xl bg-white border border-slate-200 p-4 shadow-[0_2px_8px_rgba(15,23,42,0.03),inset_0_1px_0_white]">
                     <div className="flex items-start gap-3">
                       <div className="mt-0.5 w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center">
-                        <Icon
-                          icon="solar:document-text-linear"
-                          style={{ strokeWidth: 1.5 }}
-                          className="text-lg text-blue-500"
-                        />
+                        <FileText className="w-5 h-5 text-blue-500" />
                       </div>
                       <div>
                         <p className="text-sm font-normal text-slate-800">
@@ -241,11 +216,7 @@ export default function Hero() {
                   <div className="aura-hero-card rounded-2xl bg-white border border-slate-200 p-4 shadow-[0_2px_8px_rgba(15,23,42,0.03),inset_0_1px_0_white]">
                     <div className="flex items-start gap-3">
                       <div className="mt-0.5 w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center">
-                        <Icon
-                          icon="solar:checklist-minimalistic-linear"
-                          style={{ strokeWidth: 1.5 }}
-                          className="text-lg text-indigo-500"
-                        />
+                        <ClipboardList className="w-5 h-5 text-indigo-500" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between gap-3">
@@ -288,19 +259,11 @@ export default function Hero() {
                           </p>
                         </div>
                         <div className="w-8 h-8 rounded-xl bg-white/80 border border-white flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                          <Icon
-                            icon="solar:lock-keyhole-linear"
-                            style={{ strokeWidth: 1.5 }}
-                            className="text-base text-blue-500"
-                          />
+                          <Lock className="w-4 h-4 text-blue-500" />
                         </div>
                       </div>
                       <div className="relative mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/70 border border-white px-2.5 py-1 text-[10px] text-slate-500 shadow-[inset_0_1px_0_white]">
-                        <Icon
-                          icon="solar:shield-check-linear"
-                          style={{ strokeWidth: 1.5 }}
-                          className="text-xs text-blue-500"
-                        />
+                        <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
                         Замена моторного масла
                       </div>
                     </div>

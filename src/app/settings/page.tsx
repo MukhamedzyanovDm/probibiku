@@ -1,5 +1,6 @@
 "use client";
-import { Icon } from "@iconify/react";
+
+import { Loader2, ArrowLeft, CheckCircle2, Star, MessageCircle } from "lucide-react";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -65,7 +66,7 @@ export default function SettingsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center font-sans">
         <div className="text-center">
-          <Icon icon="solar:spinner-linear" className="text-4xl text-blue-500 animate-spin" />
+          <Loader2 className="text-4xl text-blue-500 animate-spin mx-auto" />
           <p className="text-sm text-slate-500 font-light mt-3">Загрузка настроек...</p>
         </div>
       </div>
@@ -119,7 +120,7 @@ export default function SettingsPage() {
             href="/garage"
             className="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-blue-500 transition-colors"
           >
-            <Icon icon="solar:arrow-left-linear" />
+            <ArrowLeft className="w-4 h-4" />
             В гараж
           </Link>
         </div>
@@ -129,7 +130,7 @@ export default function SettingsPage() {
 
           {saveSuccess && (
             <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-4 mb-8 text-xs text-emerald-800 flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
-              <Icon icon="solar:check-circle-linear" className="text-xl text-emerald-500" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-500" />
               <span>Настройки успешно сохранены!</span>
             </div>
           )}
@@ -151,7 +152,7 @@ export default function SettingsPage() {
                     {statusIcon ? (
                       <img src={statusIcon} className="w-3.5 h-3.5 object-contain" alt={statusText} />
                     ) : (
-                      <Icon icon="solar:star-linear" className="text-xs text-slate-400" />
+                      <Star className="w-3.5 h-3.5 text-slate-400" />
                     )}
                     <span>{statusText}</span>
                   </div>
@@ -228,7 +229,7 @@ export default function SettingsPage() {
                     {profile.telegramConnected && (
                       <div className="pt-2">
                         <span className="inline-flex items-center gap-1 text-[10px] font-mono text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded">
-                          <Icon icon="solar:chat-round-dots-linear" />
+                          <MessageCircle className="w-3.5 h-3.5" />
                           Подключено: {profile.telegramUsername}
                         </span>
                       </div>

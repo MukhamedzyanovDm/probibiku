@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { ArrowRight, Briefcase, Lock, UserCheck, Rocket, SquarePen, Wand2 } from "lucide-react";
 import React from "react";
 
 export default function BuiltFor() {
@@ -23,11 +23,7 @@ export default function BuiltFor() {
             className="inline-flex items-center gap-2 justify-center rounded-full px-6 py-3.5 text-sm font-normal text-white bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 shadow-[0_10px_24px_rgba(59,130,246,0.26),inset_0_1px_0_rgba(255,255,255,0.35)] hover:from-blue-400 hover:to-blue-500 hover:-translate-y-0.5 transition-all duration-300"
           >
             Начать бесплатно
-            <Icon
-              icon="solar:arrow-right-linear"
-              style={{ strokeWidth: 1.5 }}
-              className="text-lg"
-            />
+            <ArrowRight className="w-5 h-5" />
           </a>
           <a
             href="#demo"
@@ -97,11 +93,7 @@ export default function BuiltFor() {
           <div className="p-6">
             <div className="flex items-start gap-4">
               <div className="w-11 h-11 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                <Icon
-                  icon="solar:rocket-linear"
-                  style={{ strokeWidth: 1.5 }}
-                  className="text-2xl text-blue-500"
-                />
+                <Rocket className="w-6 h-6 text-blue-500" />
               </div>
               <div>
                 <h3 className="text-xl font-normal tracking-tight text-slate-950">
@@ -146,11 +138,7 @@ export default function BuiltFor() {
                   АВТОПАРК (5 ТС)
                 </span>
                 <div className="w-9 h-9 rounded-xl bg-white/90 border border-white flex items-center justify-center shadow-[0_8px_18px_-12px_rgba(15,23,42,0.35),inset_0_1px_0_white]">
-                  <Icon
-                    icon="solar:case-round-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-lg text-blue-500"
-                  />
+                  <Briefcase className="w-5 h-5 text-blue-500" />
                 </div>
               </div>
 
@@ -184,11 +172,7 @@ export default function BuiltFor() {
                       </p>
                     </div>
                     <div className="w-8 h-8 rounded-xl bg-white/90 border border-white flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                      <Icon
-                        icon="solar:lock-keyhole-linear"
-                        style={{ strokeWidth: 1.5 }}
-                        className="text-base text-blue-500"
-                      />
+                      <Lock className="w-4 h-4 text-blue-500" />
                     </div>
                   </div>
                 </div>
@@ -200,11 +184,7 @@ export default function BuiltFor() {
           <div className="relative p-6 text-white">
             <div className="flex items-start gap-4">
               <div className="w-11 h-11 shrink-0 rounded-2xl bg-white/16 border border-white/20 flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
-                <Icon
-                  icon="solar:user-check-linear"
-                  style={{ strokeWidth: 1.5 }}
-                  className="text-2xl text-white"
-                />
+                <UserCheck className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h3 className="text-xl font-normal tracking-tight text-white">
@@ -244,11 +224,7 @@ export default function BuiltFor() {
                   ПРОВЕРКА ИСТОРИИ
                 </span>
                 <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
-                  <Icon
-                    icon="solar:pen-new-square-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-lg text-blue-500"
-                  />
+                  <SquarePen className="w-5 h-5 text-blue-500" />
                 </div>
               </div>
 
@@ -281,11 +257,7 @@ export default function BuiltFor() {
           <div className="p-6">
             <div className="flex items-start gap-4">
               <div className="w-11 h-11 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                <Icon
-                  icon="solar:magic-stick-3-linear"
-                  style={{ strokeWidth: 1.5 }}
-                  className="text-2xl text-blue-500"
-                />
+                <Wand2 className="w-6 h-6 text-blue-500" />
               </div>
               <div>
                 <h3 className="text-xl font-normal tracking-tight text-slate-950">

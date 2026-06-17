@@ -1,5 +1,5 @@
 "use client";
-import { Icon } from "@iconify/react";
+import { Star, Pencil, CheckCircle2, XCircle } from "lucide-react";
 
 import React, { useState } from "react";
 
@@ -76,10 +76,9 @@ export default function Testimonials() {
               {/* Star Rating */}
               <div className="flex gap-1 mb-5">
                 {[...Array(rev.rating)].map((_, i) => (
-                  <Icon
+                  <Star
                     key={i}
-                    icon="solar:star-bold"
-                    className="text-amber-400 text-sm"
+                    className="text-amber-400 w-4 h-4 fill-amber-400"
                   />
                 ))}
               </div>
@@ -112,7 +111,7 @@ export default function Testimonials() {
           onClick={() => setModalOpen(true)}
           className="inline-flex items-center gap-2 rounded-full px-6 py-3 bg-gradient-to-b from-white to-slate-50 border border-slate-200 text-slate-700 text-xs font-normal shadow-[0_4px_12px_rgba(15,23,42,0.05),inset_0_1px_0_white] hover:from-slate-50 hover:to-slate-100 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
         >
-          <Icon icon="solar:pen-linear" className="text-base text-blue-500" />
+          <Pencil className="w-4 h-4 text-blue-500" />
           Оставить отзыв
         </button>
       </div>
@@ -131,7 +130,7 @@ export default function Testimonials() {
             {feedbackSubmitted ? (
               <div className="text-center py-8">
                 <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-500 mx-auto mb-4 animate-bounce">
-                  <Icon icon="solar:check-circle-linear" className="text-2xl" />
+                  <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <h4 className="text-base font-semibold text-slate-900">Спасибо за отзыв!</h4>
                 <p className="text-xs text-slate-500 font-light mt-2">
@@ -149,7 +148,7 @@ export default function Testimonials() {
                     onClick={() => setModalOpen(false)}
                     className="text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
                   >
-                    <Icon icon="solar:close-circle-linear" className="text-[28px]" />
+                    <XCircle className="w-7 h-7" />
                   </button>
                 </div>
 

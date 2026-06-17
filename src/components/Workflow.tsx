@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { Upload, FileText, Target, ClipboardList, ArrowRight } from "lucide-react";
 import React from "react";
 
 export default function Workflow() {
@@ -63,11 +63,7 @@ export default function Workflow() {
               {/* Card */}
               <div className="mt-4 rounded-[2rem] bg-white/70 border border-white p-6 min-h-[15rem] shadow-[0_16px_36px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] group-hover:-translate-y-1 group-hover:bg-white/85 transition-all duration-300">
                 <div className="w-11 h-11 mx-auto rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white] mb-5">
-                  <Icon
-                    icon="solar:inbox-in-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-2xl text-blue-500"
-                  />
+                  <Upload className="w-6 h-6 text-blue-500" />
                 </div>
                 <h3 className="text-xl font-normal tracking-tight text-slate-950 font-sans">
                   Загрузка чека
@@ -96,11 +92,7 @@ export default function Workflow() {
               {/* Card */}
               <div className="mt-4 rounded-[2rem] bg-white/70 border border-white p-6 min-h-[15rem] shadow-[0_16px_36px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] group-hover:-translate-y-1 group-hover:bg-white/85 transition-all duration-300">
                 <div className="w-11 h-11 mx-auto rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white] mb-5">
-                  <Icon
-                    icon="solar:document-text-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-2xl text-blue-500"
-                  />
+                  <FileText className="w-6 h-6 text-blue-500" />
                 </div>
                 <h3 className="text-xl font-normal tracking-tight text-slate-950 font-sans">
                   Распознавание
@@ -130,11 +122,7 @@ export default function Workflow() {
               {/* Card */}
               <div className="mt-4 rounded-[2rem] bg-white/70 border border-white p-6 min-h-[15rem] shadow-[0_16px_36px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] group-hover:-translate-y-1 group-hover:bg-white/85 transition-all duration-300">
                 <div className="w-11 h-11 mx-auto rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white] mb-5">
-                  <Icon
-                    icon="solar:target-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-2xl text-blue-500"
-                  />
+                  <Target className="w-6 h-6 text-blue-500" />
                 </div>
                 <h3 className="text-xl font-normal tracking-tight text-slate-950 font-sans">
                   AI-Анализ и проверка
@@ -163,11 +151,7 @@ export default function Workflow() {
               {/* Card */}
               <div className="mt-4 rounded-[2rem] bg-white/70 border border-white p-6 min-h-[15rem] shadow-[0_16px_36px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] group-hover:-translate-y-1 group-hover:bg-white/85 transition-all duration-300">
                 <div className="w-11 h-11 mx-auto rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white] mb-5">
-                  <Icon
-                    icon="solar:checklist-minimalistic-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-2xl text-blue-500"
-                  />
+                  <ClipboardList className="w-6 h-6 text-blue-500" />
                 </div>
                 <h3 className="text-xl font-normal tracking-tight text-slate-950 font-sans">
                   Результат
@@ -198,11 +182,7 @@ export default function Workflow() {
             className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal shadow-[0_10px_24px_rgba(59,130,246,0.26),inset_0_1px_0_rgba(255,255,255,0.35)] hover:from-blue-400 hover:to-blue-500 hover:-translate-y-0.5 transition-all duration-300"
           >
             Попробовать бесплатно
-            <Icon
-              icon="solar:arrow-right-linear"
-              style={{ strokeWidth: 1.5 }}
-              className="text-lg"
-            />
+            <ArrowRight className="w-5 h-5" />
           </a>
         </div>
       </div>

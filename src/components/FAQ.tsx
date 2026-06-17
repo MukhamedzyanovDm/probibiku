@@ -1,4 +1,16 @@
-import { Icon } from "@iconify/react";
+import {
+  HelpCircle,
+  ShieldCheck,
+  FileText,
+  RotateCcw,
+  ArrowRight,
+  MessageSquare,
+  PlusCircle,
+  FileSpreadsheet,
+  Smartphone,
+  Sparkles,
+  UserCheck
+} from "lucide-react";
 import React from "react";
 
 export default function FAQ() {
@@ -54,11 +66,7 @@ export default function FAQ() {
 
             <div className="relative">
               <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.14)] mb-8">
-                <Icon
-                  icon="solar:question-circle-linear"
-                  style={{ strokeWidth: 1.5 }}
-                  className="text-2xl text-blue-200"
-                />
+                <HelpCircle className="w-6 h-6 text-blue-200" />
               </div>
 
               <p className="font-mono text-xs font-medium tracking-[-0.04em] text-blue-200 mb-4">
@@ -79,11 +87,7 @@ export default function FAQ() {
               <div className="mt-8 grid gap-3 font-sans">
                 <div className="rounded-2xl bg-white/[0.07] border border-white/10 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
                   <div className="flex items-center gap-3">
-                    <Icon
-                      icon="solar:shield-check-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-xl text-blue-200"
-                    />
+                    <ShieldCheck className="w-5 h-5 text-blue-200" />
                     <span className="text-sm text-white font-normal">
                       Приватность и шифрование VIN
                     </span>
@@ -92,11 +96,7 @@ export default function FAQ() {
 
                 <div className="rounded-2xl bg-white/[0.07] border border-white/10 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
                   <div className="flex items-center gap-3">
-                    <Icon
-                      icon="solar:document-text-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-xl text-blue-200"
-                    />
+                    <FileText className="w-5 h-5 text-blue-200" />
                     <span className="text-sm text-white font-normal">
                       Оцифровка смет, чеков и накладных
                     </span>
@@ -105,11 +105,7 @@ export default function FAQ() {
 
                 <div className="rounded-2xl bg-white/[0.07] border border-white/10 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
                   <div className="flex items-center gap-3">
-                    <Icon
-                      icon="solar:restart-circle-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-xl text-blue-200"
-                    />
+                    <RotateCcw className="w-5 h-5 text-blue-200" />
                     <span className="text-sm text-white font-normal">
                       Сброс или экспорт архива
                     </span>
@@ -123,11 +119,7 @@ export default function FAQ() {
                   className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 bg-white text-slate-950 text-sm font-normal border border-white shadow-[inset_0_1px_0_white] hover:bg-slate-100 hover:-translate-y-0.5 transition-all"
                 >
                   Начать бесплатно
-                  <Icon
-                    icon="solar:arrow-right-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-lg"
-                  />
+                  <ArrowRight className="w-5 h-5" />
                 </a>
                 <a
                   href="#privacy"
@@ -146,22 +138,14 @@ export default function FAQ() {
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                    <Icon
-                      icon="solar:chat-round-like-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-xl text-blue-500"
-                    />
+                    <MessageSquare className="w-5 h-5 text-blue-500" />
                   </div>
                   <h3 className="text-base md:text-lg font-normal tracking-tight text-slate-950">
                     Чем Пробибику отличается от обычных таблиц расходов?
                   </h3>
                 </div>
                 <div className="w-9 h-9 shrink-0 rounded-full bg-gradient-to-b from-white to-slate-50 border border-slate-200 flex items-center justify-center shadow-[0_4px_10px_rgba(15,23,42,0.05),inset_0_1px_0_white]">
-                  <Icon
-                    icon="solar:add-circle-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-xl text-slate-505 group-open:rotate-45 transition-transform"
-                  />
+                  <PlusCircle className="w-5 h-5 text-slate-500 group-open:rotate-45 transition-transform" />
                 </div>
               </summary>
               <div className="px-5 md:px-6 pb-6 md:pl-[5.75rem]">
@@ -178,22 +162,14 @@ export default function FAQ() {
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                    <Icon
-                      icon="solar:microphone-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-xl text-blue-500"
-                    />
+                    <FileSpreadsheet className="w-5 h-5 text-blue-500" />
                   </div>
                   <h3 className="text-base md:text-lg font-normal tracking-tight text-slate-950">
                     Какие чеки и накладные я могу загружать?
                   </h3>
                 </div>
                 <div className="w-9 h-9 shrink-0 rounded-full bg-gradient-to-b from-white to-slate-50 border border-slate-200 flex items-center justify-center shadow-[0_4px_10px_rgba(15,23,42,0.05),inset_0_1px_0_white]">
-                  <Icon
-                    icon="solar:add-circle-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-xl text-slate-505 group-open:rotate-45 transition-transform"
-                  />
+                  <PlusCircle className="w-5 h-5 text-slate-500 group-open:rotate-45 transition-transform" />
                 </div>
               </summary>
               <div className="px-5 md:px-6 pb-6 md:pl-[5.75rem]">
@@ -210,22 +186,14 @@ export default function FAQ() {
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                    <Icon
-                      icon="solar:devices-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-xl text-blue-500"
-                    />
+                    <Smartphone className="w-5 h-5 text-blue-500" />
                   </div>
                   <h3 className="text-base md:text-lg font-normal tracking-tight text-slate-950">
                     Работает ли Пробибику на смартфонах?
                   </h3>
                 </div>
                 <div className="w-9 h-9 shrink-0 rounded-full bg-gradient-to-b from-white to-slate-50 border border-slate-200 flex items-center justify-center shadow-[0_4px_10px_rgba(15,23,42,0.05),inset_0_1px_0_white]">
-                  <Icon
-                    icon="solar:add-circle-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-xl text-slate-505 group-open:rotate-45 transition-transform"
-                  />
+                  <PlusCircle className="w-5 h-5 text-slate-500 group-open:rotate-45 transition-transform" />
                 </div>
               </summary>
               <div className="px-5 md:px-6 pb-6 md:pl-[5.75rem]">
@@ -242,22 +210,14 @@ export default function FAQ() {
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                    <Icon
-                      icon="solar:sun-2-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-xl text-blue-500"
-                    />
+                    <Sparkles className="w-5 h-5 text-blue-500" />
                   </div>
                   <h3 className="text-base md:text-lg font-normal tracking-tight text-slate-950">
                     Как ИИ прогнозирует регламентные работы?
                   </h3>
                 </div>
                 <div className="w-9 h-9 shrink-0 rounded-full bg-gradient-to-b from-white to-slate-50 border border-slate-200 flex items-center justify-center shadow-[0_4px_10px_rgba(15,23,42,0.05),inset_0_1px_0_white]">
-                  <Icon
-                    icon="solar:add-circle-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-xl text-slate-505 group-open:rotate-45 transition-transform"
-                  />
+                  <PlusCircle className="w-5 h-5 text-slate-500 group-open:rotate-45 transition-transform" />
                 </div>
               </summary>
               <div className="px-5 md:px-6 pb-6 md:pl-[5.75rem]">
@@ -274,22 +234,14 @@ export default function FAQ() {
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                    <Icon
-                      icon="solar:shield-check-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-xl text-blue-500"
-                    />
+                    <ShieldCheck className="w-5 h-5 text-blue-500" />
                   </div>
                   <h3 className="text-base md:text-lg font-normal tracking-tight text-slate-950">
                     Безопасны ли мои VIN-данные и чеки?
                   </h3>
                 </div>
                 <div className="w-9 h-9 shrink-0 rounded-full bg-gradient-to-b from-white to-slate-50 border border-slate-200 flex items-center justify-center shadow-[0_4px_10px_rgba(15,23,42,0.05),inset_0_1px_0_white]">
-                  <Icon
-                    icon="solar:add-circle-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-xl text-slate-505 group-open:rotate-45 transition-transform"
-                  />
+                  <PlusCircle className="w-5 h-5 text-slate-500 group-open:rotate-45 transition-transform" />
                 </div>
               </summary>
               <div className="px-5 md:px-6 pb-6 md:pl-[5.75rem]">
@@ -306,22 +258,14 @@ export default function FAQ() {
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                    <Icon
-                      icon="solar:user-check-linear"
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-xl text-blue-500"
-                    />
+                    <UserCheck className="w-5 h-5 text-blue-500" />
                   </div>
                   <h3 className="text-base md:text-lg font-normal tracking-tight text-slate-950">
                     Как автоотчет помогает повысить цену при продаже?
                   </h3>
                 </div>
                 <div className="w-9 h-9 shrink-0 rounded-full bg-gradient-to-b from-white to-slate-50 border border-slate-200 flex items-center justify-center shadow-[0_4px_10px_rgba(15,23,42,0.05),inset_0_1px_0_white]">
-                  <Icon
-                    icon="solar:add-circle-linear"
-                    style={{ strokeWidth: 1.5 }}
-                    className="text-xl text-slate-505 group-open:rotate-45 transition-transform"
-                  />
+                  <PlusCircle className="w-5 h-5 text-slate-500 group-open:rotate-45 transition-transform" />
                 </div>
               </summary>
               <div className="px-5 md:px-6 pb-6 md:pl-[5.75rem]">

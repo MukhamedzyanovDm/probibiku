@@ -1,5 +1,5 @@
 "use client";
-import { Icon } from "@iconify/react";
+import { CheckCircle2, Sparkles, Building2 } from "lucide-react";
 
 import React, { useState } from "react";
 
@@ -25,7 +25,7 @@ export default function Pricing() {
       credits: 20,
       price: 290, // ~14.5 ₽
       description: "Попробовать сервис в деле и оцифровать первые чеки",
-      icon: "solar:check-circle-linear",
+      icon: CheckCircle2,
       badge: "Быстрый старт",
     },
     {
@@ -33,7 +33,7 @@ export default function Pricing() {
       credits: 60,
       price: 590, // ~9.8 ₽
       description: "Хватит на 1-2 года обслуживания одного автомобиля",
-      icon: "solar:stars-linear",
+      icon: Sparkles,
       badge: "Популярно",
       popular: true,
     },
@@ -42,7 +42,7 @@ export default function Pricing() {
       credits: 150,
       price: 1190, // ~7.9 ₽
       description: "Для семейного автопарка или полной проверки истории бу авто перед покупкой",
-      icon: "solar:buildings-2-linear",
+      icon: Building2,
       badge: "Макс. выгода",
     },
   ];
@@ -198,11 +198,7 @@ export default function Pricing() {
                       ? "bg-blue-50 border-blue-100 text-blue-500"
                       : "bg-slate-50 border-slate-200 text-slate-400"
                   }`}>
-                    <Icon
-                      icon={pkg.icon}
-                      style={{ strokeWidth: 1.5 }}
-                      className="text-lg"
-                    />
+                    <pkg.icon className="w-5 h-5" />
                   </div>
                 </div>
                 <p className="text-xs text-slate-500 font-light leading-relaxed">

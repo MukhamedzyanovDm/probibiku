@@ -1,5 +1,13 @@
 "use client";
-import { Icon } from "@iconify/react";
+
+import {
+  PlusCircle,
+  ShieldAlert,
+  Car as CarIcon,
+  ArrowRight,
+  Pencil,
+  Trash2
+} from "lucide-react";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -68,7 +76,7 @@ export default function GaragePage() {
             onClick={handleOpenAddModal}
             className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal shadow-[0_4px_12px_rgba(59,130,246,0.2)] hover:from-blue-600 hover:to-blue-700 transition-all cursor-pointer"
           >
-            <Icon icon="solar:add-circle-linear" className="text-lg" />
+            <PlusCircle className="w-5 h-5" />
             Добавить автомобиль
           </button>
         </div>
@@ -108,7 +116,7 @@ export default function GaragePage() {
         {/* Critical Alerts / Notifications */}
         {activeCars > 0 && (
           <div className="rounded-2xl border bg-amber-50/50 border-amber-100 p-4 mb-10 flex gap-4 text-xs">
-            <Icon icon="solar:shield-warning-linear" className="text-2xl text-amber-500 shrink-0" />
+            <ShieldAlert className="w-6 h-6 text-amber-500 shrink-0" />
             <div className="space-y-1.5">
               <strong className="block text-slate-800">Обратите внимание (2):</strong>
               <p className="text-slate-600 font-light">
@@ -124,7 +132,7 @@ export default function GaragePage() {
         {/* Cars List Grid */}
         {cars.length === 0 ? (
           <div className="text-center py-20 bg-white/50 border border-slate-200 rounded-[2rem] p-10">
-            <Icon icon="solar:garage-linear" className="text-5xl text-slate-300 mb-4" />
+            <CarIcon className="w-12 h-12 text-slate-300 mb-4 mx-auto" />
             <h3 className="text-lg font-medium text-slate-800">В вашем гараже пусто</h3>
             <p className="text-sm text-slate-500 font-light max-w-sm mx-auto mt-2 mb-6">
               Добавьте ваш первый автомобиль, чтобы начать отслеживать его расходы и прогнозировать регламент обслуживания
@@ -197,7 +205,7 @@ export default function GaragePage() {
                     <div className="flex justify-between items-center text-xs text-slate-500">
                       <span className="text-blue-500 group-hover:underline inline-flex items-center gap-1">
                         Подробнее о машине
-                        <Icon icon="solar:arrow-right-linear" />
+                        <ArrowRight className="w-4 h-4" />
                       </span>
                       
                       <div className="flex items-center gap-2">
@@ -206,14 +214,14 @@ export default function GaragePage() {
                           className="w-8 h-8 rounded-full border border-slate-200 hover:bg-slate-50 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors"
                           title="Редактировать"
                         >
-                          <Icon icon="solar:pen-linear" />
+                          <Pencil className="w-4 h-4" />
                         </button>
                         <button
                           onClick={(e) => handleDeleteClick(car.id, e)}
                           className="w-8 h-8 rounded-full border border-slate-200 hover:border-red-200 hover:bg-red-50 flex items-center justify-center text-slate-500 hover:text-red-500 transition-colors"
                           title="Удалить"
                         >
-                          <Icon icon="solar:trash-bin-minimalistic-linear" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
@@ -245,7 +253,7 @@ export default function GaragePage() {
             <div className="relative w-full max-w-sm rounded-[2rem] bg-white border border-slate-200/80 shadow-2xl p-6 z-10 animate-in zoom-in-95 duration-200">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-500 mb-4 shadow-[0_4px_12px_rgba(239,68,68,0.1)]">
-                  <Icon icon="solar:trash-bin-trash-bold" className="text-xl" />
+                  <Trash2 className="w-5 h-5" />
                 </div>
                 <h3 className="text-sm font-semibold text-slate-900">Удалить автомобиль?</h3>
                 <p className="text-xs text-slate-500 font-light mt-2 leading-relaxed">

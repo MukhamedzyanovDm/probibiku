@@ -1,5 +1,6 @@
 "use client";
-import { Icon } from "@iconify/react";
+
+import { XCircle, Camera, Pencil, ChevronDown, PlusCircle, Trash2 } from "lucide-react";
 
 import React, { useState, useEffect } from "react";
 import { Car, ServiceRecord, updateCar } from "@/utils/garageStore";
@@ -187,7 +188,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
             onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
           >
-            <Icon icon="solar:close-circle-linear" className="text-[28px]" />
+            <XCircle className="w-7 h-7" />
           </button>
         </div>
 
@@ -202,7 +203,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
                 : "border-transparent text-slate-400 hover:text-slate-600"
             }`}
           >
-            <Icon icon="solar:camera-linear" className="mr-1.5 align-middle text-sm" />
+            <Camera className="w-4 h-4 mr-1.5 align-middle" />
             Сканировать чек ИИ
           </button>
           <button
@@ -214,7 +215,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
                 : "border-transparent text-slate-400 hover:text-slate-600"
             }`}
           >
-            <Icon icon="solar:pen-linear" className="mr-1.5 align-middle text-sm" />
+            <Pencil className="w-4 h-4 mr-1.5 align-middle" />
             Ввести позиции вручную
           </button>
         </div>
@@ -260,7 +261,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
                     <option value="Другое">Другое</option>
                   </select>
                   <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-slate-400">
-                    <Icon icon="solar:alt-arrow-down-linear" className="text-base" />
+                    <ChevronDown className="w-4 h-4 text-slate-400" />
                   </div>
                 </div>
               </div>
@@ -303,7 +304,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
                 ) : (
                   <div className="flex flex-col items-center text-center py-4 space-y-4">
                     <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600 shadow-[inset_0_1px_0_white]">
-                      <Icon icon="solar:camera-linear" className="text-2xl" />
+                      <Camera className="w-6 h-6" />
                     </div>
                     <div>
                       <h4 className="text-sm font-medium text-slate-800">Загрузите или сфотографируйте чек</h4>
@@ -341,7 +342,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
                     onClick={handleAddItem}
                     className="inline-flex items-center gap-1 text-xs text-blue-500 hover:text-blue-600 transition-colors font-medium cursor-pointer"
                   >
-                    <Icon icon="solar:add-circle-linear" className="text-sm" />
+                    <PlusCircle className="w-4 h-4" />
                     Добавить позицию
                   </button>
                 </div>
@@ -366,7 +367,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
                             className="w-8 h-8 rounded-full border border-slate-200 hover:border-red-200 hover:bg-red-50 flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors cursor-pointer shrink-0"
                             title="Удалить позицию"
                           >
-                            <Icon icon="solar:trash-bin-minimalistic-linear" className="text-base" />
+                             <Trash2 className="w-4 h-4" />
                           </button>
                         )}
                       </div>

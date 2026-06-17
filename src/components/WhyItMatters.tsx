@@ -1,25 +1,25 @@
-import { Icon } from "@iconify/react";
+import { Lightbulb, PieChart, Folders, Clock } from "lucide-react";
 import React from "react";
 
 const PROBLEM_CARDS = [
   {
     title: "Сфотографировал и забыл",
-    icon: "solar:lightbulb-bolt-linear",
+    icon: Lightbulb,
     desc: "Не надо хранить, сортировать и переживать что выцветет. Сфотографировали накладную и она уже в истории. Навсегда. Даже та, где написано «замена чего-то за 4 800 руб»"
   },
   {
     title: "Куда уходят деньги на машину",
-    icon: "solar:widget-5-linear",
+    icon: PieChart,
     desc: "Масло, колодки, «ну и заодно посмотрели подвеску»... Пробибику раскладывает всё по категориям, чтобы вы наконец увидели цифру и не пугались дважды"
   },
   {
     title: "Меняли сервис — история не потерялась",
-    icon: "solar:folder-with-files-linear",
+    icon: Folders,
     desc: "Три мастера за пять лет? Отлично. Все их работы в одном месте, по датам, без пробелов. Как будто вы всё это время были очень организованным человеком"
   },
   {
     title: "ТО не подкрадётся",
-    icon: "solar:clock-circle-linear",
+    icon: Clock,
     desc: "Пробибику напомнит раньше, чем машина сама об этом сообщит скрипом"
   }
 ];
@@ -51,11 +51,7 @@ export default function WhyItMatters() {
               className="group flex flex-col gap-4 rounded-[2rem] bg-white/62 border border-white p-6 shadow-[0_10px_28px_-20px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/82 transition-all duration-300"
             >
               <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500 shadow-[inset_0_1px_0_white]">
-                <Icon
-                  icon={card.icon}
-                  style={{ strokeWidth: 1.5 }}
-                  className="text-2xl"
-                />
+                <card.icon className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-lg font-normal tracking-tight text-slate-950">
