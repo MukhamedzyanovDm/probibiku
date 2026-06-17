@@ -4,7 +4,6 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Background from "@/components/Background";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export default function LoginPage() {
@@ -66,11 +65,21 @@ export default function LoginPage() {
   return (
     <>
       <Background />
-      <Header />
 
       <main className="relative z-10 flex-1 flex items-center justify-center min-h-screen px-6 pt-24 pb-16 font-sans">
         <div className="relative w-full max-w-md rounded-[2.5rem] bg-white/70 border border-white shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl overflow-hidden p-8 sm:p-10 text-center">
           
+          {/* Вернуться на главный экран */}
+          <div className="flex justify-start mb-6 -mt-2">
+            <a
+              href="/"
+              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-blue-500 transition-colors font-light"
+            >
+              <Icon icon="solar:arrow-left-linear" className="text-sm" />
+              <span>Вернуться на главную</span>
+            </a>
+          </div>
+
           <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500 shadow-[inset_0_1px_0_white] mx-auto mb-6">
             <Icon
               icon={step === "email" ? "solar:user-rounded-linear" : "solar:shield-keyhole-linear"}
