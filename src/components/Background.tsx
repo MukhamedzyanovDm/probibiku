@@ -24,6 +24,11 @@ export default function Background() {
     if (!mounted) return;
 
     const initUnicorn = () => {
+      // Don't initialize WebGL on mobile devices for performance
+      if (typeof window !== "undefined" && window.innerWidth < 768) {
+        return;
+      }
+
       const win = window as WindowWithUnicorn;
       if (win.UnicornStudio) {
         try {
@@ -71,7 +76,7 @@ export default function Background() {
       {mounted && (
         <div 
           key={pathname}
-          className="aura-background-component fixed top-0 w-full h-screen -z-10 opacity-30 sm:opacity-50 md:opacity-80 pointer-events-none overflow-hidden"
+          className="aura-background-component fixed top-0 w-full h-screen -z-10 opacity-30 sm:opacity-50 md:opacity-80 pointer-events-none overflow-hidden hidden md:block"
           style={{
             maskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)",
             WebkitMaskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)"
