@@ -138,7 +138,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
             onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
           >
-            <XCircle className="w-7 h-7" />
+            <XCircle className="w-6 h-6" />
           </button>
         </div>
 
@@ -249,7 +249,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
                 </div>
               )}
               <label className="flex-1 flex flex-col items-center justify-center border border-dashed border-slate-200 hover:border-blue-400 bg-slate-50/50 hover:bg-blue-50/10 rounded-xl py-3 cursor-pointer transition-colors">
-                <Camera className="w-5 h-5 text-slate-400 mb-1" />
+                <Camera className="w-[18px] h-[18px] text-slate-400 mb-1" />
                 <span className="text-xs text-slate-600 font-normal">Выбрать файл с компьютера</span>
                 <input
                   type="file"

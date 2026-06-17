@@ -55,7 +55,7 @@ export default function Privacy() {
           {/* Left Trust Copy */}
           <div className="flex flex-col justify-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1.5 text-xs text-blue-600 font-light w-fit mb-7 shadow-[inset_0_1px_0_white]">
-              <ShieldCheck className="w-4 h-4 text-blue-500" />
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
               Конфиденциальный автопрофиль
             </div>
 
@@ -73,15 +73,15 @@ export default function Privacy() {
             {/* Trust Pills */}
             <div className="mt-9 flex flex-wrap gap-3 font-sans">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/72 border border-white px-4 py-2 text-xs text-slate-600 font-light shadow-[0_8px_20px_-16px_rgba(15,23,42,0.24),inset_0_1px_0_white]">
-                <Database className="w-4 h-4 text-blue-500" />
+                <Database className="w-3.5 h-3.5 text-blue-500" />
                 Контролируемые данные
               </span>
               <span className="inline-flex items-center gap-2 rounded-full bg-white/72 border border-white px-4 py-2 text-xs text-slate-600 font-light shadow-[0_8px_20px_-16px_rgba(15,23,42,0.24),inset_0_1px_0_white]">
-                <Sliders className="w-4 h-4 text-blue-500" />
+                <Sliders className="w-3.5 h-3.5 text-blue-500" />
                 Настройка VIN-доступа
               </span>
               <span className="inline-flex items-center gap-2 rounded-full bg-white/72 border border-white px-4 py-2 text-xs text-slate-600 font-light shadow-[0_8px_20px_-16px_rgba(15,23,42,0.24),inset_0_1px_0_white]">
-                <RotateCcw className="w-4 h-4 text-blue-500" />
+                <RotateCcw className="w-3.5 h-3.5 text-blue-500" />
                 Сброс при продаже
               </span>
             </div>
@@ -119,7 +119,7 @@ export default function Privacy() {
                     </h3>
                   </div>
                   <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                    <Lock className="w-6 h-6 text-blue-500" />
+                    <Lock className="w-[21px] h-[21px] text-blue-500" />
                   </div>
                 </div>
 
@@ -130,7 +130,7 @@ export default function Privacy() {
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
-                          <CheckCircle2 className="w-5 h-5 text-blue-500" />
+                          <CheckCircle2 className="w-[18px] h-[18px] text-blue-500" />
                         </div>
                         <div>
                           <p className="text-sm font-normal text-slate-900">
@@ -162,8 +162,8 @@ export default function Privacy() {
                   <div className="rounded-2xl bg-white border border-slate-200 p-4 shadow-[0_2px_8px_rgba(15,23,42,0.03),inset_0_1px_0_white]">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center">
-                          <Clock className="w-5 h-5 text-slate-600" />
+                        <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
+                          <Clock className="w-[18px] h-[18px] text-blue-500" />
                         </div>
                         <div>
                           <p className="text-sm font-normal text-slate-900">
@@ -174,7 +174,7 @@ export default function Privacy() {
                           </p>
                         </div>
                       </div>
-                      <span className="text-xs text-slate-500 bg-slate-100 border border-slate-200 rounded-full px-2.5 py-1">
+                      <span className="text-xs text-blue-500 bg-blue-50 border border-blue-100 rounded-full px-2.5 py-1">
                         активно
                       </span>
                     </div>
@@ -184,8 +184,8 @@ export default function Privacy() {
                   <div className="rounded-2xl bg-gradient-to-b from-blue-50 to-white text-slate-900 border border-blue-100 p-4 shadow-[0_12px_28px_-20px_rgba(59,130,246,0.28),inset_0_1px_0_white]">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-[inset_0_1px_0_white]">
-                          <ShieldAlert className="w-5 h-5 text-blue-500" />
+                        <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
+                          <ShieldAlert className="w-[18px] h-[18px] text-blue-500" />
                         </div>
                         <div>
                           <p className="text-sm font-normal text-slate-900">
@@ -228,7 +228,7 @@ export default function Privacy() {
           <div className="relative overflow-hidden bg-white/78 border border-white rounded-[2rem] p-6 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.38),0_4px_14px_-12px_rgba(59,130,246,0.20),inset_0_1px_0_white]">
             <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-blue-200/60 to-transparent" />
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-5 shadow-[inset_0_1px_0_white]">
-              <Database className="w-6 h-6 text-blue-500" />
+              <Database className="w-[21px] h-[21px] text-blue-500" />
             </div>
             <h3 className="text-lg font-normal tracking-tight text-slate-950">
               Ваши данные — ваши
@@ -242,7 +242,7 @@ export default function Privacy() {
           <div className="relative overflow-hidden bg-white/78 border border-white rounded-[2rem] p-6 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.38),0_4px_14px_-12px_rgba(59,130,246,0.20),inset_0_1px_0_white]">
             <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-blue-200/60 to-transparent" />
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-5 shadow-[inset_0_1px_0_white]">
-              <FolderLock className="w-6 h-6 text-blue-500" />
+              <FolderLock className="w-[21px] h-[21px] text-blue-500" />
             </div>
             <h3 className="text-lg font-normal tracking-tight text-slate-950">
             Всё хранится надёжно
@@ -256,7 +256,7 @@ export default function Privacy() {
           <div className="relative overflow-hidden bg-white/78 border border-white rounded-[2rem] p-6 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.38),0_4px_14px_-12px_rgba(59,130,246,0.20),inset_0_1px_0_white]">
             <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-blue-200/60 to-transparent" />
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-5 shadow-[inset_0_1px_0_white]">
-              <Sliders className="w-6 h-6 text-blue-500" />
+              <Sliders className="w-[21px] h-[21px] text-blue-500" />
             </div>
             <h3 className="text-lg font-normal tracking-tight text-slate-950">
               Платите за то что используете
@@ -268,8 +268,8 @@ export default function Privacy() {
 
           {/* Trust Card 04 */}
           <div className="bg-gradient-to-b from-blue-50 to-white border border-blue-100 rounded-[2rem] p-6 shadow-[0_16px_38px_-26px_rgba(59,130,246,0.28),inset_0_1px_0_white]">
-            <div className="w-11 h-11 rounded-2xl bg-white border border-white flex items-center justify-center mb-5 shadow-[inset_0_1px_0_white]">
-              <Trash2 className="w-6 h-6 text-blue-500" />
+            <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-5 shadow-[inset_0_1px_0_white]">
+              <Trash2 className="w-[21px] h-[21px] text-blue-500" />
             </div>
             <h3 className="text-lg font-normal tracking-tight text-slate-950 font-sans">
               Захотели уйти — уходите

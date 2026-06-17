@@ -98,7 +98,7 @@ export function AIAssistant({ isOpen, onClose }: AIAssistantProps) {
             <div className="p-6 border-b border-slate-50 flex items-center justify-between bg-white">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-xl bg-amber-50 flex items-center justify-center">
-                  <Sparkles className="h-5 w-5 text-amber-500 fill-amber-500/20" />
+                  <Sparkles className="h-[18px] w-[18px] text-amber-500 fill-amber-500/20" />
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 leading-none">Ассистент</h3>
@@ -113,7 +113,7 @@ export function AIAssistant({ isOpen, onClose }: AIAssistantProps) {
                   className="hidden lg:flex h-9 w-9 rounded-xl text-slate-400 hover:bg-slate-50"
                   onClick={() => setIsExpanded(!isExpanded)}
                 >
-                  {isExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+                  {isExpanded ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
                 </Button>
                 <Button 
                   variant="ghost" 
@@ -121,7 +121,7 @@ export function AIAssistant({ isOpen, onClose }: AIAssistantProps) {
                   className="h-9 w-9 rounded-xl bg-slate-50 text-slate-500 hover:bg-slate-100"
                   onClick={onClose}
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3.5 w-3.5" />
                 </Button>
               </div>
             </div>
@@ -142,7 +142,7 @@ export function AIAssistant({ isOpen, onClose }: AIAssistantProps) {
                         "w-6 h-6 rounded-lg flex items-center justify-center",
                         msg.role === "assistant" ? "bg-amber-50 text-amber-600" : "bg-slate-100 text-slate-600"
                       )}>
-                        {msg.role === "assistant" ? <Bot className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}
+                        {msg.role === "assistant" ? <Bot className="w-3 h-3" /> : <User className="w-3 h-3" />}
                       </div>
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                         {msg.role === "assistant" ? "Пробибику" : "Вы"}
@@ -160,7 +160,7 @@ export function AIAssistant({ isOpen, onClose }: AIAssistantProps) {
                 ))}
                 {isLoading && (
                   <div className="flex items-center gap-3 text-slate-400">
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     <span className="text-xs font-medium italic">Думаю...</span>
                   </div>
                 )}
@@ -183,7 +183,7 @@ export function AIAssistant({ isOpen, onClose }: AIAssistantProps) {
                   disabled={!input.trim() || isLoading}
                   className="absolute right-1.5 h-9 w-9 rounded-lg bg-slate-900 hover:bg-slate-800 transition-all z-20"
                 >
-                  <Send className="h-4 w-4 text-white" />
+                  <Send className="h-3.5 w-3.5 text-white" />
                 </Button>
               </div>
               <p className="text-[10px] text-slate-400 mt-4 text-center">

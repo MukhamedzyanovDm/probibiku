@@ -178,6 +178,12 @@ export default function LoginPage() {
             >
               Войти без регистрации (Демо-режим)
             </a>
+            <p className="text-[10px] text-slate-400 font-light mt-5 leading-relaxed">
+              Авторизуясь в сервисе, вы соглашаетесь с<br />
+              <a href="/terms" className="underline hover:text-blue-500 transition-colors">Условиями использования</a>
+              {" и "}
+              <a href="/privacy" className="underline hover:text-blue-500 transition-colors">Политикой конфиденциальности</a>
+            </p>
           </div>
 
         </div>

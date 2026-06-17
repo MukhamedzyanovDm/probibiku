@@ -193,12 +193,8 @@ export default function Pricing() {
                       {pkg.credits} кр.
                     </p>
                   </div>
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${
-                    pkg.popular
-                      ? "bg-blue-50 border-blue-100 text-blue-500"
-                      : "bg-slate-50 border-slate-200 text-slate-400"
-                  }`}>
-                    <pkg.icon className="w-5 h-5" />
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center border bg-blue-50 border-blue-100 text-blue-500">
+                    <pkg.icon className="w-[18px] h-[18px]" />
                   </div>
                 </div>
                 <p className="text-xs text-slate-500 font-light leading-relaxed">

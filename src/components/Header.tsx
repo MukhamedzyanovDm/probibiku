@@ -87,7 +87,7 @@ export function Header({ showAccountIcon = false }: { showAccountIcon?: boolean 
                       onClick={() => setIsChatOpen(true)}
                       className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium text-slate-800 bg-white hover:bg-amber-50/20 border border-amber-400/70 hover:border-amber-500 shadow-[0_4px_12px_rgba(245,158,11,0.08),inset_0_1px_0_white] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
                     >
-                      <Wand2 className="w-4 h-4 text-amber-500" />
+                      <Wand2 className="w-3.5 h-3.5 text-amber-500" />
                       <span>ИИ Ассистент</span>
                     </button>
                     <div className="relative" ref={dropdownRef}>
@@ -148,7 +148,7 @@ export function Header({ showAccountIcon = false }: { showAccountIcon?: boolean 
                       onClick={() => setIsChatOpen(true)}
                       className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium text-slate-800 bg-white hover:bg-amber-50/20 border border-amber-400/70 hover:border-amber-500 shadow-[0_4px_12px_rgba(245,158,11,0.08),inset_0_1px_0_white] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
                     >
-                      <Wand2 className="w-4 h-4 text-amber-500" />
+                      <Wand2 className="w-3.5 h-3.5 text-amber-500" />
                       <span>ИИ Ассистент</span>
                     </button>
                     <a
