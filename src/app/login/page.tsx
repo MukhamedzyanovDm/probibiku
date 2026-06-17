@@ -1,5 +1,6 @@
 "use client";
-import { Icon } from "@iconify/react";
+
+import { User, Lock, ArrowRight, ArrowLeft } from "lucide-react";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -75,17 +76,17 @@ export default function LoginPage() {
               href="/"
               className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-blue-500 transition-colors font-light"
             >
-              <Icon icon="solar:arrow-left-linear" className="text-sm" />
+              <ArrowLeft className="w-3.5 h-3.5" />
               <span>Вернуться на главную</span>
             </a>
           </div>
 
           <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500 shadow-[inset_0_1px_0_white] mx-auto mb-6">
-            <Icon
-              icon={step === "email" ? "solar:user-rounded-linear" : "solar:shield-keyhole-linear"}
-              style={{ strokeWidth: 1.5 }}
-              className="text-2xl"
-            />
+            {step === "email" ? (
+              <User className="w-6 h-6 stroke-[1.5]" />
+            ) : (
+              <Lock className="w-6 h-6 stroke-[1.5]" />
+            )}
           </div>
 
           <h1 className="text-2xl font-normal tracking-tight text-slate-900 mb-2">
@@ -118,7 +119,7 @@ export default function LoginPage() {
                 className="w-full inline-flex items-center justify-center gap-2 rounded-full py-3.5 bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal shadow-[0_4px_12px_rgba(59,130,246,0.2)] hover:from-blue-600 hover:to-blue-700 transition-all duration-300"
               >
                 Получить код
-                <Icon icon="solar:arrow-right-linear" />
+                <ArrowRight className="w-4 h-4" />
               </button>
             </form>
           ) : (
