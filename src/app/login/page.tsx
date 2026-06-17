@@ -1,163 +1,179 @@
 "use client";
+import { Icon } from "@iconify/react";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { 
-  InputOTP, 
-  InputOTPGroup, 
-  InputOTPSlot 
-} from "@/components/ui/input-otp";
-import { ArrowLeft, Mail, ShieldCheck } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Background from "@/components/Background";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
-  const [step, setStep] = useState<"email" | "otp">("email");
-  const [isLoading, setIsLoading] = useState(false);
+  const [code, setCode] = useState<string[]>(Array(6).fill(""));
+  const [step, setStep] = useState<"email" | "code">("email");
+  const [timer, setTimer] = useState(59);
+  const router = useRouter();
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (step === "code" && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [step, timer]);
+
+  const handleSendCode = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    
-    setIsLoading(true);
-    // Имитация отправки кода
-    setTimeout(() => {
-      setIsLoading(false);
-      setStep("otp");
-    }, 1500);
+    setStep("code");
+    setTimer(59);
   };
 
-  const handleOtpComplete = (value: string) => {
-    console.log("OTP Completed:", value);
-    // Здесь будет логика проверки кода через NextAuth
+  const handleCodeChange = (element: HTMLInputElement, index: number) => {
+    if (isNaN(Number(element.value))) return;
+
+    const newCode = [...code];
+    newCode[index] = element.value;
+    setCode(newCode);
+
+    // Auto-focus next input
+    if (element.value !== "" && element.nextSibling) {
+      (element.nextSibling as HTMLInputElement).focus();
+    }
+
+    // Auto-submit if all digits are entered
+    if (newCode.every(digit => digit !== "")) {
+      // Direct redirect for demo purposes
+      setTimeout(() => {
+        router.push("/dashboard/garage");
+      }, 500);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key === "Backspace" && code[index] === "" && e.currentTarget.previousSibling) {
+      (e.currentTarget.previousSibling as HTMLInputElement).focus();
+    }
+  };
+
+  const resendCode = () => {
+    setTimer(59);
+    setCode(Array(6).fill(""));
   };
 
   return (
-    <div className="min-h-screen bg-[#F2F2F2] flex flex-col items-center justify-center p-6">
-      {/* Back button */}
-      <Link 
-        href="/"
-        className="absolute top-8 left-8 flex items-center gap-2 text-[#1A2233]/60 hover:text-[#1A2233] transition-colors font-sans text-sm font-medium"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        На главную
-      </Link>
+    <>
+      <Background />
+      <Header />
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[400px] bg-white rounded-[32px] shadow-[0px_20px_40px_rgba(0,0,0,0.05)] p-8 md:p-10"
-      >
-        <div className="flex flex-col items-center text-center mb-10">
-          <div className="w-16 h-16 bg-[#F2F2F2] rounded-2xl flex items-center justify-center mb-6">
-            <ShieldCheck className="w-8 h-8 text-[#C89F87]" />
+      <main className="relative z-10 flex-1 flex items-center justify-center min-h-screen px-6 pt-24 pb-16 font-sans">
+        <div className="relative w-full max-w-md rounded-[2.5rem] bg-white/70 border border-white shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl overflow-hidden p-8 sm:p-10 text-center">
+          
+          <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500 shadow-[inset_0_1px_0_white] mx-auto mb-6">
+            <Icon
+              icon={step === "email" ? "solar:user-rounded-linear" : "solar:shield-keyhole-linear"}
+              style={{ strokeWidth: 1.5 }}
+              className="text-2xl"
+            />
           </div>
-          <h1 className="text-2xl font-display font-bold text-[#1A2233] mb-2">
-            {step === "email" ? "Вход в Пробибику" : "Введите код"}
+
+          <h1 className="text-2xl font-normal tracking-tight text-slate-900 mb-2">
+            {step === "email" ? "Войти в личный кабинет" : "Введите код подтверждения"}
           </h1>
-          <p className="text-sm font-sans text-[#1A2233]/60">
-            {step === "email" 
-              ? "Введите ваш email для получения кода доступа" 
-              : `Мы отправили 6-значный код на ${email}`}
+          <p className="text-sm text-slate-500 font-light mb-8 max-w-xs mx-auto">
+            {step === "email"
+              ? "Мы отправим одноразовый код на вашу электронную почту для безопасного входа"
+              : `Мы отправили 6-значный проверочный код на адрес ${email}`}
           </p>
-        </div>
 
-        <AnimatePresence mode="wait">
           {step === "email" ? (
-            <motion.form
-              key="email-step"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              onSubmit={handleEmailSubmit}
-              className="space-y-6"
-            >
-              <div className="space-y-2">
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1A2233]/30" />
-                  <Input 
-                    type="email"
-                    placeholder="example@mail.ru"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-12 rounded-xl border-[#E2E8F0] focus:border-[#C89F87] transition-all"
-                  />
-                </div>
+            <form onSubmit={handleSendCode} className="space-y-4 text-left">
+              <div>
+                <label className="block text-xs text-slate-500 font-light mb-1.5 pl-1">
+                  Электронная почта
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="yourname@domain.com"
+                  className="w-full text-sm border border-slate-200 rounded-xl px-4 py-3 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
+                  required
+                />
               </div>
 
-              <Button 
+              <button
                 type="submit"
-                disabled={isLoading}
-                className="w-full h-12 rounded-xl bg-[#C89F87] hover:bg-[#B88F77] text-white font-sans font-semibold text-base transition-all shadow-sm"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-full py-3.5 bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal shadow-[0_4px_12px_rgba(59,130,246,0.2)] hover:from-blue-600 hover:to-blue-700 transition-all duration-300"
               >
-                {isLoading ? "Отправка..." : "Получить код"}
-              </Button>
-
-              <div className="relative py-2">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-[#E2E8F0]"></div>
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-2 text-[#1A2233]/30 font-sans font-medium">или</span>
-                </div>
+                Получить код
+                <Icon icon="solar:arrow-right-linear" />
+              </button>
+            </form>
+          ) : (
+            <div className="space-y-6">
+              {/* OTP Input Fields */}
+              <div className="flex justify-between gap-2">
+                {code.map((digit, idx) => (
+                  <input
+                    key={idx}
+                    type="text"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleCodeChange(e.target, idx)}
+                    onKeyDown={(e) => handleKeyDown(e, idx)}
+                    className="w-12 h-12 text-center text-lg font-mono font-medium border border-slate-200 focus:border-blue-500 bg-slate-50/50 focus:bg-white rounded-xl outline-none transition-all"
+                  />
+                ))}
               </div>
 
-              <Button 
-                type="button"
-                variant="outline"
-                className="w-full h-12 rounded-xl border-[#E2E8F0] text-[#1A2233] font-sans font-semibold text-base hover:bg-[#F8FAFC] transition-all flex items-center justify-center gap-3"
-                onClick={() => console.log("Yandex Login")}
-              >
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M11.9023 20V8.21639L15.9082 0H12.793L10.3379 5.86248L7.86523 0H4.57031L8.57617 8.21639V20H11.9023Z" fill="#FF0000"/>
-                </svg>
-                Войти через Яндекс
-              </Button>
-            </motion.form>
-          ) : (
-            <motion.div
-              key="otp-step"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              className="flex flex-col items-center space-y-8"
-            >
-              <InputOTP 
-                maxLength={6} 
-                onComplete={handleOtpComplete}
-                autoFocus
-              >
-                <InputOTPGroup>
-                  <InputOTPSlot index={0} className="h-12 w-10 sm:h-14 sm:w-12 rounded-xl border-[#E2E8F0] focus:border-[#C89F87]" />
-                  <InputOTPSlot index={1} className="h-12 w-10 sm:h-14 sm:w-12 rounded-xl border-[#E2E8F0] focus:border-[#C89F87]" />
-                  <InputOTPSlot index={2} className="h-12 w-10 sm:h-14 sm:w-12 rounded-xl border-[#E2E8F0] focus:border-[#C89F87]" />
-                  <InputOTPSlot index={3} className="h-12 w-10 sm:h-14 sm:w-12 rounded-xl border-[#E2E8F0] focus:border-[#C89F87]" />
-                  <InputOTPSlot index={4} className="h-12 w-10 sm:h-14 sm:w-12 rounded-xl border-[#E2E8F0] focus:border-[#C89F87]" />
-                  <InputOTPSlot index={5} className="h-12 w-10 sm:h-14 sm:w-12 rounded-xl border-[#E2E8F0] focus:border-[#C89F87]" />
-                </InputOTPGroup>
-              </InputOTP>
+              {/* Countdown & Resend */}
+              <div className="text-xs text-slate-500 font-light">
+                {timer > 0 ? (
+                  <span>Отправить код повторно через <strong className="font-mono text-slate-700 font-normal">{timer} сек</strong></span>
+                ) : (
+                  <button
+                    onClick={resendCode}
+                    className="text-blue-500 hover:text-blue-600 font-normal underline transition-colors"
+                  >
+                    Отправить код еще раз
+                  </button>
+                )}
+              </div>
 
-              <button 
-                type="button"
-                onClick={() => setStep("email")}
-                className="text-sm font-sans font-medium text-[#C89F87] hover:text-[#B88F77] transition-colors"
-              >
-                Изменить email
-              </button>
-            </motion.div>
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={() => setStep("email")}
+                  className="flex-1 rounded-full border border-slate-200 text-slate-500 text-sm font-normal py-3 bg-white hover:bg-slate-50 transition-all duration-300"
+                >
+                  Назад
+                </button>
+                <button
+                  onClick={() => router.push("/dashboard/garage")}
+                  className="flex-1 rounded-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-normal py-3 shadow-[0_4px_12px_rgba(59,130,246,0.2)] transition-all duration-300"
+                >
+                  Войти
+                </button>
+              </div>
+            </div>
           )}
-        </AnimatePresence>
-      </motion.div>
 
-      <p className="mt-8 text-xs text-[#1A2233]/40 text-center max-w-[300px] font-sans leading-relaxed">
-        Нажимая кнопку, вы соглашаетесь с{" "}
-        <Link href="/privacy" className="underline hover:text-[#1A2233]/60 transition-colors">политикой конфиденциальности</Link>
-        {" "}и{" "}
-        <Link href="/terms" className="underline hover:text-[#1A2233]/60 transition-colors">условиями использования</Link>
-      </p>
-    </div>
+          {/* Simple Link to Demo Garage */}
+          <div className="mt-8 pt-6 border-t border-slate-100">
+            <a
+              href="/dashboard/garage"
+              className="text-xs text-blue-500 hover:text-blue-600 font-normal transition-colors"
+            >
+              Войти без регистрации (Демо-режим)
+            </a>
+          </div>
+
+        </div>
+      </main>
+
+      <Footer />
+    </>
   );
 }

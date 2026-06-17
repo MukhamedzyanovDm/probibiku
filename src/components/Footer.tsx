@@ -1,157 +1,120 @@
-"use client";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import svgPaths from "@/imports/1920X1080/svg-acf38vze5p";
+import React from "react";
 
 export function Footer() {
   return (
-    <footer className="relative w-full bg-[#f8fafc] border-t border-[#e2e8f0]">
-      <div className="mx-auto max-w-[1320px] px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Logo & Description */}
-          <div className="flex flex-col gap-4">
-            <div className="h-[32.076px] w-[198.092px]">
-              <svg
-                className="block size-full"
-                fill="none"
-                preserveAspectRatio="none"
-                viewBox="0 0 198.092 32.076"
-              >
-                <g>
-                  <path d={svgPaths.p36766480} fill="#C89F87" />
-                  <path d={svgPaths.p274cc40} fill="#C89F87" />
-                  <path d={svgPaths.p23ac0b00} fill="#C89F87" />
-                  <path d={svgPaths.p2aba1400} fill="#314158" />
-                  <path d={svgPaths.p180e4300} fill="#314158" />
-                  <path d={svgPaths.p3eb54470} fill="#314158" />
-                  <path d={svgPaths.pead7070} fill="#314158" />
-                  <path d={svgPaths.p179bfa00} fill="#314158" />
-                  <path d={svgPaths.p169d1200} fill="#314158" />
-                </g>
-              </svg>
-            </div>
+    <footer className="relative z-10 w-full bg-white/72 border-t border-white shadow-[0_-18px_55px_-40px_rgba(15,23,42,0.45),inset_0_1px_0_white] backdrop-blur-xl">
+      {/* Subtle footer glow */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent" />
 
-            <p className="font-display font-regular text-l text-[#94a3b8] tracking-[-0.1px] leading-7">
-              Ваш персональный ИИ-ассистент для безупречной истории обслуживания
-              автомобиля
+      <div className="max-w-7xl mx-auto px-6 py-12 font-sans">
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1.8fr] gap-10 lg:gap-16">
+          {/* Brand / Summary */}
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+            <a href="#" className="flex items-center gap-3 group">
+              <img src="/Probibiku_main_logo.svg" alt="ПРОБИБИКУ" className="h-[22.4px] w-auto" />
+            </a>
+
+            <p className="mt-5 max-w-sm text-sm leading-6 text-slate-500 font-light">
+            Вся история вашей машины в одном месте
             </p>
 
-            {/* Compliance Badge */}
-            <div className="bg-[#f1f5f9] rounded-xl px-5 py-5 flex items-center gap-1 w-fit">
-              <div className="size-4">
-                <svg
-                  className="block size-full"
-                  fill="none"
-                  viewBox="0 0 11.9967 14.6656"
-                >
-                  <path
-                    d={svgPaths.p2f53e380}
-                    stroke="#475569"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.33"
-                  />
-                </svg>
-              </div>
-              <p className="font-display font-medium text-sm text-[#475569] leading-[14px]">
-                Соответствует 152-ФЗ
-              </p>
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1.5 text-xs text-blue-600 shadow-[inset_0_1px_0_white]">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+              Создано для автовладельцев
             </div>
           </div>
 
-          {/* Product */}
-          <div className="flex flex-col gap-4">
-            <h3 className="font-display font-semibold text-lg text-[#1e293b]">
-              Продукт
-            </h3>
-            <ul className="space-y-3">
-              {[
-                { label: "Возможности", href: "#features" },
-                { label: "Безопасность", href: "#safety" },
-                { label: "Цены", href: "#pricing" },
-                { label: "Обновления", href: "#" },
-              ].map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    className="font-display text-base text-[#475569] hover:text-[#1e293b] transition-colors duration-200"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Footer Link Groups */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
+            {/* Product */}
+            <div>
+              <p className="font-mono text-[10px] font-medium tracking-[-0.04em] text-slate-400 uppercase mb-4">
+                Продукт
+              </p>
+              <div className="flex flex-col gap-3 text-sm text-slate-500 font-light">
+                <a href="#features" className="hover:text-blue-600 transition-colors">
+                  Возможности
+                </a>
+                <a href="#workflow" className="hover:text-blue-600 transition-colors">
+                  Процесс
+                </a>
+                <a href="#built-for" className="hover:text-blue-600 transition-colors">
+                  Для кого
+                </a>
+                <a href="#pricing" className="hover:text-blue-600 transition-colors">
+                  Тарифы
+                </a>
+              </div>
+            </div>
 
-          {/* Company */}
-          <div className="flex flex-col gap-4">
-            <h3 className="font-display font-semibold text-lg text-[#1e293b]">
-              Компания
-            </h3>
-            <ul className="space-y-3">
-              {[
-                { label: "О нас", href: "#" },
-                { label: "Блог", href: "#" },
-                { label: "Контакты", href: "#" },
-              ].map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    className="font-display text-base text-[#475569] hover:text-[#1e293b] transition-colors duration-200"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            {/* Workflow */}
+            <div>
+              <p className="font-mono text-[10px] font-medium tracking-[-0.04em] text-slate-400 uppercase mb-4">
+                Функции
+              </p>
+              <div className="flex flex-col gap-3 text-sm text-slate-500 font-light">
+                <a href="#workflow" className="hover:text-blue-600 transition-colors">
+                  Сканирование чеков
+                </a>
+                <a href="#features" className="hover:text-blue-600 transition-colors">
+                  Распознавание позиций
+                </a>
+                <a href="#features" className="hover:text-blue-600 transition-colors">
+                  ИИ-прогноз ТО
+                </a>
+                <a href="#features" className="hover:text-blue-600 transition-colors">
+                  Анализ расходов
+                </a>
+              </div>
+            </div>
 
-          {/* Legal */}
-          <div className="flex flex-col gap-4">
-            <h3 className="font-display font-semibold text-lg text-[#1e293b]">
-              Правовая информация
-            </h3>
-            <ul className="space-y-3">
-              {[
-                { label: "Политика конфиденциальности", href: "/privacy" },
-                { label: "Условия использования", href: "/terms" },
-                { label: "Обработка данных", href: "/data" },
-              ].map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    className="font-display text-base text-[#475569] hover:text-[#1e293b] transition-colors duration-200"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {/* Trust */}
+            <div>
+              <p className="font-mono text-[10px] font-medium tracking-[-0.04em] text-slate-400 uppercase mb-4">
+                Безопасность
+              </p>
+              <div className="flex flex-col gap-3 text-sm text-slate-500 font-light">
+                <a href="#privacy" className="hover:text-blue-600 transition-colors">
+                  Защита данных
+                </a>
+                <a href="#privacy" className="hover:text-blue-600 transition-colors">
+                  Хранение чеков
+                </a>
+                <a href="#privacy" className="hover:text-blue-600 transition-colors">
+                  Управление архивом
+                </a>
+                <a href="#faq" className="hover:text-blue-600 transition-colors">
+                  Вопросы и ответы
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-[#e2e8f0] flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="font-display text-sm text-[#94a3b8]">
-            © 2026 Пробибику. Все права защищены.
+        {/* Bottom Row */}
+        <div className="mt-12 pt-6 border-t border-slate-200/70 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-slate-400 font-light">
+            © 2026 ПРОБИБИКУ. Все права защищены
           </p>
 
-          {/* Social Links */}
-          <div className="flex items-center gap-4">
-            {["ВКонтакте", "Дзен"].map((social) => (
-              <motion.a
-                key={social}
-                href="#"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="text-[#94a3b8] hover:text-[#1e293b] transition-colors duration-200"
-              >
-                <span className="font-display text-sm">{social}</span>
-              </motion.a>
-            ))}
+          <div className="flex items-center gap-4 text-xs text-slate-400 font-light">
+            <a href="#" className="hover:text-blue-600 transition-colors">
+              Условия использования
+            </a>
+            <span className="w-1 h-1 rounded-full bg-slate-300" />
+            <a href="#" className="hover:text-blue-600 transition-colors">
+              Конфиденциальность
+            </a>
+            <span className="w-1 h-1 rounded-full bg-slate-300" />
+            <a href="#" className="hover:text-blue-600 transition-colors">
+              Контакты
+            </a>
           </div>
         </div>
       </div>
     </footer>
   );
 }
+
+export default Footer;

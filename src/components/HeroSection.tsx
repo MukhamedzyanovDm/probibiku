@@ -1,125 +1,60 @@
 "use client";
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Sparkles, Mouse } from 'lucide-react';
+import { HeroChatMockup } from './HeroChatMockup';
 
 export const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
-
-  const mouseOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
-
-  // Using a state to handle client-side media query to avoid hydration mismatch
-  const [isDesktop, setIsDesktop] = React.useState(false);
-
-  useEffect(() => {
-    const checkIsDesktop = () => {
-      setIsDesktop(window.matchMedia("(min-width: 769px)").matches);
-    };
-    
-    checkIsDesktop();
-    window.addEventListener('resize', checkIsDesktop);
-    
-    if (!isDesktop) return;
-
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleLoadedMetadata = () => {
-      video.currentTime = 0.001;
-    };
-
-    video.addEventListener('loadedmetadata', handleLoadedMetadata);
-    if (video.readyState >= 1) handleLoadedMetadata();
-
-    const unsubscribe = smoothProgress.on("change", (latest) => {
-      if (video.duration && video.readyState >= 2) {
-        const targetTime = latest * video.duration;
-        if (Math.abs(video.currentTime - targetTime) > 0.01) {
-          video.currentTime = targetTime;
-        }
-      }
-    });
-
-    return () => {
-      window.removeEventListener('resize', checkIsDesktop);
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      unsubscribe();
-    };
-  }, [smoothProgress, isDesktop]);
-
-return (
-  <section 
-    ref={containerRef}
-    className="relative h-[200vh] w-full"
-  >
-    <div className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden bg-[#F2F2F2]">
-      <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#F2F2F2]">
-        {isDesktop ? (
-          <video
-            ref={videoRef}
-            src="https://storage.yandexcloud.net/autolog-docs/assets/hero-video.mp4"
-            muted
-            playsInline
-            preload="metadata"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ transform: 'scaleX(-1)' }}
-          />
-        ) : (
-          <div 
-            className="absolute inset-0 w-full h-full bg-cover bg-center"
-            style={{ 
-              backgroundImage: 'url(/assets/hero-poster.png)',
-              transform: 'scaleX(-1)'
-            }}
-          />
-        )}
+  return (
+    <section 
+      ref={containerRef}
+      className="relative min-h-screen w-full overflow-hidden bg-white"
+    >
+      {/* Unifying Background Element (The "Stage") */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1200px] aspect-square pointer-events-none z-0">
+        <div className="absolute inset-0 bg-gradient-to-tr from-amber-200/40 via-white to-blue-200/40 rounded-full blur-[120px] opacity-80" />
       </div>
 
-        <div className="absolute inset-0 z-20 pointer-events-none">
-          <div className="max-w-[1320px] mx-auto h-full px-6 flex flex-col justify-end pb-10 md:pb-40">
-            <div className="max-w-2xl pointer-events-auto">
+      <div className="absolute inset-0 z-20 pointer-events-none">
+        <div className="max-w-[1100px] mx-auto h-full px-6 flex flex-col justify-center py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-center">
+            <div className="max-w-xl pointer-events-auto z-30">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
-                className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium text-[#1A2233] bg-white/50 backdrop-blur-sm rounded-full border border-gray-200"
+                className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium text-[#1A2233] bg-[#F8FAFC] rounded-full border border-slate-200"
               >
-                <Sparkles className="w-4 h-4 text-[#1A2233]" />
-                <span>ИИ-ассистент для автовладельцев</span>
+                <Sparkles className="w-4 h-4 text-amber-500 fill-amber-500/20" />
+                <span>Ваш ассистент в автосервисе</span>
               </motion.div>
 
               <motion.h1
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-[24px] xs:text-[30px] md:text-5xl lg:text-6xl font-bold font-display text-[#1A2233] mb-4 xs:mb-6 leading-[1.1]"
+                className="text-[36px] xs:text-[44px] md:text-5xl lg:text-7xl font-bold font-display text-slate-900 mb-6 xs:mb-8 leading-[1.05] tracking-tight"
               >
-                Прозрачная история вашего автомобиля
+                Отвечайте мастеру уверенно
               </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-[13px] xs:text-[14px] md:text-xl text-[#1A2233]/70 mb-6 xs:mb-8 leading-relaxed max-w-2xl"
+                className="text-[16px] xs:text-[18px] md:text-xl text-slate-600 mb-8 xs:mb-10 leading-relaxed max-w-xl"
               >
-                Загрузите чеки из сервиса и превратите хаос в безупречную цифровую историю
-                обслуживания, которой доверяют покупатели и которую приятно вести
+                Больше не нужно вспоминать, когда вы в последний раз меняли масло или ГРМ. Вся история обслуживания в вашем телефоне — забудьте о поисках бумажек в бардачке.
               </motion.p>
+
+              {/* Mobile Mockup */}
+              <div className="lg:hidden mb-12 max-w-[280px] mx-auto">
+                <HeroChatMockup />
+              </div>
 
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -131,31 +66,49 @@ return (
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="bg-[#c89f87] w-full md:w-auto px-5 xs:px-6 sm:px-10 py-3 xs:py-4 rounded-xl shadow-[0px_1px_1.5px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.06)] transition-all duration-200 hover:bg-[#b88f77] pointer-events-auto flex items-center justify-center"
+                    className="bg-slate-900 w-full md:w-auto px-8 py-4 rounded-2xl shadow-xl shadow-slate-200 transition-all duration-200 hover:bg-slate-800 pointer-events-auto flex items-center justify-center"
                   >
-                    <p className="font-sans font-semibold text-[13px] xs:text-sm sm:text-base text-white leading-6 whitespace-nowrap">
+                    <p className="font-sans font-semibold text-base text-white leading-6 whitespace-nowrap">
                       Добавить первый автомобиль →
                     </p>
                   </motion.button>
                 </Link>
               </motion.div>
             </div>
+
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="hidden lg:flex justify-start pointer-events-auto"
+            >
+              <div className="w-full max-w-[340px] relative">
+
+                {/* Decorative background element for the phone */}
+                <div className="absolute -inset-10 bg-amber-50/50 rounded-full blur-3xl -z-10" />
+                <div className="transform transition-transform duration-700">
+                  <HeroChatMockup />
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
-
-        <motion.div 
-          style={{ opacity: mouseOpacity }}
-          className="hidden md:flex absolute bottom-10 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-[#1A2233]/40 w-full"
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <Mouse className="w-6 h-6" />
-          </motion.div>
-          <span className="text-[10px] font-medium uppercase tracking-widest whitespace-nowrap">Листайте вниз ↓</span>
-        </motion.div>
       </div>
+
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+        className="hidden md:flex absolute bottom-10 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-slate-300 w-full"
+      >
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <Mouse className="w-6 h-6" />
+        </motion.div>
+        <span className="text-[10px] font-medium uppercase tracking-widest whitespace-nowrap">Листайте вниз</span>
+      </motion.div>
     </section>
   );
 };

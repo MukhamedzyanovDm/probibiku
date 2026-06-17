@@ -1,31 +1,45 @@
-import { Header } from "@/components/Header";
-import { HeroSection } from "@/components/HeroSection";
-import { FeaturesSection } from "@/components/FeaturesSection";
-import { ExcelImportSection } from "@/components/ExcelImportSection";
-import { WhoSection } from "@/components/WhoSection";
-import { StepsSection } from "@/components/StepsSection";
-import { SafetySection } from "@/components/SafetySection";
-import { FAQSection } from "@/components/FAQSection";
-import { PriceSection } from "@/components/PriceSection";
-import { CTASection } from "@/components/CTASection";
-import { Footer } from "@/components/Footer";
+import Background from "@/components/Background";
+import Header from "@/components/Header";
+import HeroWithAI from "@/components/HeroWithAI";
+import OCRDemo from "@/components/OCRDemo";
+import WhyItMatters from "@/components/WhyItMatters";
+import Features from "@/components/Features";
+import Workflow from "@/components/Workflow";
+// import BuiltFor from "@/components/BuiltFor";
+import Privacy from "@/components/Privacy";
+import Pricing from "@/components/Pricing";
+import Testimonials from "@/components/Testimonials";
+import FAQ from "@/components/FAQ";
+import FinalCTA from "@/components/FinalCTA";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="relative w-full min-h-screen bg-white">
+    <>
+      {/* WebGL and CSS backdrop blobs */}
+      <Background />
+
+      {/* Fixed top navigation */}
       <Header />
-      <main className="relative">
-        <HeroSection />
-        <FeaturesSection />
-        <ExcelImportSection />
-        <WhoSection />
-        <StepsSection />
-        <SafetySection />
-        <FAQSection />
-        <PriceSection />
-        <CTASection />
+
+      {/* Core sections */}
+      <main className="relative z-10 w-full">
+        <HeroWithAI />
+        <Testimonials />
+        <OCRDemo />
+        <WhyItMatters />
+        <Features />
+        <Workflow />
+        {/* <BuiltFor /> */}
+        <Privacy />
+        <Pricing />
+        <FAQ />
+        <FinalCTA />
       </main>
+
+      {/* Footer */}
       <Footer />
-    </div>
+    </>
   );
 }
+

@@ -1,0 +1,85 @@
+import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/db";
+import { serviceRecords, workItems, vehicles } from "@/db/schema";
+import { eq } from "drizzle-orm";
+
+export async function POST(req: NextRequest) {
+  console.log("🚀 POST /api/service-records - Started");
+  const startTime = Date.now();
+  
+  try {
+    const data = await req.json();
+    console.log("📦 Received data:", JSON.stringify(data, null, 2));
+    
+    const { 
+      vehicleId, 
+      date, 
+      odometer, 
+      serviceCenterName, 
+      items, 
+      totalAmount 
+    } = data;
+
+    if (!vehicleId || !date || !totalAmount) {
+      console.error("❌ Missing required fields");
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    console.log("⏳ Starting DB transaction...");
+    const result = await db.transaction(async (tx) => {
+      // 1. Create service record
+      console.log("📝 Inserting service record...");
+      const [record] = await tx.insert(serviceRecords).values({
+        vehicleId,
+        date: new Date(date).toISOString(),
+        odometer: odometer ? parseInt(odometer.toString()) : 0,
+        totalAmount: totalAmount.toString(),
+        serviceCenterName,
+        status: "manual",
+      }).returning();
+      console.log("✅ Service record created:", record.id);
+
+      // 2. Create work items
+      if (items && items.length > 0) {
+        console.log(`🛠 Inserting ${items.length} work items...`);
+        await tx.insert(workItems).values(
+          items.map((item: any) => ({
+            recordId: record.id,
+            description: item.description,
+            cost: item.cost.toString(),
+            quantity: (item.quantity || "1").toString(),
+          }))
+        );
+        console.log("✅ Work items inserted");
+      }
+
+      // 3. Update vehicle mileage if higher
+      console.log("🚗 Checking vehicle mileage...");
+      const [vehicle] = await tx.select().from(vehicles).where(eq(vehicles.id, vehicleId));
+      const newOdometer = odometer ? parseInt(odometer.toString()) : 0;
+      
+      if (vehicle && newOdometer > (vehicle.currentMileage || 0)) {
+        console.log(`📈 Updating mileage from ${vehicle.currentMileage} to ${newOdometer}`);
+        await tx.update(vehicles)
+          .set({ currentMileage: newOdometer })
+          .where(eq(vehicles.id, vehicleId));
+        console.log("✅ Mileage updated");
+      } else {
+        console.log("ℹ️ Mileage update not needed or vehicle not found");
+      }
+
+      return record;
+    });
+
+    const duration = Date.now() - startTime;
+    console.log(`✨ POST /api/service-records - Success (${duration}ms)`);
+    return NextResponse.json({ success: true, recordId: result.id });
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    console.error(`💥 POST /api/service-records - Failed after ${duration}ms:`, error);
+    return NextResponse.json({ 
+      error: "Internal Server Error", 
+      details: error instanceof Error ? error.message : String(error) 
+    }, { status: 500 });
+  }
+}

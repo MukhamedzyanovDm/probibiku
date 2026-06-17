@@ -1,80 +1,172 @@
 "use client";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import svgPaths from "@/imports/1920X1080/svg-acf38vze5p";
+import { Icon } from "@iconify/react";
 
-export function Header() {
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+import React, { useState, useEffect, useRef } from "react";
+import AIChat from "./AIChat";
+
+export function Header({ showAccountIcon = false }: { showAccountIcon?: boolean }) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
     }
-  };
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   return (
-    <motion.header
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed top-8 left-0 right-0 z-50 mx-auto max-w-[1320px] px-4"
-    >
-      <div className="backdrop-blur-[5.85px] bg-white/30 rounded-[20px] shadow-[0px_13px_26.7px_0px_rgba(117,85,71,0.1)]">
-        <div className="flex items-center justify-between px-4 xs:px-8 lg:px-[60px] py-4 xs:py-5">
-          {/* Logo */}
-          <div className="h-auto w-[140px] xs:w-[198.092px] shrink-0">
-            <svg
-              className="block size-full"
-              fill="none"
-              viewBox="0 0 198.092 32.076"
-              preserveAspectRatio="xMinYMin meet"
-            >
-              <g>
-                <path d={svgPaths.p36766480} fill="#C89F87" />
-                <path d={svgPaths.p274cc40} fill="#C89F87" />
-                <path d={svgPaths.p23ac0b00} fill="#C89F87" />
-                <path d={svgPaths.p2aba1400} fill="#314158" />
-                <path d={svgPaths.p180e4300} fill="#314158" />
-                <path d={svgPaths.p3eb54470} fill="#314158" />
-                <path d={svgPaths.pead7070} fill="#314158" />
-                <path d={svgPaths.p179bfa00} fill="#314158" />
-                <path d={svgPaths.p169d1200} fill="#314158" />
-              </g>
-            </svg>
-          </div>
+    <header className="fixed top-0 left-0 right-0 z-50">
+      <nav className="max-w-7xl mx-auto px-6 pt-5">
+        <div className="relative rounded-full bg-white/55 backdrop-blur-xl border border-white shadow-[0_30px_80px_-45px_rgba(15,23,42,0.35),inset_0_1px_0_rgba(255,255,255,1)] px-4 py-3">
 
-          {/* Navigation */}
-          <nav className="hidden lg:flex items-center gap-2">
-            {[
-              { label: "Возможности", id: "features" },
-              { label: "Как работает", id: "how-it-works" },
-              { label: "Безопасность", id: "safety" },
-              { label: "FAQ", id: "faq" },
-              { label: "Цены", id: "pricing" },
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="px-2 py-2.5 rounded-md font-sans font-medium text-sm text-[#1e293b] transition-all duration-200 hover:bg-white/40"
+          {/* Nav Content */}
+          <div className="relative z-10 flex items-center justify-between">
+            {/* Brand */}
+            <a href="#" className="flex items-center gap-3 group">
+              <img 
+                src="/Probibiku_small_logo.svg" 
+                alt="ПРОБИБИКУ" 
+                className="h-[24px] w-auto lg:hidden" 
+              />
+              <img 
+                src="/Probibiku_main_logo.svg" 
+                alt="ПРОБИБИКУ" 
+                className="h-[24px] w-auto hidden lg:block" 
+              />
+            </a>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-7 text-xs text-slate-600 font-normal">
+              <a
+                href="#features"
+                className="relative transition-colors duration-300 hover:text-blue-600 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
               >
-                {item.label}
-              </button>
-            ))}
-          </nav>
+                Возможности
+              </a>
+              <a
+                href="#demo"
+                className="relative transition-colors duration-300 hover:text-blue-600 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+              >
+                Как это работает
+              </a>
 
-          {/* CTA Button */}
-          <Link href="/login">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-[#334155] px-4 py-2 rounded-md shadow-[0px_1px_1.5px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.06)] transition-all duration-200 hover:bg-[#475569] flex items-center justify-center"
-            >
-              <p className="font-sans font-medium text-sm text-[#f8fafc] leading-5">
-                Войти
-              </p>
-            </motion.button>
-          </Link>
+              <a
+                href="#privacy"
+                className="relative transition-colors duration-300 hover:text-blue-600 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+              >
+                Безопасность
+              </a>
+              <a
+                href="#pricing"
+                className="relative transition-colors duration-300 hover:text-blue-600 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+              >
+                Цены
+              </a>
+            </div>
+
+            {/* Navigation CTAs */}
+            <div className="flex items-center gap-2">
+              {mounted && (
+                showAccountIcon ? (
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setIsChatOpen(true)}
+                      className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium text-slate-800 bg-white hover:bg-amber-50/20 border border-amber-400/70 hover:border-amber-500 shadow-[0_4px_12px_rgba(245,158,11,0.08),inset_0_1px_0_white] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                    >
+                      <Icon icon="solar:magic-stick-3-bold" className="text-base text-amber-500" />
+                      <span>ИИ Ассистент</span>
+                    </button>
+                    <div className="relative" ref={dropdownRef}>
+                      <button
+                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                        className="text-slate-600 hover:text-blue-600 transition-colors flex items-center justify-center cursor-pointer"
+                        title="Личный кабинет"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[28px] h-[28px]">
+                          <circle cx="12" cy="12" r="10" />
+                          <circle cx="12" cy="10" r="3" />
+                          <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+                        </svg>
+                      </button>
+                      {dropdownOpen && (
+                        <div className="absolute right-0 top-full mt-3 w-48 rounded-2xl bg-white border border-slate-200 shadow-[0_10px_30px_-10px_rgba(15,23,42,0.15)] py-1.5 z-40 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                            <a
+                              href="#pricing"
+                              onClick={() => setDropdownOpen(false)}
+                              className="flex items-center justify-between px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                            >
+                              <span>Мой счет</span>
+                              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium text-white bg-gradient-to-b from-amber-500 to-amber-600 border border-amber-600 shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-[10px] h-[10px]">
+                                  <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+                                </svg>
+                                <span>10</span>
+                              </span>
+                            </a>
+                            <a
+                              href="/garage"
+                              onClick={() => setDropdownOpen(false)}
+                              className="px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors block"
+                            >
+                              Мои автомобили
+                            </a>
+                            <a
+                              href="/settings"
+                              onClick={() => setDropdownOpen(false)}
+                              className="px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors block"
+                            >
+                              Настройки
+                            </a>
+                            <a
+                              href="/"
+                              onClick={() => setDropdownOpen(false)}
+                              className="px-4 py-2.5 text-xs text-red-600 hover:bg-red-50/50 transition-colors block border-t border-slate-100"
+                            >
+                              Выйти
+                            </a>
+                          </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setIsChatOpen(true)}
+                      className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium text-slate-800 bg-white hover:bg-amber-50/20 border border-amber-400/70 hover:border-amber-500 shadow-[0_4px_12px_rgba(245,158,11,0.08),inset_0_1px_0_white] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                    >
+                      <Icon icon="solar:magic-stick-3-bold" className="text-base text-amber-500" />
+                      <span>ИИ Ассистент</span>
+                    </button>
+                    <a
+                      href="/login"
+                      className="inline-flex items-center justify-center rounded-full px-4 py-2 text-xs text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition-colors duration-300"
+                    >
+                      Войти
+                    </a>
+                  </>
+                )
+              )}
+            </div>
         </div>
       </div>
-    </motion.header>
+      </nav>
+      <AIChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+    </header>
   );
 }
+
+export default Header;
