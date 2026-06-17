@@ -26,10 +26,14 @@ export default function Background() {
     const initUnicorn = () => {
       const win = window as WindowWithUnicorn;
       if (win.UnicornStudio) {
-        // Force reset and re-initialize on route changes
-        win.UnicornStudio.isInitialized = false;
-        win.UnicornStudio.init();
-        win.UnicornStudio.isInitialized = true;
+        try {
+          // Force reset and re-initialize on route changes
+          win.UnicornStudio.isInitialized = false;
+          win.UnicornStudio.init();
+          win.UnicornStudio.isInitialized = true;
+        } catch (e) {
+          console.error("Failed to initialize UnicornStudio WebGL:", e);
+        }
       }
     };
 
@@ -48,13 +52,17 @@ export default function Background() {
       {/* Script Loader for Unicorn Studio */}
       <Script
         src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         onLoad={() => {
           const win = window as WindowWithUnicorn;
           if (win.UnicornStudio) {
-            win.UnicornStudio.init();
-            win.UnicornStudio.isInitialized = true;
-            window.dispatchEvent(new Event("unicorn-studio-loaded"));
+            try {
+              win.UnicornStudio.init();
+              win.UnicornStudio.isInitialized = true;
+              window.dispatchEvent(new Event("unicorn-studio-loaded"));
+            } catch (e) {
+              console.error("Failed to init UnicornStudio on load:", e);
+            }
           }
         }}
       />
