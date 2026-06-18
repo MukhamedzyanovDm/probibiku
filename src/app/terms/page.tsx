@@ -26,13 +26,13 @@ export default function TermsPage() {
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-slate-950 leading-[1.1]">
                   Условия использования
                 </h1>
-                <p className="mt-4 text-sm text-slate-500 font-light">
+                <p className="mt-4 text-sm text-slate-500">
                   Последнее обновление: 17 июня 2026 г.
                 </p>
               </div>
 
               {/* Legal Text Placeholder */}
-              <div className="prose prose-slate max-w-none text-slate-700 leading-relaxed font-light text-sm md:text-base space-y-6">
+              <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed text-sm md:text-base space-y-6">
                 <p>
                   Добро пожаловать в сервис ПРОБИБИКУ (далее — «Сервис»). Перед началом использования функций Сервиса, пожалуйста, внимательно ознакомьтесь с настоящими Условиями использования (далее — «Условия»).
                 </p>

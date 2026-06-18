@@ -12,7 +12,11 @@ import {
   Settings,
   Search,
   Trash2,
-  MessageCircle
+  MessageCircle,
+  BadgeCheck,
+  Download,
+  Pencil,
+  Globe
 } from "lucide-react";
 
 import React, { useState, useEffect } from "react";
@@ -21,9 +25,19 @@ import Link from "next/link";
 import Background from "@/components/Background";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Car, getCarById, updateCar } from "@/utils/garageStore";
+import { Car, ServiceRecord, getCarById, updateCar } from "@/utils/garageStore";
 import AddRecordModal from "@/components/AddRecordModal";
 import ShareModal from "@/components/ShareModal";
+import { Button } from "@/components/ui/button";
+
+const SEARCH_PROVIDERS: Record<string, string> = {
+  "Яндекс": "https://yandex.ru/search/?text=",
+  "Exist": "https://exist.ru/Price.axd?pcode=",
+  "Ozon": "https://www.ozon.ru/search/?text=",
+  "Wildberries": "https://www.wildberries.ru/catalog/0/search.aspx?search=",
+  "Autodoc": "https://www.autodoc.ru/web/price/art/",
+  "Свой сайт": "custom"
+};
 
 export default function CarDetailPage() {
   const { id } = useParams() as { id: string };
@@ -34,6 +48,10 @@ export default function CarDetailPage() {
   const [isAddRecordOpen, setIsAddRecordOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [partToDeleteId, setPartToDeleteId] = useState<string | null>(null);
+  const [recordToEdit, setRecordToEdit] = useState<ServiceRecord | null>(null);
+  const [isSearchSettingsOpen, setIsSearchSettingsOpen] = useState(false);
+  const [searchProvider, setSearchProvider] = useState("Яндекс");
+  const [customSearchUrl, setCustomSearchUrl] = useState("https://yandex.ru/search/?text={query}");
   
   // Parts addition inline state
   const [newPartName, setNewPartName] = useState("");
@@ -51,6 +69,16 @@ export default function CarDetailPage() {
 
   useEffect(() => {
     loadCar();
+    if (typeof window !== "undefined") {
+      const storedProvider = localStorage.getItem("probibiku_search_provider");
+      if (storedProvider) {
+        setSearchProvider(storedProvider);
+      }
+      const storedCustom = localStorage.getItem("probibiku_custom_search_url");
+      if (storedCustom) {
+        setCustomSearchUrl(storedCustom);
+      }
+    }
   }, [id]);
 
   if (!car) {
@@ -93,6 +121,43 @@ export default function CarDetailPage() {
 
   const handleDeletePart = (partId: string) => {
     setPartToDeleteId(partId);
+  };
+
+  const handleDownloadReceipt = (rec: any) => {
+    const content = `=== ПРОБИБИКУ: ПОДТВЕРЖДЕННЫЙ ЧЕК ===\nЭлектронный отчет по техническому обслуживанию\nДата фиксации: ${rec.date}\n\nАвтомобиль: ${car.make} ${car.model}\nГосномер: ${car.licensePlate || "Без госномера"}\n\nТип выполненных работ: ${rec.type}\nЗафиксированный пробег: ${rec.mileage.toLocaleString("ru-RU")} км\nСтоимость работ/деталей: ${rec.cost.toLocaleString("ru-RU")} ₽\n\nДетализированное описание:\n${rec.description}\n\nСписок запчастей и материалов:\n${rec.parts || 'Не указаны'}\n\n=====================================\nСТАТУС ПРОВЕРКИ: УСПЕШНО ПРОВЕРЕНО ИИ\nЗапись верифицирована. Доверие покупателей +10% к стоимости авто.\nСпасибо, что делаете историю обслуживания прозрачной!`;
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `receipt-${rec.id}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleEditRecord = (rec: ServiceRecord) => {
+    setRecordToEdit(rec);
+    setIsAddRecordOpen(true);
+  };
+
+  const handleSelectProvider = (prov: string) => {
+    setSearchProvider(prov);
+    localStorage.setItem("probibiku_search_provider", prov);
+  };
+
+  const getSearchUrl = (partName: string, partNumber: string) => {
+    const query = partNumber || partName;
+    const providerUrl = SEARCH_PROVIDERS[searchProvider];
+    
+    if (providerUrl === "custom") {
+      const template = customSearchUrl || "https://yandex.ru/search/?text={query}";
+      return template.replace("{query}", encodeURIComponent(query));
+    }
+    
+    if (searchProvider === "Exist" || searchProvider === "Autodoc") {
+      return `${providerUrl}${encodeURIComponent(partNumber || partName)}`;
+    }
+    
+    return `${providerUrl}${encodeURIComponent(`${partName} ${partNumber}`.trim())}`;
   };
 
   // SVG Line Chart coordinates calculation for fuel consumption
@@ -180,13 +245,17 @@ export default function CarDetailPage() {
             Назад в гараж
           </Link>
 
-          <button
-            onClick={() => setIsAddRecordOpen(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-blue-500 hover:bg-blue-600 border border-blue-700 text-white text-xs font-normal px-4 py-2 shadow-[0_2px_8px_rgba(59,130,246,0.15)] transition-colors cursor-pointer"
+          <Button
+            onClick={() => {
+              setRecordToEdit(null);
+              setIsAddRecordOpen(true);
+            }}
+            variant="brand"
+            className="h-11 px-5"
           >
-            <PlusCircle className="w-4 h-4" />
+            <PlusCircle className="w-5 h-5" />
             Добавить запись
-          </button>
+          </Button>
         </div>
 
         {/* Car Details Summary card */}
@@ -221,12 +290,12 @@ export default function CarDetailPage() {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-8 pt-6 border-t border-slate-100">
               <div>
-                <p className="text-[10px] text-slate-400 font-light uppercase tracking-wider font-mono">Общие траты</p>
-                <p className="text-xl font-semibold text-slate-800 mt-1 font-mono">{totalSpend.toLocaleString("ru-RU")} ₽</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Общие траты</p>
+                <p className="text-xl font-semibold text-slate-900 mt-1 font-mono">{totalSpend.toLocaleString("ru-RU")} ₽</p>
               </div>
               <div>
-                <p className="text-[10px] text-slate-400 font-light uppercase tracking-wider font-mono">Пробег после ТО</p>
-                <p className="text-xl font-semibold text-slate-800 mt-1 font-mono">{mileageSinceLastService.toLocaleString("ru-RU")} км</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Пробег после ТО</p>
+                <p className="text-xl font-semibold text-slate-900 mt-1 font-mono">{mileageSinceLastService.toLocaleString("ru-RU")} км</p>
               </div>
             </div>
           </div>
@@ -258,12 +327,15 @@ export default function CarDetailPage() {
               {car.serviceHistory.length === 0 ? (
                 <div className="flex flex-col items-center justify-center text-center py-8 px-4 bg-slate-50/40 border border-dashed border-slate-200 rounded-2xl">
                   <Sparkles className="w-8 h-8 text-blue-400 mb-2 animate-pulse" />
-                  <h4 className="text-xs font-medium text-slate-800">Рекомендации формируются</h4>
-                  <p className="text-[11px] text-slate-500 font-light mt-1.5 max-w-md">
+                  <h4 className="text-xs font-medium text-slate-900">Рекомендации формируются</h4>
+                  <p className="text-[11px] text-slate-600 mt-1.5 max-w-md">
                     Умный помощник начнет анализировать состояние автомобиля и давать персональные советы, как только вы добавите первую запись об обслуживании или расходах
                   </p>
                   <button
-                    onClick={() => setIsAddRecordOpen(true)}
+                    onClick={() => {
+                      setRecordToEdit(null);
+                      setIsAddRecordOpen(true);
+                    }}
                     className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-normal text-xs px-4 py-2.5 transition-colors cursor-pointer shadow-[0_2px_8px_rgba(59,130,246,0.15)] animate-in fade-in zoom-in-95 duration-300"
                   >
                     <PlusCircle className="w-4 h-4" />
@@ -275,8 +347,8 @@ export default function CarDetailPage() {
                   {/* Recommendation 1 */}
                   <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
                     <span className="text-[9px] font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium">СРОКИ ЗАМЕНЫ</span>
-                    <h4 className="text-xs font-medium text-slate-800 mt-2">Масло двигателя и масляный фильтр</h4>
-                    <p className="text-[11px] text-slate-500 font-light mt-1">
+                    <h4 className="text-xs font-medium text-slate-900 mt-2">Масло двигателя и масляный фильтр</h4>
+                    <p className="text-[11px] text-slate-600 mt-1">
                       Рекомендуется замена через 1 500 км или 2 месяца. Вы заливали Shell Helix 5W-30
                     </p>
                   </div>
@@ -284,8 +356,8 @@ export default function CarDetailPage() {
                   {/* Recommendation 2 */}
                   <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
                     <span className="text-[9px] font-mono bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded font-medium">ДИАГНОСТИКА ХОДОВОЙ</span>
-                    <h4 className="text-xs font-medium text-slate-800 mt-2">Амортизаторы и элементы подвески</h4>
-                    <p className="text-[11px] text-slate-500 font-light mt-1">
+                    <h4 className="text-xs font-medium text-slate-900 mt-2">Амортизаторы и элементы подвески</h4>
+                    <p className="text-[11px] text-slate-600 mt-1">
                       Исходя из пробега {car.mileage.toLocaleString("ru-RU")} км, рекомендуется выполнить осмотр сайлентблоков передних рычагов на следующем ТО
                     </p>
                   </div>
@@ -293,8 +365,8 @@ export default function CarDetailPage() {
                   {/* Recommendation 3 */}
                   <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
                     <span className="text-[9px] font-mono bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded font-medium">ЛИКВИДНОСТЬ АВТО</span>
-                    <h4 className="text-xs font-medium text-slate-800 mt-2">Рыночная стоимость и спрос</h4>
-                    <p className="text-[11px] text-slate-500 font-light mt-1">
+                    <h4 className="text-xs font-medium text-slate-900 mt-2">Рыночная стоимость и спрос</h4>
+                    <p className="text-[11px] text-slate-600 mt-1">
                       Данный кузов имеет высокую ликвидность на рынке. Подробная сервисная книжка увеличит цену продажи на 7-10%
                     </p>
                   </div>
@@ -302,8 +374,8 @@ export default function CarDetailPage() {
                   {/* Recommendation 4 */}
                   <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
                     <span className="text-[9px] font-mono bg-amber-50 text-amber-600 px-2 py-0.5 rounded font-medium">ЭКОНОМИЯ ТО</span>
-                    <h4 className="text-xs font-medium text-slate-800 mt-2">Подбор запчастей</h4>
-                    <p className="text-[11px] text-slate-500 font-light mt-1">
+                    <h4 className="text-xs font-medium text-slate-900 mt-2">Подбор запчастей</h4>
+                    <p className="text-[11px] text-slate-600 mt-1">
                       Покупка оригинального фильтра Mann-Filter самостоятельно на маркетплейсах сэкономит до 1 200 ₽ на наценках автосервиса
                     </p>
                   </div>
@@ -342,7 +414,7 @@ export default function CarDetailPage() {
                   </div>
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-center text-[11px] text-slate-500 font-light pt-2">
+                <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-center text-[11px] text-slate-600 pt-2">
                   <div className="flex items-center gap-1.5">
                     <span className="inline-block w-2.5 h-2.5 rounded-full bg-blue-500" />
                     <span>ТО ({maintPct}%)</span>
@@ -367,12 +439,17 @@ export default function CarDetailPage() {
                   История обслуживания
                 </h3>
                 
-                <button
-                  onClick={() => setIsAddRecordOpen(true)}
-                  className="rounded-full bg-blue-500 hover:bg-blue-600 text-white font-normal text-xs px-3.5 py-2 transition-colors cursor-pointer shadow-[0_2px_8px_rgba(59,130,246,0.15)]"
+                <Button
+                  onClick={() => {
+                    setRecordToEdit(null);
+                    setIsAddRecordOpen(true);
+                  }}
+                  variant="brand"
+                  className="h-11 px-5"
                 >
+                  <PlusCircle className="w-5 h-5" />
                   Добавить запись
-                </button>
+                </Button>
               </div>
 
               {car.serviceHistory.length === 0 ? (
@@ -385,7 +462,7 @@ export default function CarDetailPage() {
                   {car.serviceHistory.map((rec) => (
                     <div key={rec.id} className="border border-slate-200/60 rounded-2xl p-5 hover:bg-slate-50/30 transition-colors">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
-                        <div>
+                        <div className="flex flex-wrap items-center gap-2">
                           <span className={`inline-flex items-center gap-1 rounded-full text-[10px] font-mono font-medium px-2 py-0.5 ${
                             rec.type === "ТО" ? "bg-blue-50 text-blue-600 border border-blue-100" :
                             rec.type === "Ремонт" ? "bg-indigo-50 text-indigo-600 border border-indigo-100" :
@@ -393,7 +470,14 @@ export default function CarDetailPage() {
                           }`}>
                             {rec.type}
                           </span>
-                          <span className="text-xs text-slate-400 font-mono ml-3">{rec.date}</span>
+                          <span className="text-xs text-slate-400 font-mono">{rec.date}</span>
+                          
+                          {rec.receiptAttached && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-2.5 py-0.5 text-[9px] font-medium shadow-[0_2px_8px_rgba(16,185,129,0.15)] hover:brightness-105 transition-all select-none cursor-default">
+                              <BadgeCheck className="w-3 h-3 text-white" />
+                              Проверено ИИ (+10% доверия)
+                            </span>
+                          )}
                         </div>
                         
                         <div className="text-left sm:text-right shrink-0">
@@ -402,15 +486,43 @@ export default function CarDetailPage() {
                         </div>
                       </div>
                       
-                      <p className="text-xs text-slate-700 font-light leading-relaxed mb-3">{rec.description}</p>
+                      <p className="text-xs text-slate-600 leading-relaxed mb-3 whitespace-pre-line">{rec.description}</p>
                       
-                      {rec.parts && (
-                        <div className="flex flex-wrap items-center gap-2 mt-2 pt-3 border-t border-slate-100 text-[10px] text-slate-400 font-mono uppercase">
-                          <Settings className="w-3.5 h-3.5" />
-                          <span>Запчасти:</span>
-                          <span className="text-slate-600 lowercase font-sans normal-case truncate">{rec.parts}</span>
+                      <div className="flex flex-wrap items-center justify-between gap-3 mt-2 pt-3 border-t border-slate-100">
+                        {rec.parts ? (
+                          <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono uppercase min-w-0 flex-1">
+                            <Settings className="w-3.5 h-3.5 shrink-0" />
+                            <span className="shrink-0">Запчасти:</span>
+                            <span className="text-slate-600 lowercase font-sans normal-case truncate">{rec.parts}</span>
+                          </div>
+                        ) : (
+                          <div />
+                        )}
+                        
+                        <div className="flex items-center gap-2 ml-auto shrink-0">
+                          <button
+                            onClick={() => handleEditRecord(rec)}
+                            className="relative group w-8 h-8 rounded-full bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-500 flex items-center justify-center transition-all active:scale-95 cursor-pointer shrink-0"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1 bg-slate-900 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-md">
+                              Редактировать
+                            </span>
+                          </button>
+                          
+                          {rec.receiptAttached && (
+                            <button
+                              onClick={() => handleDownloadReceipt(rec)}
+                              className="relative group w-8 h-8 rounded-full bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-500 flex items-center justify-center transition-all active:scale-95 cursor-pointer shrink-0"
+                            >
+                              <Download className="w-4 h-4" />
+                              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1 bg-slate-900 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-md">
+                                Скачать чек
+                              </span>
+                            </button>
+                          )}
                         </div>
-                      )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -424,9 +536,57 @@ export default function CarDetailPage() {
             
             {/* 1. Parts Checklist */}
             <div className="rounded-[2rem] bg-white border border-slate-200/80 p-5 shadow-[0_12px_36px_-18px_rgba(15,23,42,0.05)]">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-100 pb-3 mb-4">
-                Спецификация запчастей
-              </h3>
+              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  Спецификация запчастей
+                </h3>
+                <button
+                  onClick={() => setIsSearchSettingsOpen(!isSearchSettingsOpen)}
+                  className="w-6 h-6 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
+                  title="Настроить поиск запчастей"
+                >
+                  <Globe className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {isSearchSettingsOpen && (
+                <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-3 mb-4 space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-200 text-left">
+                  <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider font-mono block">Где искать запчасти?</span>
+                  
+                  <div className="grid grid-cols-3 gap-1">
+                    {Object.keys(SEARCH_PROVIDERS).map((prov) => (
+                      <button
+                        key={prov}
+                        type="button"
+                        onClick={() => handleSelectProvider(prov)}
+                        className={`text-[9px] py-1.5 px-2 rounded-lg border text-center transition-all cursor-pointer font-medium ${
+                          searchProvider === prov
+                            ? "bg-blue-500 border-blue-600 text-white font-semibold"
+                            : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        }`}
+                      >
+                        {prov}
+                      </button>
+                    ))}
+                  </div>
+
+                  {searchProvider === "Свой сайт" && (
+                    <div className="space-y-1">
+                      <label className="text-[9px] text-slate-400 font-mono block">URL-шаблон (используйте {"{query}"} для запроса):</label>
+                      <input
+                        type="text"
+                        placeholder="https://exist.ru/Price.axd?pcode={query}"
+                        value={customSearchUrl}
+                        onChange={(e) => {
+                          setCustomSearchUrl(e.target.value);
+                          localStorage.setItem("probibiku_custom_search_url", e.target.value);
+                        }}
+                        className="w-full text-[10px] border border-slate-200 rounded-xl px-2.5 py-1.5 bg-white focus:border-blue-500 outline-none transition-all font-mono"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
               
               {car.parts.length === 0 ? (
                 <p className="text-xs text-slate-400 font-light text-center py-6">
@@ -444,7 +604,7 @@ export default function CarDetailPage() {
                       <div className="flex items-center gap-1.5 shrink-0">
                         {/* Search in autoteile / marketplace shortcut */}
                         <a
-                          href={`https://yandex.ru/search/?text=${encodeURIComponent(p.name + " " + p.partNumber)}`}
+                          href={getSearchUrl(p.name, p.partNumber)}
                           target="_blank"
                           rel="noreferrer"
                           className="w-7 h-7 rounded-full bg-slate-50 hover:bg-blue-50 hover:text-blue-500 text-slate-400 flex items-center justify-center transition-colors"
@@ -524,9 +684,13 @@ export default function CarDetailPage() {
         {/* Modal components */}
         <AddRecordModal
           isOpen={isAddRecordOpen}
-          onClose={() => setIsAddRecordOpen(false)}
+          onClose={() => {
+            setIsAddRecordOpen(false);
+            setRecordToEdit(null);
+          }}
           onSave={loadCar}
           car={car}
+          recordToEdit={recordToEdit}
         />
 
         <ShareModal

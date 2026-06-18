@@ -33,7 +33,6 @@
 }
 
 :root {
-    --font-sans: ui-sans-serif, system-ui, sans-serif;
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
@@ -56,10 +55,16 @@
 }
 
 body {
-  background-color: var(--background);
+  background-color: #e8f3ff;
   color: var(--foreground);
   margin: 0;
   font-family: var(--font-sans);
+}
+
+@media (min-width: 768px) {
+  body {
+    background-color: var(--background);
+  }
 }
 
 button, 

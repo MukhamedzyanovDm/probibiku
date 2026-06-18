@@ -10,9 +10,10 @@ interface AddRecordModalProps {
   onClose: () => void;
   onSave: () => void;
   car: Car;
+  recordToEdit?: ServiceRecord | null;
 }
 
-export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddRecordModalProps) {
+export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToEdit }: AddRecordModalProps) {
   const [date, setDate] = useState("");
   const [type, setType] = useState<ServiceRecord["type"]>("ТО");
   const [mileage, setMileage] = useState(car.mileage);
@@ -34,19 +35,83 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
   const [isOcrActive, setIsOcrActive] = useState(false);
   const [ocrProgress, setOcrProgress] = useState(0);
   const [ocrLog, setOcrLog] = useState("");
+  const [wasScanned, setWasScanned] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      setDate(new Date().toISOString().split("T")[0]);
-      setType("ТО");
-      setMileage(car.mileage);
-      setItems([{ id: "item-1", name: "", quantity: 1, price: 0 }]);
-      setNote("");
-      setActiveTab("scan");
-      setIsOcrActive(false);
-      setErrors({});
+      if (recordToEdit) {
+        setDate(recordToEdit.date);
+        setType(recordToEdit.type);
+        setMileage(recordToEdit.mileage);
+        
+        const descriptionLines = recordToEdit.description.split("\n");
+        const parsedItems: { id: string; name: string; quantity: number; price: number }[] = [];
+        let parsedNote = "";
+        let isParsingItems = false;
+        
+        for (let i = 0; i < descriptionLines.length; i++) {
+          const line = descriptionLines[i].trim();
+          if (line === "Выполненные работы и запчасти:") {
+            isParsingItems = true;
+            continue;
+          }
+          if (isParsingItems) {
+            if (line.startsWith("• ")) {
+              const match = line.match(/^•\s+(.+?)\s+—\s+(\d+)\s+шт\.\s+x\s+(\d+)\s+₽/);
+              if (match) {
+                parsedItems.push({
+                  id: `item-edit-${i}`,
+                  name: match[1],
+                  quantity: parseInt(match[2]),
+                  price: parseInt(match[3])
+                });
+              } else {
+                parsedItems.push({
+                  id: `item-edit-${i}`,
+                  name: line.substring(2),
+                  quantity: 1,
+                  price: 0
+                });
+              }
+            }
+          } else {
+            if (line) {
+              parsedNote += (parsedNote ? "\n" : "") + line;
+            }
+          }
+        }
+        
+        if (parsedItems.length > 0) {
+          setItems(parsedItems);
+        } else {
+          const cleanDesc = recordToEdit.description
+            .replace("Выполненные работы и запчасти:", "")
+            .replace(/•\s+/g, "")
+            .trim();
+          setItems([{
+            id: "item-edit-default",
+            name: cleanDesc || recordToEdit.type,
+            quantity: 1,
+            price: recordToEdit.cost
+          }]);
+        }
+        setNote(parsedNote);
+        setActiveTab("manual");
+        setWasScanned(!!recordToEdit.receiptAttached);
+        setErrors({});
+      } else {
+        setDate(new Date().toISOString().split("T")[0]);
+        setType("ТО");
+        setMileage(car.mileage);
+        setItems([{ id: "item-1", name: "", quantity: 1, price: 0 }]);
+        setNote("");
+        setActiveTab("scan");
+        setIsOcrActive(false);
+        setWasScanned(false);
+        setErrors({});
+      }
     }
-  }, [isOpen, car]);
+  }, [isOpen, car, recordToEdit]);
 
   if (!isOpen) return null;
 
@@ -107,20 +172,30 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
     const formattedParts = items.map(item => item.name).join(', ');
 
     const newRecord: ServiceRecord = {
-      id: `rec-${Math.random().toString(36).substr(2, 9)}`,
+      id: recordToEdit ? recordToEdit.id : `rec-${Math.random().toString(36).substr(2, 9)}`,
       date,
       type,
       mileage: Number(mileage),
       cost: totalCalculatedCost,
       description: formattedDescription,
       parts: formattedParts,
-      receiptAttached: activeTab === "scan" || Math.random() > 0.5
+      receiptAttached: wasScanned || activeTab === "scan"
     };
+
+    let updatedHistory = [...car.serviceHistory];
+    if (recordToEdit) {
+      const idx = updatedHistory.findIndex(r => r.id === recordToEdit.id);
+      if (idx !== -1) {
+        updatedHistory[idx] = newRecord;
+      }
+    } else {
+      updatedHistory = [newRecord, ...updatedHistory];
+    }
 
     const updatedCar: Car = {
       ...car,
       mileage: Math.max(car.mileage, Number(mileage)),
-      serviceHistory: [newRecord, ...car.serviceHistory]
+      serviceHistory: updatedHistory
     };
 
     updateCar(updatedCar);
@@ -164,6 +239,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
           ]);
           setIsOcrActive(false);
           setActiveTab("manual"); // Switch to manual tab for review
+          setWasScanned(true);
         }, 500);
       }
     }, 100);
@@ -182,7 +258,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
         {/* Header */}
         <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-white z-20">
           <h3 className="text-base font-medium text-slate-900">
-            Добавить запись обслуживания
+            {recordToEdit ? "Редактировать запись обслуживания" : "Добавить запись обслуживания"}
           </h3>
           <button 
             onClick={onClose}
@@ -193,30 +269,30 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
         </div>
 
         {/* Tab Selector */}
-        <div className="flex border-b border-slate-100 px-6 bg-slate-50/30 z-20">
+        <div className="flex border-b border-slate-100 px-4 sm:px-6 bg-slate-50/30 z-20">
           <button
             type="button"
             onClick={() => setActiveTab("scan")}
-            className={`flex-1 py-3.5 text-xs font-medium border-b-2 transition-all cursor-pointer ${
+            className={`flex-1 py-2.5 sm:py-3.5 text-[11px] sm:text-xs font-medium border-b-2 transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeTab === "scan"
                 ? "border-blue-500 text-blue-600 font-semibold"
                 : "border-transparent text-slate-400 hover:text-slate-600"
             }`}
           >
-            <Camera className="w-3.5 h-3.5 mr-1.5 align-middle" />
-            Сканировать чек ИИ
+            <Camera className="w-3.5 h-3.5" />
+            Скан чека 
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("manual")}
-            className={`flex-1 py-3.5 text-xs font-medium border-b-2 transition-all cursor-pointer ${
+            className={`flex-1 py-2.5 sm:py-3.5 text-[11px] sm:text-xs font-medium border-b-2 transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeTab === "manual"
                 ? "border-blue-500 text-blue-600 font-semibold"
                 : "border-transparent text-slate-400 hover:text-slate-600"
             }`}
           >
-            <Pencil className="w-3.5 h-3.5 mr-1.5 align-middle" />
-            Ввести позиции вручную
+            <Pencil className="w-3.5 h-3.5" />
+            Добавить вручную
           </button>
         </div>
 
@@ -467,7 +543,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car }: AddReco
                   type="submit"
                   className="flex-1 rounded-full bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal py-3 shadow-[0_4px_12px_rgba(59,130,246,0.2)] hover:from-blue-600 hover:to-blue-700 transition-all cursor-pointer"
                 >
-                  Добавить запись
+                  {recordToEdit ? "Сохранить изменения" : "Добавить запись"}
                 </button>
               )}
             </div>

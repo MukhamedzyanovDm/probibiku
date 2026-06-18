@@ -143,7 +143,7 @@ export default function Privacy() {
                       </div>
                       <button
                         onClick={() => setRememberPreference(!rememberPreference)}
-                        className={`relative inline-flex h-7 w-12 items-center rounded-full border transition-colors duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] ${
+                        className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full border transition-colors duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] ${
                           rememberPreference
                             ? "bg-gradient-to-b from-blue-500 to-blue-600 border-blue-700"
                             : "bg-slate-200 border-slate-300"
@@ -169,7 +169,7 @@ export default function Privacy() {
                           <p className="text-sm font-normal text-slate-900">
                             Временное хранение смет
                           </p>
-                          <p className="mt-1 text-xs text-slate-400 font-light">
+                          <p className="mt-1 text-xs text-slate-400">
                             Удалять изображения чеков после оцифровки
                           </p>
                         </div>
@@ -191,7 +191,7 @@ export default function Privacy() {
                           <p className="text-sm font-normal text-slate-900">
                             Скрывать автоколонку
                           </p>
-                          <p className="mt-1 text-xs text-slate-500 font-light">
+                          <p className="mt-1 text-xs text-slate-600">
                             Не передавать цены дилерам и автосервисам
                           </p>
                         </div>
@@ -208,8 +208,8 @@ export default function Privacy() {
                       <p className="text-xs font-normal text-slate-900 font-sans">
                         Экспорт истории доступен в 1 клик
                       </p>
-                      <p className="mt-1 text-[11px] text-slate-400 font-light">
-                        Скачивайте PDF-отчет или передавайте профиль при продаже.
+                      <p className="mt-1 text-[11px] text-slate-500">
+                        Скачивайте PDF-отчет или передавайте профиль при продаже
                       </p>
                     </div>
                     <button className="inline-flex items-center justify-center rounded-full px-3 py-1.5 text-xs text-blue-600 bg-blue-50 border border-blue-100 shadow-[inset_0_1px_0_white] hover:bg-blue-100 transition-colors">
@@ -233,7 +233,7 @@ export default function Privacy() {
             <h3 className="text-lg font-normal tracking-tight text-slate-950">
               Ваши данные — ваши
             </h3>
-            <p className="mt-3 text-sm leading-6 text-slate-500 font-light">
+            <p className="mt-3 text-sm leading-6 text-slate-600">
             Сами решаете что добавить, что удалить и что оставить только для себя
             </p>
           </div>
@@ -247,7 +247,7 @@ export default function Privacy() {
             <h3 className="text-lg font-normal tracking-tight text-slate-950">
             Всё хранится надёжно
             </h3>
-            <p className="mt-3 text-sm leading-6 text-slate-500 font-light">
+            <p className="mt-3 text-sm leading-6 text-slate-600">
             Чеки и сметы зашифрованы и лежат в защищённом облаке. Не на чьём-то компьютере, не в таблице Excel
             </p>
           </div>
@@ -261,7 +261,7 @@ export default function Privacy() {
             <h3 className="text-lg font-normal tracking-tight text-slate-950">
               Платите за то что используете
             </h3>
-            <p className="mt-3 text-sm leading-6 text-slate-500 font-light">
+            <p className="mt-3 text-sm leading-6 text-slate-600">
               Никаких скрытых списаний. Только за реальное количество оцифровок или автомобилей в аккаунте
             </p>
           </div>
@@ -274,7 +274,7 @@ export default function Privacy() {
             <h3 className="text-lg font-normal tracking-tight text-slate-950 font-sans">
               Захотели уйти — уходите
             </h3>
-            <p className="mt-3 text-sm leading-6 text-slate-600 font-light">
+            <p className="mt-3 text-sm leading-6 text-slate-600">
             Удалить историю или аккаунт полностью можно в один клик. Без звонков в поддержку и «подождите 30 дней»
             </p>
           </div>

@@ -26,13 +26,13 @@ export default function PrivacyPage() {
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-slate-950 leading-[1.1]">
                   Политика конфиденциальности
                 </h1>
-                <p className="mt-4 text-sm text-slate-500 font-light">
+                <p className="mt-4 text-sm text-slate-500">
                   Последнее обновление: 17 июня 2026 г.
                 </p>
               </div>
 
               {/* Legal Text Placeholder */}
-              <div className="prose prose-slate max-w-none text-slate-700 leading-relaxed font-light text-sm md:text-base space-y-6">
+              <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed text-sm md:text-base space-y-6">
                 <p>
                   Настоящая Политика конфиденциальности описывает, как сервис ПРОБИБИКУ (далее — «Сервис», «мы») собирает, использует, хранит и защищает информацию, полученную от пользователей (далее — «Пользователь», «вы») при использовании нашего веб-сайта и связанных услуг.
                 </p>

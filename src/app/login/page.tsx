@@ -74,7 +74,7 @@ export default function LoginPage() {
           <div className="flex justify-start mb-6 -mt-2">
             <a
               href="/"
-              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-blue-500 transition-colors font-light"
+              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-blue-500 transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Вернуться на главную</span>
@@ -92,7 +92,7 @@ export default function LoginPage() {
           <h1 className="text-2xl font-normal tracking-tight text-slate-900 mb-2">
             {step === "email" ? "Войти в личный кабинет" : "Введите код подтверждения"}
           </h1>
-          <p className="text-sm text-slate-500 font-light mb-8 max-w-xs mx-auto">
+          <p className="text-sm text-slate-600 mb-8 max-w-xs mx-auto">
             {step === "email"
               ? "Мы отправим одноразовый код на вашу электронную почту для безопасного входа"
               : `Мы отправили 6-значный проверочный код на адрес ${email}`}
@@ -101,7 +101,7 @@ export default function LoginPage() {
           {step === "email" ? (
             <form onSubmit={handleSendCode} className="space-y-4 text-left">
               <div>
-                <label className="block text-xs text-slate-500 font-light mb-1.5 pl-1">
+                <label className="block text-xs text-slate-500 mb-1.5 pl-1">
                   Электронная почта
                 </label>
                 <input
@@ -140,7 +140,7 @@ export default function LoginPage() {
               </div>
 
               {/* Countdown & Resend */}
-              <div className="text-xs text-slate-500 font-light">
+              <div className="text-xs text-slate-500">
                 {timer > 0 ? (
                   <span>Отправить код повторно через <strong className="font-mono text-slate-700 font-normal">{timer} сек</strong></span>
                 ) : (
@@ -178,7 +178,7 @@ export default function LoginPage() {
             >
               Войти без регистрации (Демо-режим)
             </a>
-            <p className="text-[10px] text-slate-400 font-light mt-5 leading-relaxed">
+            <p className="text-[10px] text-slate-400 mt-5 leading-relaxed">
               Авторизуясь в сервисе, вы соглашаетесь с<br />
               <a href="/terms" className="underline hover:text-blue-500 transition-colors">Условиями использования</a>
               {" и "}

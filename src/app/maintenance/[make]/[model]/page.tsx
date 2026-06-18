@@ -90,7 +90,7 @@ export default async function MaintenancePage({ params }: PageProps) {
           <h1 className="text-3xl md:text-4xl font-normal tracking-tight text-slate-900 mt-4">
             Регламент ТО и стоимость обслуживания {data.carName}
           </h1>
-          <p className="mt-4 text-base text-slate-600 font-light leading-relaxed">
+          <p className="mt-4 text-base text-slate-600 leading-relaxed">
             На основе анализа сотен оцифрованных чеков и официальных регламентов дилеров, мы составили актуальную карту расходов на обслуживание {data.carName}. Загрузите чек своего автосервиса в личный кабинет «Пробибику», чтобы автоматически отслеживать износ и получать умные уведомления
           </p>
 
@@ -114,7 +114,7 @@ export default async function MaintenancePage({ params }: PageProps) {
                     {data.intervals.map((interval, index) => (
                       <tr key={index} className="hover:bg-slate-50/30 transition-colors">
                         <td className="p-4 font-normal text-slate-800">{interval.name}</td>
-                        <td className="p-4 text-slate-500 font-light text-xs leading-relaxed">{interval.items}</td>
+                        <td className="p-4 text-slate-600 text-xs leading-relaxed">{interval.items}</td>
                         <td className="p-4 text-right font-mono font-medium text-slate-900">{interval.cost.toLocaleString("ru-RU")} ₽</td>
                       </tr>
                     ))}
@@ -133,9 +133,9 @@ export default async function MaintenancePage({ params }: PageProps) {
             <div className="grid sm:grid-cols-3 gap-4">
               {data.commonIssues.map((issue, index) => (
                 <div key={index} className="bg-white/80 border border-slate-200/60 rounded-2xl p-4 shadow-[0_4px_12px_rgba(15,23,42,0.02)]">
-                  <p className="text-xs text-slate-400 font-light uppercase tracking-wider font-mono">Деталь</p>
+                  <p className="text-xs text-slate-400 uppercase tracking-wider font-mono">Деталь</p>
                   <p className="text-sm font-medium text-slate-800 mt-1">{issue.part}</p>
-                  <p className="text-xs text-slate-500 font-light mt-2">{issue.interval}</p>
+                  <p className="text-xs text-slate-600 mt-2">{issue.interval}</p>
                   <p className="text-base font-mono font-medium text-blue-600 mt-3">~{issue.avgCost.toLocaleString("ru-RU")} ₽</p>
                 </div>
               ))}
@@ -146,7 +146,7 @@ export default async function MaintenancePage({ params }: PageProps) {
           <div className="mt-12 rounded-[2rem] bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-700 p-6 sm:p-8 text-white relative overflow-hidden shadow-[0_15px_35px_-10px_rgba(59,130,246,0.3)]">
             <div className="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-white/10 blur-2xl pointer-events-none" />
             <h3 className="text-xl font-normal mb-2">Начните вести сервисную историю автоматически</h3>
-            <p className="text-sm text-blue-100 font-light mb-6 max-w-xl">
+            <p className="text-sm text-blue-100 mb-6 max-w-xl">
               Загрузите ваш первый чек на главной странице. Наш ИИ распознает все позиции, добавит их в историю обслуживания и построит точный прогноз замен
             </p>
             <a

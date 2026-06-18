@@ -17,6 +17,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Car, getCars, deleteCar } from "@/utils/garageStore";
 import AddCarModal from "@/components/AddCarModal";
+import { Button } from "@/components/ui/button";
 
 export default function GaragePage() {
   const router = useRouter();
@@ -67,18 +68,19 @@ export default function GaragePage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
           <div>
             <h1 className="text-3xl font-normal tracking-tight text-slate-900">Мой гараж</h1>
-            <p className="text-xs text-slate-400 font-light mt-1 uppercase tracking-wider font-mono">
+            <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-mono">
               Обзор личного автопарка и расходов
             </p>
           </div>
           
-          <button
+          <Button
             onClick={handleOpenAddModal}
-            className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal shadow-[0_4px_12px_rgba(59,130,246,0.2)] hover:from-blue-600 hover:to-blue-700 transition-all cursor-pointer"
+            variant="brand"
+            className="h-11 px-5"
           >
             <PlusCircle className="w-5 h-5" />
             Добавить автомобиль
-          </button>
+          </Button>
         </div>
 
         {/* Global Metrics Row */}
@@ -86,27 +88,27 @@ export default function GaragePage() {
           
           {/* Card 1: Expenses */}
           <div className="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-[0_10px_30px_-15px_rgba(15,23,42,0.05)]">
-            <p className="text-xs text-slate-400 font-light uppercase tracking-wider font-mono">Суммарные расходы</p>
+            <p className="text-xs text-slate-400 uppercase tracking-wider font-mono">Суммарные расходы</p>
             <p className="text-2xl font-semibold text-slate-900 mt-2 font-mono">
               {totalExpenses.toLocaleString("ru-RU")} ₽
             </p>
-            <p className="text-[10px] text-slate-400 mt-1 font-light">Включая все ТО, ремонтные работы и запчасти</p>
+            <p className="text-[10px] text-slate-600 mt-1">Включая все ТО, ремонтные работы и запчасти</p>
           </div>
 
           {/* Card 2: Active Cars */}
           <div className="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-[0_10px_30px_-15px_rgba(15,23,42,0.05)]">
-            <p className="text-xs text-slate-400 font-light uppercase tracking-wider font-mono">Активные автомобили</p>
+            <p className="text-xs text-slate-400 uppercase tracking-wider font-mono">Активные автомобили</p>
             <p className="text-2xl font-semibold text-slate-900 mt-2 font-mono">{activeCars}</p>
-            <p className="text-[10px] text-slate-400 mt-1 font-light">Доступно слотов в личном кабинете: 5</p>
+            <p className="text-[10px] text-slate-600 mt-1">Доступно слотов в личном кабинете: 5</p>
           </div>
 
           {/* Card 3: Days to Maintenance */}
           <div className="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-[0_10px_30px_-15px_rgba(15,23,42,0.05)]">
-            <p className="text-xs text-slate-400 font-light uppercase tracking-wider font-mono">До ближайшего ТО</p>
+            <p className="text-xs text-slate-400 uppercase tracking-wider font-mono">До ближайшего ТО</p>
             <p className="text-2xl font-semibold text-blue-600 mt-2 font-mono">
               {activeCars > 0 ? "45 дней" : "—"}
             </p>
-            <p className="text-[10px] text-slate-400 mt-1 font-light">
+            <p className="text-[10px] text-slate-600 mt-1">
               {activeCars > 0 ? "По расчетам ИИ на основе пробега" : "Добавьте автомобиль"}
             </p>
           </div>
@@ -119,10 +121,10 @@ export default function GaragePage() {
             <ShieldAlert className="w-6 h-6 text-amber-500 shrink-0" />
             <div className="space-y-1.5">
               <strong className="block text-slate-800">Обратите внимание (2):</strong>
-              <p className="text-slate-600 font-light">
-                • Страховка ОСАГО для автомобиля <span className="font-medium text-slate-800">Kia Sportage (У777ХХ777)</span> истекает через 14 дней.
+              <p className="text-slate-600">
+                • Страховка ОСАГО для автомобиля <span className="font-medium text-slate-900">Kia Sportage (У777ХХ777)</span> истекает через 14 дней.
               </p>
-              <p className="text-slate-600 font-light">
+              <p className="text-slate-600">
                 • Выявлена активная отзывная кампания дилера по обновлению ПО рулевой рейки. Рекомендуется обратиться в СТО
               </p>
             </div>
@@ -133,16 +135,17 @@ export default function GaragePage() {
         {cars.length === 0 ? (
           <div className="text-center py-20 bg-white/50 border border-slate-200 rounded-[2rem] p-10">
             <CarIcon className="w-12 h-12 text-slate-300 mb-4 mx-auto" />
-            <h3 className="text-lg font-medium text-slate-800">В вашем гараже пусто</h3>
-            <p className="text-sm text-slate-500 font-light max-w-sm mx-auto mt-2 mb-6">
+            <h3 className="text-lg font-medium text-slate-900">В вашем гараже пусто</h3>
+            <p className="text-sm text-slate-600 max-w-sm mx-auto mt-2 mb-6">
               Добавьте ваш первый автомобиль, чтобы начать отслеживать его расходы и прогнозировать регламент обслуживания
             </p>
-            <button
+            <Button
               onClick={handleOpenAddModal}
-              className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 bg-blue-500 text-white text-xs font-normal shadow-[0_4px_12px_rgba(59,130,246,0.15)] hover:bg-blue-600 transition-colors"
+              variant="brand"
+              size="sm"
             >
               Добавить первый автомобиль
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -187,15 +190,15 @@ export default function GaragePage() {
                   <div className="p-6">
                     <div className="grid grid-cols-2 gap-4 text-xs mb-6 border-b border-slate-100 pb-5">
                       <div>
-                        <p className="text-slate-400 font-light">Пробег</p>
-                        <p className="text-sm font-semibold text-slate-800 font-mono mt-1">
+                        <p className="text-slate-400">Пробег</p>
+                        <p className="text-sm font-semibold text-slate-900 font-mono mt-1">
                           {car.mileage.toLocaleString("ru-RU")} км
                         </p>
                       </div>
 
                       <div>
-                        <p className="text-slate-400 font-light">Расходы на СТО</p>
-                        <p className="text-sm font-semibold text-slate-800 font-mono mt-1">
+                        <p className="text-slate-400">Расходы на СТО</p>
+                        <p className="text-sm font-semibold text-slate-900 font-mono mt-1">
                           {carExpenses.toLocaleString("ru-RU")} ₽
                         </p>
                       </div>
@@ -211,14 +214,14 @@ export default function GaragePage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={(e) => handleEdit(car, e)}
-                          className="w-8 h-8 rounded-full border border-slate-200 hover:bg-slate-50 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors"
+                          className="w-8 h-8 rounded-full bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-500 flex items-center justify-center transition-all active:scale-95 cursor-pointer"
                           title="Редактировать"
                         >
                           <Pencil className="w-4 h-4" />
                         </button>
                         <button
                           onClick={(e) => handleDeleteClick(car.id, e)}
-                          className="w-8 h-8 rounded-full border border-slate-200 hover:border-red-200 hover:bg-red-50 flex items-center justify-center text-slate-500 hover:text-red-500 transition-colors"
+                          className="w-8 h-8 rounded-full bg-slate-50 hover:bg-red-50 text-slate-400 hover:text-red-500 flex items-center justify-center transition-all active:scale-95 cursor-pointer"
                           title="Удалить"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -256,7 +259,7 @@ export default function GaragePage() {
                   <Trash2 className="w-5 h-5" />
                 </div>
                 <h3 className="text-sm font-semibold text-slate-900">Удалить автомобиль?</h3>
-                <p className="text-xs text-slate-500 font-light mt-2 leading-relaxed">
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
                   Вы уверены, что хотите удалить этот автомобиль из базы? Все данные о расходах и истории ТО будут безвозвратно стерты
                 </p>
                 

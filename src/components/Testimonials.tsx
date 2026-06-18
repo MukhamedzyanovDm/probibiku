@@ -58,7 +58,7 @@ export default function Testimonials() {
         </p>
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-slate-950 leading-[1.05] max-w-5xl mx-auto">
           Что говорят автовладельцы
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 font-medium">о сервисе Пробибику.</span>
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 font-medium">о сервисе Пробибику</span>
         </h2>
         <p className="mt-6 text-base md:text-lg leading-8 text-slate-600 font-light max-w-3xl mx-auto">
          Те, кто пользуется Пробибику, знают сколько потратили на машину за последние три года. Остальные примерно догадываются
