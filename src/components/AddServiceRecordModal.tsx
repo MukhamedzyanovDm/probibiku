@@ -43,7 +43,7 @@ import { cn } from "@/components/ui/utils"
 const workItemSchema = z.object({
   description: z.string().min(1, "Обязательно"),
   cost: z.string().min(1, "Обязательно"),
-  quantity: z.string().default("1"),
+  quantity: z.string(),
 })
 
 const formSchema = z.object({
