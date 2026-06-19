@@ -241,46 +241,83 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
     }
   };
 
-  const handleStartOcrSimulation = () => {
+  const handleRealOcrUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
     setIsOcrActive(true);
-    setOcrProgress(0);
-    setOcrLog("Загрузка чека...");
+    setOcrProgress(10);
+    setOcrLog("Загрузка файла в облако...");
 
-    const logs = [
-      "Распознавание структуры документа...",
-      "Извлечение позиций и цен...",
-      "Сопоставление запчастей...",
-      "Успешно оцифровано!"
-    ];
+    try {
+      // 1. Get presigned URL
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: JSON.stringify({ contentType: file.type, fileName: file.name }),
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!uploadRes.ok) throw new Error("Failed to prepare upload");
+      const { uploadUrl, key } = await uploadRes.json();
+      setOcrProgress(30);
+      setOcrLog("Загрузка чека в S3...");
 
-    let currentProgress = 0;
-    const interval = setInterval(() => {
-      currentProgress += 5;
-      setOcrProgress(currentProgress);
+      // 2. Upload to S3
+      const s3Res = await fetch(uploadUrl, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type },
+      });
+      if (!s3Res.ok) throw new Error("Failed to upload to S3");
+      setOcrProgress(50);
+      setOcrLog("Распознавание чека искусственным интеллектом...");
+
+      // 3. Analyze via real OCR API
+      const analyzeRes = await fetch("/api/ocr/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key }),
+      });
+      if (!analyzeRes.ok) throw new Error("Failed to analyze receipt");
+      const { data } = await analyzeRes.json();
       
-      const logIdx = Math.min(Math.floor((currentProgress / 100) * logs.length), logs.length - 1);
-      setOcrLog(logs[logIdx]);
+      setOcrProgress(90);
+      setOcrLog("Обработка результатов...");
 
-      if (currentProgress >= 100) {
-        clearInterval(interval);
-        setTimeout(() => {
-          // Prefill values
-          setDate("2026-06-11");
-          setType("ТО");
-          setMileage(car.mileage > 84320 ? car.mileage : 84320);
-          setNote("Плановое ТО: замена моторного масла, масляного фильтра и передних тормозных колодок Brembo.");
-          setItems([
-            { id: "item-1", name: "Масло Shell Helix 5W-30", quantity: 4, price: 1500 },
-            { id: "item-2", name: "Фильтр Mann-Filter W 811/80", quantity: 1, price: 850 },
-            { id: "item-3", name: "Колодки Brembo SP1399", quantity: 1, price: 3200 },
-            { id: "item-4", name: "Работы по замене масла и колодок", quantity: 1, price: 3200 }
-          ]);
-          setIsOcrActive(false);
-          setActiveTab("manual"); // Switch to manual tab for review
-          setWasScanned(true);
-        }, 500);
+      // 4. Prefill form fields with real OCR data
+      if (data) {
+        if (data.date) setDate(data.date);
+        if (data.serviceCenterName) setNote(data.serviceCenterName);
+        if (data.mileage) setMileage(Number(data.mileage));
+        
+        // Map items
+        if (data.items && Array.isArray(data.items)) {
+          const mappedItems = data.items.map((item: any, idx: number) => ({
+            id: `item-${Date.now()}-${idx}`,
+            name: item.description || item.name || "Работа / Запчасть",
+            quantity: Number(item.quantity) || 1,
+            price: Number(item.cost) || Number(item.price) || 0
+          }));
+          setItems(mappedItems);
+        }
       }
-    }, 100);
+
+      setOcrProgress(100);
+      setOcrLog("Успешно оцифровано!");
+      
+      setTimeout(() => {
+        setIsOcrActive(false);
+        setActiveTab("manual"); // Switch to manual review tab
+        setWasScanned(true);
+      }, 800);
+
+    } catch (err: any) {
+      console.error("OCR process error:", err);
+      setOcrLog("Ошибка: " + (err.message || "не удалось распознать"));
+      setOcrProgress(0);
+      setTimeout(() => {
+        setIsOcrActive(false);
+      }, 3000);
+    }
   };
 
   return (
@@ -427,13 +464,17 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
                         Наш искусственный интеллект распознает смету и автоматически заполнит позиции в деталях
                       </p>
                     </div>
-                    <button
-                      type="button"
-                      onClick={handleStartOcrSimulation}
-                      className="rounded-full bg-blue-600 hover:bg-blue-500 border border-blue-700 text-white text-xs font-normal px-5 py-3 shadow-[0_4px_12px_rgba(59,130,246,0.2)] transition-all cursor-pointer"
+                    <label
+                      className="rounded-full bg-blue-600 hover:bg-blue-500 border border-blue-700 text-white text-xs font-normal px-5 py-3 shadow-[0_4px_12px_rgba(59,130,246,0.2)] transition-all cursor-pointer text-center inline-block"
                     >
-                      Начать сканирование чека
-                    </button>
+                      Выбрать фото чека
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleRealOcrUpload}
+                        className="hidden"
+                      />
+                    </label>
                   </div>
                 )}
               </div>
