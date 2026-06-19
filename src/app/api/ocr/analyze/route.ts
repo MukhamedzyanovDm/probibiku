@@ -53,14 +53,54 @@ export async function POST(req: NextRequest) {
     let fullText = "";
     if (textDetection.pages) {
       textDetection.pages.forEach((p: any) => {
+        // 1. Calculate the average text tilt angle on the page
+        let totalWeight = 0;
+        let weightedAngleSum = 0;
+
+        p.blocks?.forEach((b: any) => {
+          b.lines?.forEach((l: any) => {
+            const vertices = l.boundingBox?.vertices || [];
+            if (vertices.length >= 2) {
+              const v0 = vertices[0];
+              const v1 = vertices[1];
+              const dx = Number(v1.x || 0) - Number(v0.x || 0);
+              const dy = Number(v1.y || 0) - Number(v0.y || 0);
+              const len = Math.sqrt(dx * dx + dy * dy);
+              if (len > 10) {
+                const angle = Math.atan2(dy, dx);
+                // Exclude extreme rotations (> 45 deg) to avoid flipping rows/columns
+                if (Math.abs(angle) < Math.PI / 4) {
+                  weightedAngleSum += angle * len;
+                  totalWeight += len;
+                }
+              }
+            }
+          });
+        });
+
+        const theta = totalWeight > 0 ? weightedAngleSum / totalWeight : 0;
+        const cosT = Math.cos(-theta);
+        const sinT = Math.sin(-theta);
+
+        // 2. Extract lines with de-rotated coordinates
         const lines: any[] = [];
         p.blocks?.forEach((b: any) => {
           b.lines?.forEach((l: any) => {
             if (!l.words || l.words.length === 0) return;
             
             const vertices = l.boundingBox?.vertices || [];
-            const yCoords = vertices.map((v: any) => Number(v.y || 0));
-            const xCoords = vertices.map((v: any) => Number(v.x || 0));
+            // Rotate each vertex back by -theta
+            const rVertices = vertices.map((v: any) => {
+              const x = Number(v.x || 0);
+              const y = Number(v.y || 0);
+              return {
+                x: x * cosT - y * sinT,
+                y: x * sinT + y * cosT
+              };
+            });
+
+            const yCoords = rVertices.map((v: any) => v.y);
+            const xCoords = rVertices.map((v: any) => v.x);
             
             const minY = yCoords.length > 0 ? Math.min(...yCoords) : 0;
             const maxY = yCoords.length > 0 ? Math.max(...yCoords) : 0;
@@ -83,7 +123,7 @@ export async function POST(req: NextRequest) {
 
         if (lines.length === 0) return;
 
-        // Sort lines vertically by their center Y coordinate
+        // Sort lines vertically by their de-rotated center Y coordinate
         lines.sort((a, b) => a.centerY - b.centerY);
 
         // Group lines into rows based on overlapping/close center Y coordinates
@@ -98,7 +138,7 @@ export async function POST(req: NextRequest) {
           const avgCenterY = currentRow.reduce((sum, l) => sum + l.centerY, 0) / currentRow.length;
           const avgHeight = currentRow.reduce((sum, l) => sum + l.height, 0) / currentRow.length;
 
-          // If vertical difference is within 50% of the line height (or at least 8 pixels), it's the same row
+          // If vertical difference is within 50% of the average height (min 8px), it's the same row
           const threshold = Math.max(avgHeight * 0.5, 8);
           if (Math.abs(line.centerY - avgCenterY) <= threshold) {
             currentRow.push(line);
