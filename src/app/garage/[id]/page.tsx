@@ -86,6 +86,7 @@ const mapDbVehicleToClientCar = (dbVehicle: any): Car => {
       parts: partsList,
       receiptAttached: rec.status === "processed" || rec.status === "manual" || !!rec.receiptImageUrl,
       receiptUrl: rec.receiptUrl || undefined,
+      receiptImageUrl: rec.receiptImageUrl || undefined,
       items: rec.items,
       serviceCenterName: rec.serviceCenterName || undefined
     };
@@ -610,45 +611,35 @@ export default function CarDetailPage() {
                 <div className="space-y-4">
                   {car.serviceHistory.map((rec) => (
                     <div key={rec.id} className="border border-slate-200/60 rounded-2xl p-5 hover:bg-slate-50/30 transition-colors">
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className={`inline-flex items-center gap-1 rounded-full text-[10px] font-mono font-medium px-2 py-0.5 ${
-                            rec.type === "ТО" ? "bg-blue-50 text-blue-600 border border-blue-100" :
-                            rec.type === "Ремонт" ? "bg-indigo-50 text-indigo-600 border border-indigo-100" :
-                            "bg-slate-50 text-slate-600 border border-slate-100"
-                          }`}>
-                            {rec.type}
-                          </span>
-                          <span className="text-xs text-slate-400 font-mono">{rec.date}</span>
+                      <div className="flex justify-between items-start gap-3 mb-3">
+                        <div className="flex-1 min-w-0 space-y-2">
+                          <div className="flex items-center gap-2">
+                            <span className={`inline-flex items-center gap-1 rounded-full text-[10px] font-mono font-medium px-2 py-0.5 ${
+                              rec.type === "ТО" ? "bg-blue-50 text-blue-600 border border-blue-100" :
+                              rec.type === "Ремонт" ? "bg-indigo-50 text-indigo-600 border border-indigo-100" :
+                              "bg-slate-50 text-slate-600 border border-slate-100"
+                            }`}>
+                              {rec.type}
+                            </span>
+                            <span className="text-xs text-slate-400 font-mono">{rec.date}</span>
+                          </div>
                           
                           {rec.receiptAttached && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-2.5 py-0.5 text-[9px] font-medium shadow-[0_2px_8px_rgba(16,185,129,0.15)] hover:brightness-105 transition-all select-none cursor-default">
-                              <BadgeCheck className="w-3 h-3 text-white" />
-                              Проверено ИИ (+10% доверия)
-                            </span>
+                            <div>
+                              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-2.5 py-0.5 text-[9px] font-medium shadow-[0_2px_8px_rgba(16,185,129,0.15)] hover:brightness-105 transition-all select-none cursor-default">
+                                <BadgeCheck className="w-3 h-3 text-white" />
+                                Проверено ИИ (+10% доверия)
+                              </span>
+                            </div>
                           )}
-                        </div>
-                        
-                        <div className="text-left sm:text-right shrink-0">
-                          <p className="text-sm font-semibold text-slate-900 font-mono">{rec.cost.toLocaleString("ru-RU")} ₽</p>
-                          <p className="text-[10px] text-slate-400 font-mono mt-0.5">на пробеге {rec.mileage.toLocaleString("ru-RU")} км</p>
-                        </div>
-                      </div>
-                      
-                      <p className="text-xs text-slate-600 leading-relaxed mb-3 whitespace-pre-line">{rec.description}</p>
-                      
-                      <div className="flex flex-wrap items-center justify-between gap-3 mt-2 pt-3 border-t border-slate-100">
-                        {rec.parts ? (
-                          <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono uppercase min-w-0 flex-1">
-                            <Settings className="w-3.5 h-3.5 shrink-0" />
-                            <span className="shrink-0">Запчасти:</span>
-                            <span className="text-slate-600 lowercase font-sans normal-case truncate">{rec.parts}</span>
+                          
+                          <div className="flex items-baseline gap-2 mt-1">
+                            <span className="text-sm font-semibold text-slate-900 font-mono">{rec.cost.toLocaleString("ru-RU")} ₽</span>
+                            <span className="text-[10px] text-slate-400 font-mono">на пробеге {rec.mileage.toLocaleString("ru-RU")} км</span>
                           </div>
-                        ) : (
-                          <div />
-                        )}
+                        </div>
                         
-                        <div className="flex items-center gap-2 ml-auto shrink-0">
+                        <div className="shrink-0">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <button
@@ -690,6 +681,16 @@ export default function CarDetailPage() {
                           </DropdownMenu>
                         </div>
                       </div>
+                      
+                      <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">{rec.description}</p>
+
+                      {rec.parts && (
+                        <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono uppercase min-w-0 mt-3 pt-2.5 border-t border-slate-100">
+                          <Settings className="w-3.5 h-3.5 shrink-0" />
+                          <span className="shrink-0">Запчасти:</span>
+                          <span className="text-slate-600 lowercase font-sans normal-case truncate">{rec.parts}</span>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

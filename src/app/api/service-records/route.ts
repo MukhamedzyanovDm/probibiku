@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { serviceRecords, workItems, vehicles } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { deleteObjectFromS3 } from "@/lib/s3";
 
 export async function POST(req: NextRequest) {
   console.log("🚀 POST /api/service-records - Started");
@@ -18,7 +19,8 @@ export async function POST(req: NextRequest) {
       serviceCenterName, 
       items, 
       totalAmount,
-      type
+      type,
+      receiptImageUrl
     } = data;
 
     if (!vehicleId || !date || !totalAmount) {
@@ -36,6 +38,7 @@ export async function POST(req: NextRequest) {
         odometer: odometer ? parseInt(odometer.toString()) : 0,
         totalAmount: totalAmount.toString(),
         serviceCenterName,
+        receiptImageUrl: receiptImageUrl || null,
         status: "manual",
       }).returning();
       console.log("✅ Service record created:", record.id);
@@ -110,7 +113,8 @@ export async function PATCH(req: NextRequest) {
       serviceCenterName, 
       items, 
       totalAmount,
-      type
+      type,
+      receiptImageUrl
     } = data;
 
     if (!id || !vehicleId || !date || !totalAmount) {
@@ -128,6 +132,7 @@ export async function PATCH(req: NextRequest) {
           odometer: odometer ? parseInt(odometer.toString()) : 0,
           totalAmount: totalAmount.toString(),
           serviceCenterName,
+          receiptImageUrl: receiptImageUrl || null,
           status: "manual",
         })
         .where(eq(serviceRecords.id, id));
@@ -190,7 +195,24 @@ export async function DELETE(req: NextRequest) {
     if (!id) {
       return NextResponse.json({ error: "Id is required" }, { status: 400 });
     }
+
+    // 1. Fetch record to get the receipt image URL (S3 Key)
+    const [record] = await db.select().from(serviceRecords).where(eq(serviceRecords.id, id));
+
+    // 2. Delete the record from database
     await db.delete(serviceRecords).where(eq(serviceRecords.id, id));
+
+    // 3. Delete the file from S3 bucket if it exists
+    if (record?.receiptImageUrl) {
+      try {
+        console.log(`🗑 Deleting receipt image from S3: ${record.receiptImageUrl}`);
+        await deleteObjectFromS3(record.receiptImageUrl);
+        console.log("✅ Receipt image deleted successfully from S3");
+      } catch (s3Error) {
+        console.error("⚠️ Failed to delete receipt image from S3:", s3Error);
+      }
+    }
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Failed to delete service record:", error);

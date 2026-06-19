@@ -139,26 +139,32 @@ export async function POST(req: NextRequest) {
 
         if (lines.length === 0) return;
 
-        // 4. Group lines into 3 columns dynamically adjusted by page width
-        const pageWidth = p.width ? Number(p.width) : 1000;
-        const colLeft = lines.filter(l => l.x < pageWidth * 0.50);
-        const colMiddle = lines.filter(l => l.x >= pageWidth * 0.50 && l.x < pageWidth * 0.65);
-        const colRight = lines.filter(l => l.x >= pageWidth * 0.65);
+        // 4. Group lines into horizontal rows by Y coordinate proximity
+        lines.sort((a, b) => a.y - b.y);
+        const rows: { y: number; items: any[] }[] = [];
+        lines.forEach((line) => {
+          const threshold = 8;
+          const matchingRow = rows.find((row) => Math.abs(row.y - line.y) < threshold);
+          
+          if (matchingRow) {
+            matchingRow.items.push(line);
+            // Recalculate average Y for the row
+            matchingRow.y = matchingRow.items.reduce((sum, item) => sum + item.y, 0) / matchingRow.items.length;
+          } else {
+            rows.push({
+              y: line.y,
+              items: [line]
+            });
+          }
+        });
 
-        // Sort columns vertically from top to bottom
-        colLeft.sort((a, b) => a.y - b.y);
-        colMiddle.sort((a, b) => a.y - b.y);
-        colRight.sort((a, b) => a.y - b.y);
-
-        // Reconstruct layout
-        fullText += "--- КОЛОНКА 1 (НАИМЕНОВАНИЕ / РЕКВИЗИТЫ СЛЕВА) ---\n";
-        colLeft.forEach(l => fullText += l.text + "\n");
-
-        fullText += "\n--- КОЛОНКА 2 (КОДЫ ДЕТАЛЕЙ / РАБОТ / РЕКВИЗИТЫ В ЦЕНТРЕ) ---\n";
-        colMiddle.forEach(l => fullText += l.text + "\n");
-
-        fullText += "\n--- КОЛОНКА 3 (КОЛИЧЕСТВО / ЦЕНЫ / РЕКВИЗИТЫ СПРАВА) ---\n";
-        colRight.forEach(l => fullText += l.text + "\n");
+        // Reconstruct layout row by row (sorting items in each row from left to right by X coordinate)
+        rows.sort((a, b) => a.y - b.y);
+        rows.forEach((row) => {
+          row.items.sort((a, b) => a.x - b.x);
+          const rowText = row.items.map(item => item.text).join(" | ");
+          fullText += rowText + "\n";
+        });
       });
     }
 
@@ -184,16 +190,19 @@ export async function POST(req: NextRequest) {
         messages: [
           {
             role: "system",
-            text: "Ты ассистент автолюбителя. Тебе дан текст чека СТО, разделенный на 3 колонки: Колонка 1 (Названия работ и запчастей), Колонка 2 (Коды) и Колонка 3 (Единицы измерения, количество и цены).\n" +
+            text: "Ты ассистент автолюбителя. Тебе дан распознанный текст чека СТО. Текст сгруппирован по строкам таблицы (элементы одной строки разделены символом '|').\n" +
                   "Твоя задача — извлечь данные в JSON с полями:\n" +
                   "- date (YYYY-MM-DD)\n" +
-                  "- totalAmount (число или строка, например, '5000.00')\n" +
+                  "- totalAmount (число или строка, например, '5000.00'; если итоговая сумма обрезана или не видна, вычисли её как сумму всех cost позиций)\n" +
                   "- mileage (пробег, число или null)\n" +
                   "- serviceCenterName (название СТО, строка или null)\n" +
-                  "- items (список позиций, каждая содержит {description, cost, quantity}).\n\n" +
-                  "ПРАВИЛО СОПОСТАВЛЕНИЯ ПОЗИЦИЙ:\n" +
-                  "Сопоставляй позиции строго по порядку следования сверху вниз. 1-я строка из Колонки 1 соответствует 1-й строке из Колонки 2 и 1-й строке из Колонки 3. Игнорируй заголовки колонок.\n" +
-                  "Будь предельно аккуратен и не путай цены и количества местами. Верни только чистый JSON без markdown."
+                  "- items (список позиций, каждая содержит {description, price, quantity, cost}).\n\n" +
+                  "ПРАВИЛА ИЗВЛЕЧЕНИЯ ДЛЯ КАЖДОЙ ПОЗИЦИИ:\n" +
+                  "1. description: название работы или запчасти (строка).\n" +
+                  "2. quantity: количество товара/услуги. Обрати внимание: в строке оно может быть записано с единицами измерения (например, '11 п/дм3', '2 шт.', '0.5 л'). Извлеки из него только число (например, 11 или 2, число).\n" +
+                  "3. price: цена за единицу. Будь предельно внимателен! Если в таблице есть колонка НДС (например, 'НДС', '18%', '20%', '1 870,00'), ИГНОРИРУЙ её. Цена за единицу (price) должна соответствовать столбцу 'Цена' (например, 1020.00), а общая стоимость — столбцу 'Сумма' (например, 11220.00).\n" +
+                  "4. cost: общая стоимость позиции (столбец 'Сумма'; если обрезана/не видна, вычисли её как price * quantity, число).\n\n" +
+                  "Верни только чистый JSON без markdown."
           },
           { role: "user", text: fullText }
         ]

@@ -8,6 +8,7 @@ export interface ServiceRecord {
   parts: string;
   receiptAttached?: boolean;
   receiptUrl?: string;
+  receiptImageUrl?: string;
   items?: any[];
   serviceCenterName?: string;
 }

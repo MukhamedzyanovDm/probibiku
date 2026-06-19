@@ -68,6 +68,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
     date?: string;
     mileage?: string;
     description?: string;
+    duplicate?: string;
   }>({});
   
   // OCR Scan Simulation States
@@ -75,6 +76,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
   const [ocrProgress, setOcrProgress] = useState(0);
   const [ocrLog, setOcrLog] = useState("");
   const [wasScanned, setWasScanned] = useState(false);
+  const [receiptImageUrl, setReceiptImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -147,6 +149,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         }
         setActiveTab("manual");
         setWasScanned(!!recordToEdit.receiptAttached);
+        setReceiptImageUrl(recordToEdit.receiptImageUrl || null);
         setErrors({});
       } else {
         setDate(new Date().toISOString().split("T")[0]);
@@ -157,6 +160,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         setActiveTab("scan");
         setIsOcrActive(false);
         setWasScanned(false);
+        setReceiptImageUrl(null);
         setErrors({});
       }
     }
@@ -186,6 +190,9 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
     if (errors.description) {
       setErrors((prev) => ({ ...prev, description: undefined }));
     }
+    if (errors.duplicate) {
+      setErrors((prev) => ({ ...prev, duplicate: undefined }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -203,14 +210,24 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
       newErrors.description = "Пожалуйста, заполните название, количество и цену для всех позиций";
     }
 
+    const totalCalculatedCost = items.reduce((sum, item) => sum + Math.round(item.quantity * item.price * 100) / 100, 0);
+    const isDuplicate = car.serviceHistory.some(rec => {
+      if (recordToEdit && rec.id === recordToEdit.id) return false;
+      const formattedDate = new Date(date).toISOString().split("T")[0];
+      const recFormattedDate = new Date(rec.date).toISOString().split("T")[0];
+      return recFormattedDate === formattedDate && Math.round(rec.cost) === Math.round(totalCalculatedCost);
+    });
+
+    if (isDuplicate) {
+      newErrors.duplicate = `Запись с этой датой (${date}) и суммой (${totalCalculatedCost.toLocaleString("ru-RU")} ₽) уже существует в истории`;
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
     setErrors({});
-
-    const totalCalculatedCost = items.reduce((sum, item) => sum + Math.round(item.quantity * item.price * 100) / 100, 0);
     
     // Form description from items list
     const formattedDescription = (note.trim() ? note.trim() + "\n\n" : "") + 
@@ -228,7 +245,8 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
       cost: totalCalculatedCost,
       description: formattedDescription,
       parts: formattedParts,
-      receiptAttached: wasScanned || activeTab === "scan"
+      receiptAttached: wasScanned || activeTab === "scan" || !!receiptImageUrl,
+      receiptImageUrl: receiptImageUrl || undefined
     };
 
     let updatedHistory = [...car.serviceHistory];
@@ -252,6 +270,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         serviceCenterName: note.trim() || "Автосервис",
         totalAmount: totalCalculatedCost,
         type,
+        receiptImageUrl: receiptImageUrl || null,
         items: items.map(item => ({
           description: item.name,
           cost: item.price,
@@ -329,6 +348,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         headers: { "Content-Type": file.type },
       });
       if (!s3Res.ok) throw new Error("Failed to upload to S3");
+      setReceiptImageUrl(key);
       setOcrProgress(50);
       setOcrLog("Распознавание чека искусственным интеллектом...");
 
@@ -354,8 +374,14 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         if (data.items && Array.isArray(data.items)) {
           const mappedItems = data.items.map((item: any, idx: number) => {
             const qty = parseFloat(item.quantity?.toString() || "1") || 1;
-            const totalCost = parseFloat(item.cost?.toString() || item.price?.toString() || "0") || 0;
-            const unitPrice = qty > 0 ? Math.round((totalCost / qty) * 100) / 100 : totalCost;
+            
+            let unitPrice = 0;
+            if (item.price !== undefined && item.price !== null && item.price !== "") {
+              unitPrice = parseFloat(item.price.toString()) || 0;
+            } else if (item.cost !== undefined && item.cost !== null && item.cost !== "") {
+              const totalCost = parseFloat(item.cost.toString()) || 0;
+              unitPrice = qty > 0 ? Math.round((totalCost / qty) * 100) / 100 : totalCost;
+            }
             
             return {
               id: `item-${Date.now()}-${idx}`,
@@ -453,6 +479,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
                   onChange={(e) => {
                     setDate(e.target.value);
                     if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }));
+                    if (errors.duplicate) setErrors((prev) => ({ ...prev, duplicate: undefined }));
                   }}
                   className={`w-full min-w-0 text-base sm:text-sm border rounded-xl pl-3 pr-2 py-2.5 bg-slate-50/50 focus:bg-white outline-none transition-all ${
                     errors.date ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-100" : "border-slate-200 focus:border-blue-500"
@@ -665,6 +692,12 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
                     className="w-full text-base sm:text-sm border border-slate-200 rounded-xl px-3.5 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all resize-none"
                   />
                 </div>
+              </div>
+            )}
+
+            {errors.duplicate && (
+              <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200/60 text-red-600 text-xs font-light text-center leading-relaxed animate-in fade-in slide-in-from-top-2 duration-300">
+                {errors.duplicate}
               </div>
             )}
 
