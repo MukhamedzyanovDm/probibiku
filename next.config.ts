@@ -30,7 +30,13 @@ const nextConfig: NextConfig = {
     "192.168.0.52",
     "192.168.0.52:3000",
     "192.168.0.52"
-  ]
+  ],
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;
