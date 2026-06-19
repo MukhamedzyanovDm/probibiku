@@ -53,9 +53,66 @@ export async function POST(req: NextRequest) {
     let fullText = "";
     if (textDetection.pages) {
       textDetection.pages.forEach((p: any) => {
-        p.blocks?.forEach((b: any) => b.lines?.forEach((l: any) => {
-          fullText += l.words.map((w: any) => w.text).join(" ") + "\n";
-        }));
+        const lines: any[] = [];
+        p.blocks?.forEach((b: any) => {
+          b.lines?.forEach((l: any) => {
+            if (!l.words || l.words.length === 0) return;
+            
+            const vertices = l.boundingBox?.vertices || [];
+            const yCoords = vertices.map((v: any) => Number(v.y || 0));
+            const xCoords = vertices.map((v: any) => Number(v.x || 0));
+            
+            const minY = yCoords.length > 0 ? Math.min(...yCoords) : 0;
+            const maxY = yCoords.length > 0 ? Math.max(...yCoords) : 0;
+            const minX = xCoords.length > 0 ? Math.min(...xCoords) : 0;
+            const maxX = xCoords.length > 0 ? Math.max(...xCoords) : 0;
+            const height = maxY - minY;
+            const text = l.words.map((w: any) => w.text).join(" ");
+            
+            lines.push({
+              text,
+              minY,
+              maxY,
+              minX,
+              maxX,
+              height,
+              centerY: minY + height / 2
+            });
+          });
+        });
+
+        if (lines.length === 0) return;
+
+        // Sort lines vertically by their center Y coordinate
+        lines.sort((a, b) => a.centerY - b.centerY);
+
+        // Group lines into rows based on overlapping/close center Y coordinates
+        const rows: any[][] = [];
+        lines.forEach((line) => {
+          if (rows.length === 0) {
+            rows.push([line]);
+            return;
+          }
+
+          const currentRow = rows[rows.length - 1];
+          const avgCenterY = currentRow.reduce((sum, l) => sum + l.centerY, 0) / currentRow.length;
+          const avgHeight = currentRow.reduce((sum, l) => sum + l.height, 0) / currentRow.length;
+
+          // If vertical difference is within 50% of the line height (or at least 8 pixels), it's the same row
+          const threshold = Math.max(avgHeight * 0.5, 8);
+          if (Math.abs(line.centerY - avgCenterY) <= threshold) {
+            currentRow.push(line);
+          } else {
+            rows.push([line]);
+          }
+        });
+
+        // Combine row elements from left to right using tabs for clear column separation
+        rows.forEach((row) => {
+          row.sort((a, b) => a.minX - b.minX);
+          const rowText = row.map((l) => l.text).join("\t");
+          fullText += rowText + "\n";
+        });
       });
     }
 
