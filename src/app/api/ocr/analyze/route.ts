@@ -141,9 +141,9 @@ export async function POST(req: NextRequest) {
 
         // 4. Group lines into 3 columns dynamically adjusted by page width
         const pageWidth = p.width ? Number(p.width) : 1000;
-        const colLeft = lines.filter(l => l.x < pageWidth * 0.45);
-        const colMiddle = lines.filter(l => l.x >= pageWidth * 0.45 && l.x < pageWidth * 0.75);
-        const colRight = lines.filter(l => l.x >= pageWidth * 0.75);
+        const colLeft = lines.filter(l => l.x < pageWidth * 0.50);
+        const colMiddle = lines.filter(l => l.x >= pageWidth * 0.50 && l.x < pageWidth * 0.65);
+        const colRight = lines.filter(l => l.x >= pageWidth * 0.65);
 
         // Sort columns vertically from top to bottom
         colLeft.sort((a, b) => a.y - b.y);
