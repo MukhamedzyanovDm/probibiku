@@ -6,6 +6,44 @@ import Portal from "@/components/Portal";
 import React, { useState, useEffect } from "react";
 import { Car, ServiceRecord, updateCar } from "@/utils/garageStore";
 
+// Client-side image compression helper
+function compressImage(file: File, maxWidth = 1200, quality = 0.85): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error("Canvas toBlob failed"));
+          },
+          "image/jpeg",
+          quality
+        );
+      };
+      img.onerror = (err) => reject(err);
+    };
+    reader.onerror = (err) => reject(err);
+  });
+}
+
 interface AddRecordModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -242,14 +280,23 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
   };
 
   const handleRealOcrUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const rawFile = e.target.files?.[0];
+    if (!rawFile) return;
 
     setIsOcrActive(true);
-    setOcrProgress(10);
-    setOcrLog("Загрузка файла в облако...");
+    setOcrProgress(5);
+    setOcrLog("Сжатие и подготовка изображения...");
 
     try {
+      // Compress and convert to image/jpeg
+      const compressedBlob = await compressImage(rawFile);
+      const file = new File([compressedBlob], rawFile.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+        type: "image/jpeg"
+      });
+
+      setOcrProgress(10);
+      setOcrLog("Загрузка файла в облако...");
+
       // 1. Get presigned URL
       const uploadRes = await fetch("/api/upload", {
         method: "POST",
