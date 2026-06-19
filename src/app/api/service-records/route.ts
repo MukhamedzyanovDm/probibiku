@@ -84,6 +84,85 @@ export async function POST(req: NextRequest) {
   }
 }
 
+
+export async function PATCH(req: NextRequest) {
+  console.log("🚀 PATCH /api/service-records - Started");
+  const startTime = Date.now();
+  
+  try {
+    const data = await req.json();
+    console.log("📦 Received update data:", JSON.stringify(data, null, 2));
+    
+    const { 
+      id,
+      vehicleId, 
+      date, 
+      odometer, 
+      serviceCenterName, 
+      items, 
+      totalAmount 
+    } = data;
+
+    if (!id || !vehicleId || !date || !totalAmount) {
+      console.error("❌ Missing required fields");
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    console.log("⏳ Starting DB transaction for update...");
+    await db.transaction(async (tx) => {
+      // 1. Update service record
+      console.log("📝 Updating service record...");
+      await tx.update(serviceRecords)
+        .set({
+          date: new Date(date).toISOString(),
+          odometer: odometer ? parseInt(odometer.toString()) : 0,
+          totalAmount: totalAmount.toString(),
+          serviceCenterName,
+        })
+        .where(eq(serviceRecords.id, id));
+
+      // 2. Re-create work items (Delete then Insert)
+      console.log("🛠 Updating work items (re-create)...");
+      await tx.delete(workItems).where(eq(workItems.recordId, id));
+
+      if (items && items.length > 0) {
+        await tx.insert(workItems).values(
+          items.map((item: any) => ({
+            recordId: id,
+            description: item.description,
+            cost: item.cost.toString(),
+            quantity: (item.quantity || "1").toString(),
+          }))
+        );
+      }
+
+      // 3. Update vehicle mileage if higher
+      console.log("🚗 Checking vehicle mileage...");
+      const [vehicle] = await tx.select().from(vehicles).where(eq(vehicles.id, vehicleId));
+      const newOdometer = odometer ? parseInt(odometer.toString()) : 0;
+      
+      if (vehicle && newOdometer > (vehicle.currentMileage || 0)) {
+        console.log(`📈 Updating mileage from ${vehicle.currentMileage} to ${newOdometer}`);
+        await tx.update(vehicles)
+          .set({ currentMileage: newOdometer })
+          .where(eq(vehicles.id, vehicleId));
+        console.log("✅ Mileage updated");
+      }
+    });
+
+    const duration = Date.now() - startTime;
+    console.log(`✨ PATCH /api/service-records - Success (${duration}ms)`);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    console.error(`💥 PATCH /api/service-records - Failed after ${duration}ms:`, error);
+    return NextResponse.json({ 
+      error: "Internal Server Error", 
+      details: error instanceof Error ? error.message : String(error) 
+    }, { status: 500 });
+  }
+}
+
 export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);

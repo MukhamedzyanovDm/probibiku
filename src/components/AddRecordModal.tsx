@@ -235,6 +235,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
 
     if (isDbVehicle) {
       const dbPayload = {
+        id: recordToEdit ? recordToEdit.id : undefined,
         vehicleId: car.id,
         date: new Date(date).toISOString(),
         odometer: Number(mileage),
@@ -247,8 +248,10 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         }))
       };
 
+      const method = recordToEdit ? "PATCH" : "POST";
+
       fetch("/api/service-records", {
-        method: "POST",
+        method,
         headers: {
           "Content-Type": "application/json"
         },
