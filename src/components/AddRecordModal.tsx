@@ -210,7 +210,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
 
     setErrors({});
 
-    const totalCalculatedCost = items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+    const totalCalculatedCost = items.reduce((sum, item) => sum + Math.round(item.quantity * item.price * 100) / 100, 0);
     
     // Form description from items list
     const formattedDescription = (note.trim() ? note.trim() + "\n\n" : "") + 
@@ -644,7 +644,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
                 <div className="rounded-2xl bg-blue-50/50 border border-blue-100/50 p-4 flex items-center justify-between">
                   <span className="text-xs text-slate-600 font-medium">Общая стоимость чека:</span>
                   <span className="text-lg font-bold text-blue-600 font-mono">
-                    {items.reduce((sum, item) => sum + (item.quantity * item.price), 0).toLocaleString("ru-RU")} ₽
+                    {items.reduce((sum, item) => sum + Math.round(item.quantity * item.price * 100) / 100, 0).toLocaleString("ru-RU")} ₽
                   </span>
                 </div>
 
