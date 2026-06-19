@@ -53,43 +53,63 @@ export async function POST(req: NextRequest) {
     let fullText = "";
     if (textDetection.pages) {
       textDetection.pages.forEach((p: any) => {
-        // 1. Calculate the average text tilt angle on the page
-        let totalWeight = 0;
-        let weightedAngleSum = 0;
-
+        // 1. Collect centers of all detected lines on the page
+        const lineCenters: any[] = [];
         p.blocks?.forEach((b: any) => {
           b.lines?.forEach((l: any) => {
+            if (!l.words || l.words.length === 0) return;
             const vertices = l.boundingBox?.vertices || [];
-            if (vertices.length >= 2) {
-              const v0 = vertices[0];
-              const v1 = vertices[1];
-              const dx = Number(v1.x || 0) - Number(v0.x || 0);
-              const dy = Number(v1.y || 0) - Number(v0.y || 0);
-              const len = Math.sqrt(dx * dx + dy * dy);
-              if (len > 10) {
-                const angle = Math.atan2(dy, dx);
-                // Exclude extreme rotations (> 45 deg) to avoid flipping rows/columns
-                if (Math.abs(angle) < Math.PI / 4) {
-                  weightedAngleSum += angle * len;
-                  totalWeight += len;
-                }
-              }
-            }
+            const yCoords = vertices.map((v: any) => Number(v.y || 0));
+            const xCoords = vertices.map((v: any) => Number(v.x || 0));
+            const minY = yCoords.length > 0 ? Math.min(...yCoords) : 0;
+            const maxY = yCoords.length > 0 ? Math.max(...yCoords) : 0;
+            const minX = xCoords.length > 0 ? Math.min(...xCoords) : 0;
+            const maxX = xCoords.length > 0 ? Math.max(...xCoords) : 0;
+            lineCenters.push({
+              x: minX + (maxX - minX) / 2,
+              y: minY + (maxY - minY) / 2
+            });
           });
         });
 
-        const theta = totalWeight > 0 ? weightedAngleSum / totalWeight : 0;
+        // 2. Search for the best tilt angle by maximizing horizontal alignment
+        let theta = 0;
+        if (lineCenters.length > 0) {
+          let bestScore = -1;
+          for (let deg = -8; deg <= 8; deg += 0.2) {
+            const rad = (deg * Math.PI) / 180;
+            const cos = Math.cos(-rad);
+            const sin = Math.sin(-rad);
+
+            const rotatedY = lineCenters.map(w => w.x * sin + w.y * cos);
+            rotatedY.sort((a, b) => a - b);
+
+            let score = 0;
+            for (let i = 0; i < rotatedY.length - 1; i++) {
+              const diff = rotatedY[i+1] - rotatedY[i];
+              if (diff <= 5) {
+                score += (6 - diff);
+              }
+            }
+
+            if (score > bestScore) {
+              bestScore = score;
+              theta = rad;
+            }
+          }
+        }
+
         const cosT = Math.cos(-theta);
         const sinT = Math.sin(-theta);
+        console.log(`📐 Detected tilt angle: ${(theta * 180 / Math.PI).toFixed(2)}°`);
 
-        // 2. Extract lines with de-rotated coordinates
+        // 3. Extract lines with de-rotated coordinates
         const lines: any[] = [];
         p.blocks?.forEach((b: any) => {
           b.lines?.forEach((l: any) => {
             if (!l.words || l.words.length === 0) return;
             
             const vertices = l.boundingBox?.vertices || [];
-            // Rotate each vertex back by -theta
             const rVertices = vertices.map((v: any) => {
               const x = Number(v.x || 0);
               const y = Number(v.y || 0);
@@ -111,48 +131,34 @@ export async function POST(req: NextRequest) {
             
             lines.push({
               text,
-              minY,
-              maxY,
-              minX,
-              maxX,
-              height,
-              centerY: minY + height / 2
+              x: minX,
+              y: minY + height / 2
             });
           });
         });
 
         if (lines.length === 0) return;
 
-        // Sort lines vertically by their de-rotated center Y coordinate
-        lines.sort((a, b) => a.centerY - b.centerY);
+        // 4. Group lines into 3 columns dynamically adjusted by page width
+        const pageWidth = p.width ? Number(p.width) : 1000;
+        const colLeft = lines.filter(l => l.x < pageWidth * 0.45);
+        const colMiddle = lines.filter(l => l.x >= pageWidth * 0.45 && l.x < pageWidth * 0.75);
+        const colRight = lines.filter(l => l.x >= pageWidth * 0.75);
 
-        // Group lines into rows based on overlapping/close center Y coordinates
-        const rows: any[][] = [];
-        lines.forEach((line) => {
-          if (rows.length === 0) {
-            rows.push([line]);
-            return;
-          }
+        // Sort columns vertically from top to bottom
+        colLeft.sort((a, b) => a.y - b.y);
+        colMiddle.sort((a, b) => a.y - b.y);
+        colRight.sort((a, b) => a.y - b.y);
 
-          const currentRow = rows[rows.length - 1];
-          const avgCenterY = currentRow.reduce((sum, l) => sum + l.centerY, 0) / currentRow.length;
-          const avgHeight = currentRow.reduce((sum, l) => sum + l.height, 0) / currentRow.length;
+        // Reconstruct layout
+        fullText += "--- КОЛОНКА 1 (НАИМЕНОВАНИЕ / РЕКВИЗИТЫ СЛЕВА) ---\n";
+        colLeft.forEach(l => fullText += l.text + "\n");
 
-          // If vertical difference is within 50% of the average height (min 8px), it's the same row
-          const threshold = Math.max(avgHeight * 0.5, 8);
-          if (Math.abs(line.centerY - avgCenterY) <= threshold) {
-            currentRow.push(line);
-          } else {
-            rows.push([line]);
-          }
-        });
+        fullText += "\n--- КОЛОНКА 2 (КОДЫ ДЕТАЛЕЙ / РАБОТ / РЕКВИЗИТЫ В ЦЕНТРЕ) ---\n";
+        colMiddle.forEach(l => fullText += l.text + "\n");
 
-        // Combine row elements from left to right using tabs for clear column separation
-        rows.forEach((row) => {
-          row.sort((a, b) => a.minX - b.minX);
-          const rowText = row.map((l) => l.text).join("\t");
-          fullText += rowText + "\n";
-        });
+        fullText += "\n--- КОЛОНКА 3 (КОЛИЧЕСТВО / ЦЕНЫ / РЕКВИЗИТЫ СПРАВА) ---\n";
+        colRight.forEach(l => fullText += l.text + "\n");
       });
     }
 
@@ -178,7 +184,16 @@ export async function POST(req: NextRequest) {
         messages: [
           {
             role: "system",
-            text: "Ты ассистент автолюбителя. Извлеки данные из текста чека СТО в JSON: date (YYYY-MM-DD), totalAmount (number/string, e.g. '12500.50'), items (list of {description, cost, quantity}), mileage (number/null), serviceCenterName (string/null). Только чистый JSON без markdown."
+            text: "Ты ассистент автолюбителя. Тебе дан текст чека СТО, разделенный на 3 колонки: Колонка 1 (Названия работ и запчастей), Колонка 2 (Коды) и Колонка 3 (Единицы измерения, количество и цены).\n" +
+                  "Твоя задача — извлечь данные в JSON с полями:\n" +
+                  "- date (YYYY-MM-DD)\n" +
+                  "- totalAmount (число или строка, например, '5000.00')\n" +
+                  "- mileage (пробег, число или null)\n" +
+                  "- serviceCenterName (название СТО, строка или null)\n" +
+                  "- items (список позиций, каждая содержит {description, cost, quantity}).\n\n" +
+                  "ПРАВИЛО СОПОСТАВЛЕНИЯ ПОЗИЦИЙ:\n" +
+                  "Сопоставляй позиции строго по порядку следования сверху вниз. 1-я строка из Колонки 1 соответствует 1-й строке из Колонки 2 и 1-й строке из Колонки 3. Игнорируй заголовки колонок.\n" +
+                  "Будь предельно аккуратен и не путай цены и количества местами. Верни только чистый JSON без markdown."
           },
           { role: "user", text: fullText }
         ]
