@@ -2,6 +2,7 @@
 import { Star, Pencil, CheckCircle2, XCircle } from "lucide-react";
 
 import React, { useState } from "react";
+import Portal from "@/components/Portal";
 
 const REVIEWS = [
   {
@@ -118,7 +119,8 @@ export default function Testimonials() {
 
       {/* Interactive Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <Portal>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           {/* Backdrop */}
           <div
             onClick={() => setModalOpen(false)}
@@ -198,6 +200,7 @@ export default function Testimonials() {
             )}
           </div>
         </div>
+        </Portal>
       )}
     </section>
   );

@@ -1,6 +1,19 @@
 import { db } from "./index";
-import { vehicles, serviceRecords } from "./schema";
+import { vehicles, serviceRecords, users } from "./schema";
 import { eq, desc } from "drizzle-orm";
+
+export async function getDemoUser() {
+  const allUsers = await db.select().from(users).limit(1);
+  if (allUsers.length > 0) {
+    return allUsers[0];
+  }
+  // Fallback test user
+  const [newUser] = await db.insert(users).values({
+    email: "test@example.com",
+    phone: "+79991234567",
+  }).returning();
+  return newUser;
+}
 
 export async function getVehicles(userId: string) {
   return await db.query.vehicles.findMany({

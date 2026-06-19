@@ -1,6 +1,13 @@
 "use client";
 
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import {
   Loader2,
   ArrowLeft,
   PlusCircle,
@@ -12,6 +19,7 @@ import {
   Settings,
   Search,
   Trash2,
+  MoreVertical,
   MessageCircle,
   BadgeCheck,
   Download,
@@ -25,8 +33,9 @@ import Link from "next/link";
 import Background from "@/components/Background";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Car, ServiceRecord, getCarById, updateCar } from "@/utils/garageStore";
+import { Car, ServiceRecord, CarPart, getCarById, updateCar } from "@/utils/garageStore";
 import AddRecordModal from "@/components/AddRecordModal";
+import Portal from "@/components/Portal";
 import ShareModal from "@/components/ShareModal";
 import { Button } from "@/components/ui/button";
 
@@ -39,15 +48,89 @@ const SEARCH_PROVIDERS: Record<string, string> = {
   "Свой сайт": "custom"
 };
 
+const mapDbVehicleToClientCar = (dbVehicle: any): Car => {
+  const serviceHistory: ServiceRecord[] = (dbVehicle.serviceRecords || []).map((rec: any) => {
+    const partsList = (rec.items || [])
+      .filter((item: any) => item.category === "parts")
+      .map((item: any) => item.description)
+      .join(", ");
+    
+    const workDescriptions = (rec.items || [])
+      .map((item: any) => {
+        if (item.quantity && parseFloat(item.quantity) !== 1) {
+          return `${item.description} (${item.quantity} шт.)`;
+        }
+        return item.description;
+      })
+      .join("\n");
+
+    const fullDescription = rec.serviceCenterName 
+      ? `СТО: ${rec.serviceCenterName}\n${workDescriptions}` 
+      : workDescriptions;
+
+    let type: "ТО" | "Ремонт" | "Тюнинг" | "Другое" = "Другое";
+    const hasRepair = (rec.items || []).some((item: any) => item.category === "repair");
+    const hasMaint = (rec.items || []).some((item: any) => item.category === "maintenance");
+    const hasTuning = (rec.items || []).some((item: any) => item.category === "tuning");
+    if (hasRepair) type = "Ремонт";
+    else if (hasMaint) type = "ТО";
+    else if (hasTuning) type = "Тюнинг";
+
+    return {
+      id: rec.id,
+      date: rec.date ? rec.date.split("T")[0] : "",
+      type,
+      mileage: rec.odometer || 0,
+      cost: parseFloat(rec.totalAmount) || 0,
+      description: fullDescription || "Запись обслуживания",
+      parts: partsList,
+      receiptAttached: rec.status === "processed" || rec.status === "manual" || !!rec.receiptImageUrl,
+      receiptUrl: rec.receiptUrl || undefined
+    };
+  });
+
+  let parts: any[] = [];
+  if (typeof window !== "undefined") {
+    const storedParts = localStorage.getItem(`parts_for_${dbVehicle.id}`);
+    if (storedParts) {
+      try {
+        parts = JSON.parse(storedParts);
+      } catch (e) {
+        parts = [];
+      }
+    }
+  }
+
+  const fuelHistory = [8.0, 8.2, 7.9, 8.1, 8.3];
+
+  return {
+    id: dbVehicle.id,
+    make: dbVehicle.make,
+    model: dbVehicle.model,
+    year: dbVehicle.year || new Date().getFullYear(),
+    licensePlate: dbVehicle.plateNumber || "",
+    mileage: dbVehicle.currentMileage || 0,
+    purchaseDate: dbVehicle.createdAt ? dbVehicle.createdAt.split("T")[0] : "",
+    health: 95,
+    imageUrl: dbVehicle.imageUrl || undefined,
+    fuelHistory,
+    serviceHistory,
+    parts
+  };
+};
+
 export default function CarDetailPage() {
   const { id } = useParams() as { id: string };
   const router = useRouter();
   const [car, setCar] = useState<Car | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   // Modals state
   const [isAddRecordOpen, setIsAddRecordOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [partToDeleteId, setPartToDeleteId] = useState<string | null>(null);
+  const [recordToDeleteId, setRecordToDeleteId] = useState<string | null>(null);
   const [recordToEdit, setRecordToEdit] = useState<ServiceRecord | null>(null);
   const [isSearchSettingsOpen, setIsSearchSettingsOpen] = useState(false);
   const [searchProvider, setSearchProvider] = useState("Яндекс");
@@ -57,14 +140,31 @@ export default function CarDetailPage() {
   const [newPartName, setNewPartName] = useState("");
   const [newPartNumber, setNewPartNumber] = useState("");
 
-  const loadCar = () => {
-    const decodedId = decodeURIComponent(id);
-    const fetched = getCarById(decodedId);
-    if (!fetched) {
-      router.push("/garage");
-      return;
+  const loadCar = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const decodedId = decodeURIComponent(id);
+      const res = await fetch(`/api/vehicles?id=${decodedId}`);
+      if (!res.ok) {
+        // Fallback to localStorage
+        const localCar = getCarById(decodedId);
+        if (localCar) {
+          setCar(localCar);
+          setIsLoading(false);
+          return;
+        }
+        throw new Error("Не удалось загрузить данные автомобиля");
+      }
+      const dbVehicle = await res.json();
+      const clientCar = mapDbVehicleToClientCar(dbVehicle);
+      setCar(clientCar);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Ошибка загрузки");
+    } finally {
+      setIsLoading(false);
     }
-    setCar(fetched);
   };
 
   useEffect(() => {
@@ -81,12 +181,25 @@ export default function CarDetailPage() {
     }
   }, [id]);
 
-  if (!car) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center font-sans">
         <div className="text-center">
           <Loader2 className="text-4xl text-blue-500 animate-spin mx-auto" />
           <p className="text-sm text-slate-500 font-light mt-3">Загрузка информации об автомобиле...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !car) {
+    return (
+      <div className="min-h-screen flex items-center justify-center font-sans">
+        <div className="text-center">
+          <p className="text-sm text-red-500 font-light mb-4">Ошибка: {error || "Автомобиль не найден"}</p>
+          <Link href="/garage" className="text-xs text-blue-500 hover:underline">
+            Вернуться в гараж
+          </Link>
         </div>
       </div>
     );
@@ -108,9 +221,14 @@ export default function CarDetailPage() {
       partNumber: newPartNumber
     };
 
+    const updatedParts = [...car.parts, newPart];
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`parts_for_${car.id}`, JSON.stringify(updatedParts));
+    }
+
     const updatedCar: Car = {
       ...car,
-      parts: [...car.parts, newPart]
+      parts: updatedParts
     };
 
     updateCar(updatedCar);
@@ -124,6 +242,10 @@ export default function CarDetailPage() {
   };
 
   const handleDownloadReceipt = (rec: any) => {
+    if (rec.receiptUrl) {
+      window.open(rec.receiptUrl, "_blank");
+      return;
+    }
     const content = `=== ПРОБИБИКУ: ПОДТВЕРЖДЕННЫЙ ЧЕК ===\nЭлектронный отчет по техническому обслуживанию\nДата фиксации: ${rec.date}\n\nАвтомобиль: ${car.make} ${car.model}\nГосномер: ${car.licensePlate || "Без госномера"}\n\nТип выполненных работ: ${rec.type}\nЗафиксированный пробег: ${rec.mileage.toLocaleString("ru-RU")} км\nСтоимость работ/деталей: ${rec.cost.toLocaleString("ru-RU")} ₽\n\nДетализированное описание:\n${rec.description}\n\nСписок запчастей и материалов:\n${rec.parts || 'Не указаны'}\n\n=====================================\nСТАТУС ПРОВЕРКИ: УСПЕШНО ПРОВЕРЕНО ИИ\nЗапись верифицирована. Доверие покупателей +10% к стоимости авто.\nСпасибо, что делаете историю обслуживания прозрачной!`;
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -132,6 +254,31 @@ export default function CarDetailPage() {
     link.download = `receipt-${rec.id}.txt`;
     link.click();
     URL.revokeObjectURL(url);
+  };
+
+  const executeDeleteRecord = async (recordId: string) => {
+    const isDbVehicle = car.id.length === 36 && car.id.includes("-");
+    
+    if (isDbVehicle) {
+      try {
+        const res = await fetch(`/api/service-records?id=${recordId}`, {
+          method: "DELETE",
+        });
+        if (!res.ok) throw new Error("Не удалось удалить запись");
+        loadCar();
+      } catch (err: any) {
+        console.error(err);
+        alert("Ошибка удаления: " + err.message);
+      }
+    } else {
+      const updatedHistory = car.serviceHistory.filter((r) => r.id !== recordId);
+      const updatedCar: Car = {
+        ...car,
+        serviceHistory: updatedHistory,
+      };
+      updateCar(updatedCar);
+      setCar(updatedCar);
+    }
   };
 
   const handleEditRecord = (rec: ServiceRecord) => {
@@ -500,27 +647,45 @@ export default function CarDetailPage() {
                         )}
                         
                         <div className="flex items-center gap-2 ml-auto shrink-0">
-                          <button
-                            onClick={() => handleEditRecord(rec)}
-                            className="relative group w-8 h-8 rounded-full bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-500 flex items-center justify-center transition-all active:scale-95 cursor-pointer shrink-0"
-                          >
-                            <Pencil className="w-3.5 h-3.5" />
-                            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1 bg-slate-900 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-md">
-                              Редактировать
-                            </span>
-                          </button>
-                          
-                          {rec.receiptAttached && (
-                            <button
-                              onClick={() => handleDownloadReceipt(rec)}
-                              className="relative group w-8 h-8 rounded-full bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-500 flex items-center justify-center transition-all active:scale-95 cursor-pointer shrink-0"
-                            >
-                              <Download className="w-4 h-4" />
-                              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1 bg-slate-900 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-md">
-                                Скачать чек
-                              </span>
-                            </button>
-                          )}
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button
+                                className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-all active:scale-95 cursor-pointer shrink-0"
+                                title="Действия"
+                              >
+                                <MoreVertical className="w-4 h-4" />
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-40 rounded-2xl p-1.5 border border-slate-200/80 bg-white shadow-lg animate-in fade-in-50 zoom-in-95 duration-100 z-50">
+                              <DropdownMenuItem
+                                onClick={() => handleEditRecord(rec)}
+                                className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-slate-700 hover:bg-slate-50 cursor-pointer focus:bg-slate-50 focus:text-slate-900 outline-none"
+                              >
+                                <Pencil className="w-3.5 h-3.5 text-slate-400" />
+                                Редактировать
+                              </DropdownMenuItem>
+                              
+                              {rec.receiptAttached && (
+                                <DropdownMenuItem
+                                  onClick={() => handleDownloadReceipt(rec)}
+                                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-slate-700 hover:bg-slate-50 cursor-pointer focus:bg-slate-50 focus:text-slate-900 outline-none"
+                                >
+                                  <Download className="w-3.5 h-3.5 text-slate-400" />
+                                  Скачать чек
+                                </DropdownMenuItem>
+                              )}
+                              
+                              <DropdownMenuSeparator className="my-1 border-t border-slate-100" />
+                              
+                              <DropdownMenuItem
+                                onClick={() => setRecordToDeleteId(rec.id)}
+                                className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-red-600 hover:bg-red-50 cursor-pointer focus:bg-red-50 focus:text-red-700 outline-none"
+                              >
+                                <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                                Удалить
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
                     </div>
@@ -699,8 +864,55 @@ export default function CarDetailPage() {
           car={car}
         />
 
+        {/* Delete Record Confirmation Modal */}
+        {recordToDeleteId && (
+          <Portal>
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <div 
+              className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm transition-opacity duration-300 animate-in fade-in" 
+              onClick={() => setRecordToDeleteId(null)}
+            />
+            
+            {/* Modal Content */}
+            <div className="relative w-full max-w-sm rounded-[2rem] bg-white border border-slate-200/80 shadow-2xl p-6 z-10 animate-in zoom-in-95 duration-200">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-12 h-12 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-500 mb-4 shadow-[0_4px_12px_rgba(239,68,68,0.1)]">
+                  <Trash2 className="w-5 h-5" />
+                </div>
+                <h3 className="text-sm font-semibold text-slate-900">Удалить запись обслуживания?</h3>
+                <p className="text-xs text-slate-500 font-light mt-2 leading-relaxed">
+                  Вы уверены, что хотите удалить эту запись? Данные о расходах будут безвозвратно стерты
+                </p>
+                
+                <div className="flex flex-col-reverse sm:flex-row gap-3 w-full mt-6">
+                  <button
+                    onClick={() => setRecordToDeleteId(null)}
+                    className="flex-1 rounded-full border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-normal py-3 transition-colors cursor-pointer"
+                  >
+                    Отмена
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (recordToDeleteId) {
+                        await executeDeleteRecord(recordToDeleteId);
+                        setRecordToDeleteId(null);
+                      }
+                    }}
+                    className="flex-1 rounded-full bg-red-600 hover:bg-red-500 border border-red-700 text-white text-xs font-normal py-3 shadow-[0_4px_12px_rgba(239,68,68,0.2)] transition-all active:scale-95 cursor-pointer"
+                  >
+                    Удалить
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          </Portal>
+        )}
+
         {/* Delete Part Confirmation Modal */}
         {partToDeleteId && (
+          <Portal>
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             {/* Backdrop */}
             <div 
@@ -729,9 +941,13 @@ export default function CarDetailPage() {
                   <button
                     onClick={() => {
                       if (partToDeleteId) {
+                        const updatedParts = car.parts.filter(p => p.id !== partToDeleteId);
+                        if (typeof window !== "undefined") {
+                          localStorage.setItem(`parts_for_${car.id}`, JSON.stringify(updatedParts));
+                        }
                         const updatedCar: Car = {
                           ...car,
-                          parts: car.parts.filter(p => p.id !== partToDeleteId)
+                          parts: updatedParts
                         };
                         updateCar(updatedCar);
                         setCar(updatedCar);
@@ -746,6 +962,7 @@ export default function CarDetailPage() {
               </div>
             </div>
           </div>
+          </Portal>
         )}
 
       </main>

@@ -1,15 +1,63 @@
 "use client";
 
 import { XCircle, Camera } from "lucide-react";
-
+import Portal from "@/components/Portal";
 import React, { useState, useEffect } from "react";
-import { Car, addCar, updateCar } from "@/utils/garageStore";
+
+interface Car {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  licensePlate: string;
+  mileage: number;
+  purchaseDate?: string;
+  imageUrl?: string;
+}
 
 interface AddCarModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: () => void;
   carToEdit?: Car | null;
+}
+
+// Client-side image compression helper
+function compressImage(file: File, maxWidth = 1200, quality = 0.85): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error("Canvas toBlob failed"));
+          },
+          "image/jpeg",
+          quality
+        );
+      };
+      img.onerror = (err) => reject(err);
+    };
+    reader.onerror = (err) => reject(err);
+  });
 }
 
 export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddCarModalProps) {
@@ -19,19 +67,24 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
   const [licensePlate, setLicensePlate] = useState("");
   const [mileage, setMileage] = useState(0);
   const [purchaseDate, setPurchaseDate] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ make?: string; model?: string }>({});
 
   useEffect(() => {
     if (isOpen) {
+      setSelectedFile(null);
       if (carToEdit) {
         setMake(carToEdit.make);
         setModel(carToEdit.model);
         setYear(carToEdit.year);
         setLicensePlate(carToEdit.licensePlate);
         setMileage(carToEdit.mileage);
-        setPurchaseDate(carToEdit.purchaseDate);
-        setImageUrl(carToEdit.imageUrl || "");
+        setPurchaseDate(carToEdit.purchaseDate || "");
+        setPreviewUrl(carToEdit.imageUrl || "");
       } else {
         setMake("");
         setModel("");
@@ -39,7 +92,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
         setLicensePlate("");
         setMileage(0);
         setPurchaseDate(new Date().toISOString().split("T")[0]);
-        setImageUrl("");
+        setPreviewUrl("");
       }
       setErrors({});
     }
@@ -47,7 +100,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: { make?: string; model?: string } = {};
     if (!make.trim()) {
@@ -63,43 +116,77 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
     }
 
     setErrors({});
+    setIsLoading(true);
 
-    const defaultImg = "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=600&q=80";
+    try {
+      let uploadedUrl = previewUrl || null;
 
-    if (carToEdit) {
-      updateCar({
-        ...carToEdit,
+      // 1. If a new file is selected, compress and upload to S3
+      if (selectedFile) {
+        // Compress image client-side to keep file small (typically 200-400KB)
+        const compressedBlob = await compressImage(selectedFile);
+        
+        // Request presigned URL from API
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contentType: "image/jpeg",
+            fileName: selectedFile.name,
+          }),
+        });
+
+        if (!uploadRes.ok) throw new Error("Failed to request upload URL");
+        
+        const { uploadUrl, publicUrl } = await uploadRes.json();
+
+        // Upload directly to Yandex S3 via PUT request
+        const s3Res = await fetch(uploadUrl, {
+          method: "PUT",
+          headers: { "Content-Type": "image/jpeg" },
+          body: compressedBlob,
+        });
+
+        if (!s3Res.ok) throw new Error("Failed to upload image to S3");
+        
+        uploadedUrl = publicUrl;
+      }
+
+      // 2. Submit vehicle payload to our database endpoints
+      const body = {
+        id: carToEdit?.id,
         make,
         model,
-        year,
-        licensePlate,
-        mileage,
-        purchaseDate,
-        imageUrl: imageUrl || defaultImg
+        year: year ? year.toString() : null,
+        plateNumber: licensePlate || null,
+        currentMileage: mileage ? mileage.toString() : "0",
+        imageUrl: uploadedUrl,
+      };
+
+      const method = carToEdit ? "PATCH" : "POST";
+
+      const res = await fetch("/api/vehicles", {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
       });
-    } else {
-      addCar({
-        make,
-        model,
-        year,
-        licensePlate,
-        mileage,
-        purchaseDate,
-        imageUrl: imageUrl || defaultImg
-      });
+
+      if (!res.ok) throw new Error("Failed to save vehicle payload");
+
+      onSave();
+      onClose();
+    } catch (error) {
+      console.error("Error saving vehicle:", error);
+    } finally {
+      setIsLoading(false);
     }
-    onSave();
-    onClose();
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
@@ -120,7 +207,8 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <Portal>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300"
@@ -138,7 +226,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
             onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
           >
-            <XCircle className="w-6 h-6" />
+            <XCircle className="w-7 h-7" />
           </button>
         </div>
 
@@ -242,14 +330,13 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
           <div>
             <label className="block text-xs text-slate-500 font-light mb-1.5">Фото автомобиля</label>
             <div className="flex items-center gap-4">
-              {imageUrl && (
+              {previewUrl && (
                 <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={imageUrl} alt="Превью" className="w-full h-full object-cover" />
+                  <img src={previewUrl} alt="Превью" className="w-full h-full object-cover" />
                 </div>
               )}
               <label className="flex-1 flex flex-col items-center justify-center border border-dashed border-slate-200 hover:border-blue-400 bg-slate-50/50 hover:bg-blue-50/10 rounded-xl py-3 cursor-pointer transition-colors">
-                <Camera className="w-[18px] h-[18px] text-slate-400 mb-1" />
+                <Camera className="w-5 h-5 text-slate-400 mb-1" />
                 <span className="text-xs text-slate-600 font-normal">Выбрать файл с компьютера</span>
                 <input
                   type="file"
@@ -272,13 +359,15 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
             </button>
             <button
               type="submit"
-              className="flex-1 rounded-full bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal py-3 shadow-[0_4px_12px_rgba(59,130,246,0.2)] hover:from-blue-600 hover:to-blue-700 transition-all"
+              disabled={isLoading}
+              className="flex-1 rounded-full bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal py-3 shadow-[0_4px_12px_rgba(59,130,246,0.2)] hover:from-blue-600 hover:to-blue-700 transition-all disabled:opacity-50"
             >
-              {carToEdit ? "Сохранить изменения" : "Создать автомобиль"}
+              {isLoading ? "Сохранение..." : carToEdit ? "Сохранить изменения" : "Создать автомобиль"}
             </button>
           </div>
         </form>
       </div>
     </div>
+    </Portal>
   );
 }

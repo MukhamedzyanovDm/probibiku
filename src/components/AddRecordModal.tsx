@@ -1,6 +1,7 @@
 "use client";
 
 import { XCircle, Camera, Pencil, ChevronDown, PlusCircle, Trash2 } from "lucide-react";
+import Portal from "@/components/Portal";
 
 import React, { useState, useEffect } from "react";
 import { Car, ServiceRecord, updateCar } from "@/utils/garageStore";
@@ -192,15 +193,52 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
       updatedHistory = [newRecord, ...updatedHistory];
     }
 
-    const updatedCar: Car = {
-      ...car,
-      mileage: Math.max(car.mileage, Number(mileage)),
-      serviceHistory: updatedHistory
-    };
+    const isDbVehicle = car.id.length === 36 && car.id.includes("-");
 
-    updateCar(updatedCar);
-    onSave();
-    onClose();
+    if (isDbVehicle) {
+      const dbPayload = {
+        vehicleId: car.id,
+        date: new Date(date).toISOString(),
+        odometer: Number(mileage),
+        serviceCenterName: note.trim() || "Автосервис",
+        totalAmount: totalCalculatedCost,
+        items: items.map(item => ({
+          description: item.name,
+          cost: item.price,
+          quantity: item.quantity
+        }))
+      };
+
+      fetch("/api/service-records", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dbPayload)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Не удалось сохранить запись");
+        return res.json();
+      })
+      .then(() => {
+        onSave();
+        onClose();
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Ошибка при сохранении записи: " + err.message);
+      });
+    } else {
+      const updatedCar: Car = {
+        ...car,
+        mileage: Math.max(car.mileage, Number(mileage)),
+        serviceHistory: updatedHistory
+      };
+
+      updateCar(updatedCar);
+      onSave();
+      onClose();
+    }
   };
 
   const handleStartOcrSimulation = () => {
@@ -246,7 +284,8 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <Portal>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300"
@@ -551,5 +590,6 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         </div>
       </div>
     </div>
+    </Portal>
   );
 }

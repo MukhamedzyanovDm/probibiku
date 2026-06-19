@@ -16,8 +16,63 @@ const AVAILABLE_LOGOS = [
   "tesla", "toyota", "volkswagen", "volvo", "zeekr"
 ];
 
+const BRAND_TRANSLATIONS: Record<string, string> = {
+  "ауди": "audi",
+  "аватр": "avatr",
+  "бмв": "bmw",
+  "бид": "byd",
+  "кадиллак": "cadillac",
+  "чанган": "changan",
+  "чери": "chery",
+  "шевроле": "chevrolet",
+  "крайслер": "chrysler",
+  "ситроен": "citroen",
+  "донгфенг": "dongfeng",
+  "фав": "faw",
+  "фиат": "fiat",
+  "форд": "ford",
+  "гак": "gac",
+  "джили": "geely",
+  "генезис": "genesis",
+  "хавейл": "haval",
+  "хавал": "haval",
+  "хонда": "honda",
+  "хендай": "hyundai",
+  "хёндай": "hyundai",
+  "инфинити": "infiniti",
+  "як": "jac",
+  "джак": "jac",
+  "каи": "kaiyi",
+  "киа": "kia",
+  "ленд ровер": "land_rover",
+  "ленд-ровер": "land_rover",
+  "лексус": "lexus",
+  "лисян": "lixiang",
+  "ли": "lixiang",
+  "мазда": "mazda",
+  "мерседес": "mercedes",
+  "мицубиси": "mitsubishi",
+  "мицубиши": "mitsubishi",
+  "ниссан": "nissan",
+  "опель": "opel",
+  "пежо": "peugeot",
+  "порше": "porsche",
+  "рено": "renault",
+  "шкода": "skoda",
+  "субару": "subaru",
+  "сузуки": "suzuki",
+  "танк": "tank",
+  "тесла": "tesla",
+  "тойота": "toyota",
+  "фольксваген": "volkswagen",
+  "вольво": "volvo",
+  "зикр": "zeekr"
+};
+
 export function BrandLogo({ make, className = "" }: BrandLogoProps) {
-  const slug = make.toLowerCase().replace(/\s+/g, "_");
+  const normalized = make.trim().toLowerCase();
+  const mappedBrand = BRAND_TRANSLATIONS[normalized] || normalized;
+  const slug = mappedBrand.replace(/\s+/g, "_");
   const hasLogo = AVAILABLE_LOGOS.includes(slug);
 
   if (hasLogo) {

@@ -7,6 +7,7 @@ export interface ServiceRecord {
   description: string;
   parts: string;
   receiptAttached?: boolean;
+  receiptUrl?: string;
 }
 
 export interface CarPart {

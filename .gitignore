@@ -33,6 +33,7 @@ yarn-error.log*
 # local-only backups and examples
 /autobackup/
 **/autobackup/
+/scratch/
 /Example frontend/
 /research/
 /docs/

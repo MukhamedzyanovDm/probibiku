@@ -1,5 +1,6 @@
 "use client";
 import { XCircle } from "lucide-react";
+import Portal from "@/components/Portal";
 
 import React, { useState } from "react";
 import { Car } from "@/utils/garageStore";
@@ -26,7 +27,8 @@ export default function ShareModal({ isOpen, onClose, car }: ShareModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <Portal>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300"
@@ -102,5 +104,6 @@ export default function ShareModal({ isOpen, onClose, car }: ShareModalProps) {
         </div>
       </div>
     </div>
+    </Portal>
   );
 }

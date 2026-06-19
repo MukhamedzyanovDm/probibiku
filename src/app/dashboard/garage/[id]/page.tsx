@@ -27,6 +27,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Car, ServiceRecord, getCarById, updateCar } from "@/utils/garageStore";
 import AddRecordModal from "@/components/AddRecordModal";
+import Portal from "@/components/Portal";
 import ShareModal from "@/components/ShareModal";
 import { Button } from "@/components/ui/button";
 
@@ -701,6 +702,7 @@ export default function CarDetailPage() {
 
         {/* Delete Part Confirmation Modal */}
         {partToDeleteId && (
+          <Portal>
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             {/* Backdrop */}
             <div 
@@ -746,6 +748,7 @@ export default function CarDetailPage() {
               </div>
             </div>
           </div>
+          </Portal>
         )}
 
       </main>
