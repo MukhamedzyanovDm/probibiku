@@ -352,12 +352,18 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         
         // Map items
         if (data.items && Array.isArray(data.items)) {
-          const mappedItems = data.items.map((item: any, idx: number) => ({
-            id: `item-${Date.now()}-${idx}`,
-            name: item.description || item.name || "Работа / Запчасть",
-            quantity: Number(item.quantity) || 1,
-            price: Number(item.cost) || Number(item.price) || 0
-          }));
+          const mappedItems = data.items.map((item: any, idx: number) => {
+            const qty = parseFloat(item.quantity?.toString() || "1") || 1;
+            const totalCost = parseFloat(item.cost?.toString() || item.price?.toString() || "0") || 0;
+            const unitPrice = qty > 0 ? Math.round((totalCost / qty) * 100) / 100 : totalCost;
+            
+            return {
+              id: `item-${Date.now()}-${idx}`,
+              name: item.description || item.name || "Работа / Запчасть",
+              quantity: qty,
+              price: unitPrice
+            };
+          });
           setItems(mappedItems);
         }
       }
