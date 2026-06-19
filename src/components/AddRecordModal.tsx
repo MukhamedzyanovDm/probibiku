@@ -83,58 +83,68 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         setType(recordToEdit.type);
         setMileage(recordToEdit.mileage);
         
-        const descriptionLines = recordToEdit.description.split("\n");
-        const parsedItems: { id: string; name: string; quantity: number; price: number }[] = [];
-        let parsedNote = "";
-        let isParsingItems = false;
-        
-        for (let i = 0; i < descriptionLines.length; i++) {
-          const line = descriptionLines[i].trim();
-          if (line === "Выполненные работы и запчасти:") {
-            isParsingItems = true;
-            continue;
-          }
-          if (isParsingItems) {
-            if (line.startsWith("• ")) {
-              const match = line.match(/^•\s+(.+?)\s+—\s+(\d+)\s+шт\.\s+x\s+(\d+)\s+₽/);
-              if (match) {
-                parsedItems.push({
-                  id: `item-edit-${i}`,
-                  name: match[1],
-                  quantity: parseInt(match[2]),
-                  price: parseInt(match[3])
-                });
-              } else {
-                parsedItems.push({
-                  id: `item-edit-${i}`,
-                  name: line.substring(2),
-                  quantity: 1,
-                  price: 0
-                });
+        if (recordToEdit.items && recordToEdit.items.length > 0) {
+          setItems(recordToEdit.items.map((item: any, idx: number) => ({
+            id: `item-edit-${idx}`,
+            name: item.description,
+            quantity: item.quantity ? parseFloat(item.quantity.toString()) : 1,
+            price: item.cost ? parseFloat(item.cost.toString()) : 0
+          })));
+          setNote(recordToEdit.serviceCenterName || "");
+        } else {
+          const descriptionLines = recordToEdit.description.split("\n");
+          const parsedItems: { id: string; name: string; quantity: number; price: number }[] = [];
+          let parsedNote = "";
+          let isParsingItems = false;
+          
+          for (let i = 0; i < descriptionLines.length; i++) {
+            const line = descriptionLines[i].trim();
+            if (line === "Выполненные работы и запчасти:") {
+              isParsingItems = true;
+              continue;
+            }
+            if (isParsingItems) {
+              if (line.startsWith("• ")) {
+                const match = line.match(/^•\s+(.+?)\s+—\s+(\d+)\s+шт\.\s+x\s+(\d+)\s+₽/);
+                if (match) {
+                  parsedItems.push({
+                    id: `item-edit-${i}`,
+                    name: match[1],
+                    quantity: parseInt(match[2]),
+                    price: parseInt(match[3])
+                  });
+                } else {
+                  parsedItems.push({
+                    id: `item-edit-${i}`,
+                    name: line.substring(2),
+                    quantity: 1,
+                    price: 0
+                  });
+                }
+              }
+            } else {
+              if (line) {
+                parsedNote += (parsedNote ? "\n" : "") + line;
               }
             }
-          } else {
-            if (line) {
-              parsedNote += (parsedNote ? "\n" : "") + line;
-            }
           }
+          
+          if (parsedItems.length > 0) {
+            setItems(parsedItems);
+          } else {
+            const cleanDesc = recordToEdit.description
+              .replace("Выполненные работы и запчасти:", "")
+              .replace(/•\s+/g, "")
+              .trim();
+            setItems([{
+              id: "item-edit-default",
+              name: cleanDesc || recordToEdit.type,
+              quantity: 1,
+              price: recordToEdit.cost
+            }]);
+          }
+          setNote(parsedNote);
         }
-        
-        if (parsedItems.length > 0) {
-          setItems(parsedItems);
-        } else {
-          const cleanDesc = recordToEdit.description
-            .replace("Выполненные работы и запчасти:", "")
-            .replace(/•\s+/g, "")
-            .trim();
-          setItems([{
-            id: "item-edit-default",
-            name: cleanDesc || recordToEdit.type,
-            quantity: 1,
-            price: recordToEdit.cost
-          }]);
-        }
-        setNote(parsedNote);
         setActiveTab("manual");
         setWasScanned(!!recordToEdit.receiptAttached);
         setErrors({});

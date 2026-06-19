@@ -85,7 +85,9 @@ const mapDbVehicleToClientCar = (dbVehicle: any): Car => {
       description: fullDescription || "Запись обслуживания",
       parts: partsList,
       receiptAttached: rec.status === "processed" || rec.status === "manual" || !!rec.receiptImageUrl,
-      receiptUrl: rec.receiptUrl || undefined
+      receiptUrl: rec.receiptUrl || undefined,
+      items: rec.items,
+      serviceCenterName: rec.serviceCenterName || undefined
     };
   });
 
