@@ -17,7 +17,8 @@ export async function POST(req: NextRequest) {
       odometer, 
       serviceCenterName, 
       items, 
-      totalAmount 
+      totalAmount,
+      type
     } = data;
 
     if (!vehicleId || !date || !totalAmount) {
@@ -42,12 +43,21 @@ export async function POST(req: NextRequest) {
       // 2. Create work items
       if (items && items.length > 0) {
         console.log(`🛠 Inserting ${items.length} work items...`);
+        const itemCategoryMap = {
+          "ТО": "maintenance" as const,
+          "Ремонт": "repair" as const,
+          "Тюнинг": "tuning" as const,
+          "Другое": "maintenance" as const,
+        };
+        const category = itemCategoryMap[type as keyof typeof itemCategoryMap] || "maintenance";
+        
         await tx.insert(workItems).values(
           items.map((item: any) => ({
             recordId: record.id,
             description: item.description,
             cost: item.cost.toString(),
             quantity: (item.quantity || "1").toString(),
+            category,
           }))
         );
         console.log("✅ Work items inserted");
@@ -84,7 +94,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-
 export async function PATCH(req: NextRequest) {
   console.log("🚀 PATCH /api/service-records - Started");
   const startTime = Date.now();
@@ -100,7 +109,8 @@ export async function PATCH(req: NextRequest) {
       odometer, 
       serviceCenterName, 
       items, 
-      totalAmount 
+      totalAmount,
+      type
     } = data;
 
     if (!id || !vehicleId || !date || !totalAmount) {
@@ -118,6 +128,7 @@ export async function PATCH(req: NextRequest) {
           odometer: odometer ? parseInt(odometer.toString()) : 0,
           totalAmount: totalAmount.toString(),
           serviceCenterName,
+          status: "manual",
         })
         .where(eq(serviceRecords.id, id));
 
@@ -126,12 +137,21 @@ export async function PATCH(req: NextRequest) {
       await tx.delete(workItems).where(eq(workItems.recordId, id));
 
       if (items && items.length > 0) {
+        const itemCategoryMap = {
+          "ТО": "maintenance" as const,
+          "Ремонт": "repair" as const,
+          "Тюнинг": "tuning" as const,
+          "Другое": "maintenance" as const,
+        };
+        const category = itemCategoryMap[type as keyof typeof itemCategoryMap] || "maintenance";
+
         await tx.insert(workItems).values(
           items.map((item: any) => ({
             recordId: id,
             description: item.description,
             cost: item.cost.toString(),
             quantity: (item.quantity || "1").toString(),
+            category,
           }))
         );
       }

@@ -241,6 +241,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         odometer: Number(mileage),
         serviceCenterName: note.trim() || "Автосервис",
         totalAmount: totalCalculatedCost,
+        type,
         items: items.map(item => ({
           description: item.name,
           cost: item.price,
