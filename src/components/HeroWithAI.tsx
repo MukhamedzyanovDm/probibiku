@@ -10,7 +10,7 @@ export default function HeroWithAI() {
         {/* Hero Copy */}
         <div className="text-center lg:text-left min-w-0">
           {/* Hero Label */}
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/75 border border-white px-3.5 py-2 shadow-[0_6px_18px_-12px_rgba(15,23,42,0.3),inset_0_1px_0_white] mb-8">
+          <div className="inline-flex items-center gap-2 mb-8 select-none">
             <span className="w-7 h-7 rounded-full bg-gradient-to-b from-blue-50 to-white border border-blue-100 shadow-[inset_0_1px_0_white] flex items-center justify-center">
               <Sparkles className="w-3.5 h-3.5 text-blue-500" />
             </span>

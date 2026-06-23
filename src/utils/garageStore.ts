@@ -11,6 +11,7 @@ export interface ServiceRecord {
   receiptImageUrl?: string;
   items?: any[];
   serviceCenterName?: string;
+  ocrRawData?: any;
 }
 
 export interface CarPart {
@@ -29,6 +30,7 @@ export interface Car {
   purchaseDate: string;
   health: number;
   imageUrl?: string;
+  insuranceExpiry?: string;
   fuelHistory: number[]; // Fuel consumption history
   serviceHistory: ServiceRecord[];
   parts: CarPart[];

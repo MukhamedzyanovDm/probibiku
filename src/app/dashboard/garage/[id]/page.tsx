@@ -16,7 +16,8 @@ import {
   BadgeCheck,
   Download,
   Pencil,
-  Globe
+  Globe,
+  ShieldAlert
 } from "lucide-react";
 
 import React, { useState, useEffect } from "react";
@@ -44,6 +45,29 @@ export default function CarDetailPage() {
   const { id } = useParams() as { id: string };
   const router = useRouter();
   const [car, setCar] = useState<Car | null>(null);
+  const [recommendations, setRecommendations] = useState<Array<{ category: string; title: string; description: string }>>([]);
+  const [isAiLoading, setIsAiLoading] = useState(false);
+
+  const fetchRecommendations = async (carData: Car) => {
+    setIsAiLoading(true);
+    try {
+      const res = await fetch("/api/ai/recommendations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(carData),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.recommendations && Array.isArray(data.recommendations)) {
+          setRecommendations(data.recommendations);
+        }
+      }
+    } catch (e) {
+      console.error("Failed to load recommendations:", e);
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
   
   // Modals state
   const [isAddRecordOpen, setIsAddRecordOpen] = useState(false);
@@ -82,6 +106,12 @@ export default function CarDetailPage() {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (car && car.serviceHistory.length > 0) {
+      fetchRecommendations(car);
+    }
+  }, [car?.id, car?.serviceHistory?.length]);
+
   if (!car) {
     return (
       <div className="min-h-screen flex items-center justify-center font-sans">
@@ -95,7 +125,8 @@ export default function CarDetailPage() {
 
   // Calculations for dashboard
   const totalSpend = car.serviceHistory.reduce((acc, curr) => acc + curr.cost, 0);
-  const lastServiceMileage = car.serviceHistory[0]?.mileage || car.mileage;
+  const sortedServiceHistory = [...car.serviceHistory].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const lastServiceMileage = sortedServiceHistory[0]?.mileage || car.mileage;
   const mileageSinceLastService = car.mileage - lastServiceMileage;
 
   // Add parts inline
@@ -232,7 +263,7 @@ export default function CarDetailPage() {
   return (
     <>
       <Background />
-      <Header showAccountIcon={true} />
+      <Header showAccountIcon={true} vehicleContext={car || undefined} />
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-32 pb-20 font-sans min-h-screen">
         
@@ -287,6 +318,43 @@ export default function CarDetailPage() {
                 <Compass className="w-4 h-4" />
                 Пробег: <strong className="font-mono text-slate-800 font-normal">{car.mileage.toLocaleString("ru-RU")} км</strong>
               </span>
+              {car.insuranceExpiry && (() => {
+                const expiry = new Date(car.insuranceExpiry);
+                const today = new Date();
+                expiry.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
+                const diffDays = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                const formattedDate = expiry.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }).replace(" г.", "");
+                
+                const getDaysPlural = (n: number) => {
+                  const mod10 = n % 10;
+                  const mod100 = n % 100;
+                  if (mod100 >= 11 && mod100 <= 19) return "дней";
+                  if (mod10 === 1) return "день";
+                  if (mod10 >= 2 && mod10 <= 4) return "дня";
+                  return "дней";
+                };
+                
+                let badgeClass = "bg-slate-50 text-slate-600 border-slate-200";
+                let text = `Страховка до: ${formattedDate}`;
+                if (diffDays < 0) {
+                  badgeClass = "bg-red-50 text-red-600 border-red-200/60";
+                  text = `ОСАГО истекла: ${formattedDate} (${Math.abs(diffDays)} дн. назад)`;
+                } else if (diffDays === 0) {
+                  badgeClass = "bg-red-50 text-red-600 border-red-200/60 animate-pulse";
+                  text = `ОСАГО заканчивается сегодня! (${formattedDate})`;
+                } else if (diffDays <= 30) {
+                  badgeClass = "bg-amber-50/70 text-amber-700 border-amber-200/60";
+                  text = `ОСАГО истекает через ${diffDays} ${getDaysPlural(diffDays)} (${formattedDate})`;
+                }
+
+                return (
+                  <span className={`inline-flex items-center gap-1 border px-2.5 py-1 rounded font-medium ${badgeClass}`}>
+                    <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
+                    <span>{text}</span>
+                  </span>
+                );
+              })()}
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-8 pt-6 border-t border-slate-100">
@@ -296,7 +364,16 @@ export default function CarDetailPage() {
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Пробег после ТО</p>
-                <p className="text-xl font-semibold text-slate-900 mt-1 font-mono">{mileageSinceLastService.toLocaleString("ru-RU")} км</p>
+                {mileageSinceLastService < 0 ? (
+                  <div className="flex flex-col mt-1">
+                    <p className="text-sm font-semibold text-red-500 font-mono">Ошибка в датах ТО</p>
+                    <span className="text-[9px] text-red-400 font-light mt-0.5 leading-normal">
+                      Пробег последнего ТО ({lastServiceMileage.toLocaleString("ru-RU")} км) превышает текущий ({car.mileage.toLocaleString("ru-RU")} км). Возможно, неверно указана дата последнего ТО.
+                    </span>
+                  </div>
+                ) : (
+                  <p className="text-xl font-semibold text-slate-900 mt-1 font-mono">{mileageSinceLastService.toLocaleString("ru-RU")} км</p>
+                )}
               </div>
             </div>
           </div>
@@ -344,43 +421,66 @@ export default function CarDetailPage() {
                   </button>
                 </div>
               ) : (
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {/* Recommendation 1 */}
-                  <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
-                    <span className="text-[9px] font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium">СРОКИ ЗАМЕНЫ</span>
-                    <h4 className="text-xs font-medium text-slate-900 mt-2">Масло двигателя и масляный фильтр</h4>
-                    <p className="text-[11px] text-slate-600 mt-1">
-                      Рекомендуется замена через 1 500 км или 2 месяца. Вы заливали Shell Helix 5W-30
-                    </p>
+                isAiLoading ? (
+                  <div className="grid sm:grid-cols-2 gap-4 animate-pulse">
+                    {[...Array(4)].map((_, idx) => (
+                      <div key={idx} className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4 space-y-2">
+                        <div className="h-3 bg-slate-200 rounded w-20" />
+                        <div className="h-4 bg-slate-200 rounded w-40" />
+                        <div className="h-3 bg-slate-200 rounded w-full" />
+                      </div>
+                    ))}
                   </div>
+                ) : (
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {recommendations.length > 0 ? (
+                      recommendations.map((rec, index) => (
+                        <div key={index} className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
+                          <span className="text-[9px] font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium">
+                            {rec.category}
+                          </span>
+                          <h4 className="text-xs font-medium text-slate-900 mt-2">{rec.title}</h4>
+                          <p className="text-[11px] text-slate-600 mt-1">{rec.description}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <>
+                        {/* Fallback mock cards if API didn't load */}
+                        <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
+                          <span className="text-[9px] font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium">СРОКИ ЗАМЕНЫ</span>
+                          <h4 className="text-xs font-medium text-slate-900 mt-2">Масло двигателя и масляный фильтр</h4>
+                          <p className="text-[11px] text-slate-600 mt-1">
+                            Рекомендуется замена через 1 500 км или 2 месяца. Вы заливали Shell Helix 5W-30
+                          </p>
+                        </div>
 
-                  {/* Recommendation 2 */}
-                  <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
-                    <span className="text-[9px] font-mono bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded font-medium">ДИАГНОСТИКА ХОДОВОЙ</span>
-                    <h4 className="text-xs font-medium text-slate-900 mt-2">Амортизаторы и элементы подвески</h4>
-                    <p className="text-[11px] text-slate-600 mt-1">
-                      Исходя из пробега {car.mileage.toLocaleString("ru-RU")} км, рекомендуется выполнить осмотр сайлентблоков передних рычагов на следующем ТО
-                    </p>
-                  </div>
+                        <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
+                          <span className="text-[9px] font-mono bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded font-medium">ДИАГНОСТИКА ХОДОВОЙ</span>
+                          <h4 className="text-xs font-medium text-slate-900 mt-2">Амортизаторы и элементы подвески</h4>
+                          <p className="text-[11px] text-slate-600 mt-1">
+                            Исходя из пробега {car.mileage.toLocaleString("ru-RU")} км, рекомендуется выполнить осмотр сайлентблоков передних рычагов на следующем ТО
+                          </p>
+                        </div>
 
-                  {/* Recommendation 3 */}
-                  <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
-                    <span className="text-[9px] font-mono bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded font-medium">ЛИКВИДНОСТЬ АВТО</span>
-                    <h4 className="text-xs font-medium text-slate-900 mt-2">Рыночная стоимость и спрос</h4>
-                    <p className="text-[11px] text-slate-600 mt-1">
-                      Данный кузов имеет высокую ликвидность на рынке. Подробная сервисная книжка увеличит цену продажи на 7-10%
-                    </p>
-                  </div>
+                        <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
+                          <span className="text-[9px] font-mono bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded font-medium">ЛИКВИДНОСТЬ АВТО</span>
+                          <h4 className="text-xs font-medium text-slate-900 mt-2">Рыночная стоимость и спрос</h4>
+                          <p className="text-[11px] text-slate-600 mt-1">
+                            Данный кузов имеет высокую ликвидность на рынке. Подробная сервисная книжка увеличит цену продажи на 7-10%
+                          </p>
+                        </div>
 
-                  {/* Recommendation 4 */}
-                  <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
-                    <span className="text-[9px] font-mono bg-amber-50 text-amber-600 px-2 py-0.5 rounded font-medium">ЭКОНОМИЯ ТО</span>
-                    <h4 className="text-xs font-medium text-slate-900 mt-2">Подбор запчастей</h4>
-                    <p className="text-[11px] text-slate-600 mt-1">
-                      Покупка оригинального фильтра Mann-Filter самостоятельно на маркетплейсах сэкономит до 1 200 ₽ на наценках автосервиса
-                    </p>
+                        <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
+                          <span className="text-[9px] font-mono bg-amber-50 text-amber-600 px-2 py-0.5 rounded font-medium">ЭКОНОМИЯ ТО</span>
+                          <h4 className="text-xs font-medium text-slate-900 mt-2">Подбор запчастей</h4>
+                          <p className="text-[11px] text-slate-600 mt-1">
+                            Покупка оригинального фильтра Mann-Filter самостоятельно на маркетплейсах сэкономит до 1 200 ₽ на наценках автосервиса
+                          </p>
+                        </div>
+                      </>
+                    )}
                   </div>
-                </div>
+                )
               )}
             </div>
 

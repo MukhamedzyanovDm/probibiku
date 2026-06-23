@@ -9,6 +9,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "contentType is required" }, { status: 400 });
     }
 
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(contentType.toLowerCase())) {
+      return NextResponse.json({ error: "Invalid file type. Only JPEG, PNG and WEBP images are allowed." }, { status: 400 });
+    }
+
     const fileExtension = fileName ? fileName.split(".").pop() : "jpg";
     const key = `receipts/${crypto.randomUUID()}.${fileExtension}`;
 

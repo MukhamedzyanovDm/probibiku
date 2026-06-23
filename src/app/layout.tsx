@@ -15,6 +15,9 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Пробибику — Учет расходов и AI-прогнозирование ТО автомобиля",
   description: "Сервис оцифровки чеков автосервисов, ведения истории обслуживания и AI-прогнозирования регламентных работ.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export const viewport: Viewport = {

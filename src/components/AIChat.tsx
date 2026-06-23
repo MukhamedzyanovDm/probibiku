@@ -14,6 +14,8 @@ interface Message {
 interface AIChatProps {
   isOpen: boolean;
   onClose: () => void;
+  vehicleContext?: any;
+  garageContext?: any;
 }
 
 const SUGGESTED_PROMPTS = [
@@ -23,30 +25,7 @@ const SUGGESTED_PROMPTS = [
   "Как работает ИИ-анализ смет сервиса?",
 ];
 
-const KNOWLEDGE_BASE = [
-  {
-    keywords: ["чек", "оцифр", "скан", "фото"],
-    answer: "Пробибику использует оптическое распознавание символов (OCR) совместно с искусственным интеллектом для мгновенного анализа чеков и заказ-нарядов. Вы просто фотографируете бумажный чек или загружаете PDF, а ИИ автоматически вычленеет стоимость работ, запчастей, ГСМ и заносит в сервисную книжку вашего автомобиля.",
-  },
-  {
-    keywords: ["масл", "то", "замен", "регламент", "срок"],
-    answer: "Интервал замены моторного масла зависит от автомобиля, но в среднем рекомендуется менять его каждые 7 500 – 10 000 км пробега или раз в год. Пробибику высчитывает индивидуальный износ расходников на основе вашего пробега и условий эксплуатации, напоминая о необходимости ТО заранее.",
-  },
-  {
-    keywords: ["кредит", "цен", "плат", "подписк", "сколько"],
-    answer: "В Пробибику нет ежемесячных подписок. Мы используем систему разовых кредитов, которые никогда не сгорают. 1 кредит списывается за оцифровку одного чека или одну ИИ-проверку сметы автосервиса. При регистрации мы дарим 10 бесплатных кредитов, чтобы вы могли оценить все возможности сервиса.",
-  },
-  {
-    keywords: ["смет", "анализ", "сервис", "ремонт", "оценка"],
-    answer: "Наша ИИ-проверка смет позволяет загрузить калькуляцию или заказ-наряд перед ремонтом. ИИ анализирует стоимость запчастей и нормо-часов, сравнивает их со средними рыночными ценами в вашем регионе и подсказывает, не завысил ли автосервис цену и не навязал ли лишние услуги.",
-  },
-  {
-    keywords: ["привет", "здравствуй", "кто ты", "начать"],
-    answer: "Привет! Я умный ИИ-помощник Пробибику. Помогаю автовладельцам планировать расходы на авто, разбираться в регламентах ТО, проверять сметы из автосервисов и эффективно вести сервисную историю. Задайте мне любой вопрос об обслуживании вашего авто!",
-  },
-];
-
-export default function AIChat({ isOpen, onClose }: AIChatProps) {
+export default function AIChat({ isOpen, onClose, vehicleContext, garageContext }: AIChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -93,38 +72,60 @@ export default function AIChat({ isOpen, onClose }: AIChatProps) {
     };
   }, [isOpen]);
 
-  const generateAIResponse = (userText: string) => {
+  const generateAIResponse = async (history: Message[]) => {
     setIsTyping(true);
 
-    setTimeout(() => {
-      const normalizedText = userText.toLowerCase();
-      let matchedAnswer = "";
+    try {
+      const apiMessages = history.map((msg) => ({
+        role: msg.sender === "user" ? "user" : "assistant",
+        text: msg.text,
+      }));
 
-      for (const entry of KNOWLEDGE_BASE) {
-        if (entry.keywords.some((keyword) => normalizedText.includes(keyword))) {
-          matchedAnswer = entry.answer;
-          break;
-        }
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          messages: apiMessages,
+          vehicleContext: vehicleContext,
+          garageContext: garageContext
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Chat request failed");
       }
 
-      if (!matchedAnswer) {
-        matchedAnswer = "Отличный вопрос! Чтобы дать точный ответ, мне нужно чуть больше контекста о марке вашего авто, годе выпуска или текущем пробеге. В целом, с Пробибику вы можете оцифровать любой чек ремонта, вести учет ГСМ и получать подсказки от ИИ о состоянии систем машины.";
-      }
+      const data = await response.json();
+      const aiText = data.text || "Извините, не удалось получить ответ от ассистента.";
 
       setMessages((prev) => [
         ...prev,
         {
           id: Math.random().toString(),
           sender: "ai",
-          text: matchedAnswer,
+          text: aiText,
           timestamp: new Date(),
         },
       ]);
+    } catch (error) {
+      console.error("Failed to generate AI response:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(),
+          sender: "ai",
+          text: "Произошла ошибка при отправке запроса. Пожалуйста, проверьте подключение к сети.",
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1200);
+    }
   };
 
-  const handleSendMessage = (text: string) => {
+  const handleSendMessage = async (text: string) => {
     if (!text.trim()) return;
 
     const newUserMessage: Message = {
@@ -134,9 +135,10 @@ export default function AIChat({ isOpen, onClose }: AIChatProps) {
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, newUserMessage]);
+    const updatedMessages = [...messages, newUserMessage];
+    setMessages(updatedMessages);
     setInputValue("");
-    generateAIResponse(text);
+    await generateAIResponse(updatedMessages);
   };
 
   if (!isOpen) return null;
@@ -214,22 +216,20 @@ export default function AIChat({ isOpen, onClose }: AIChatProps) {
         </div>
 
         {/* Suggested Prompts */}
-        {messages.length === 1 && (
-          <div className="px-6 py-4 border-t border-slate-100 bg-white/30 backdrop-blur-sm">
-            <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mb-2.5">Частые вопросы</p>
-            <div className="flex flex-col gap-2">
-              {SUGGESTED_PROMPTS.map((prompt, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSendMessage(prompt)}
-                  className="text-left text-xs text-slate-600 hover:text-blue-600 bg-white hover:bg-blue-50/50 border border-slate-200/60 hover:border-blue-200 rounded-xl px-3.5 py-2.5 transition-all shadow-sm hover:shadow-md cursor-pointer font-light"
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
+        <div className="px-6 py-4 border-t border-slate-100 bg-white/30 backdrop-blur-sm">
+          <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mb-2.5">Частые вопросы</p>
+          <div className="flex flex-col gap-2">
+            {SUGGESTED_PROMPTS.map((prompt, index) => (
+              <button
+                key={index}
+                onClick={() => handleSendMessage(prompt)}
+                className="text-left text-xs text-slate-600 hover:text-blue-600 bg-white hover:bg-blue-50/50 border border-slate-200/60 hover:border-blue-200 rounded-xl px-3.5 py-2.5 transition-all shadow-sm hover:shadow-md cursor-pointer font-light"
+              >
+                {prompt}
+              </button>
+            ))}
           </div>
-        )}
+        </div>
 
         {/* Input Area */}
         <div className="p-4 border-t border-slate-100 bg-white sticky bottom-0 z-20">

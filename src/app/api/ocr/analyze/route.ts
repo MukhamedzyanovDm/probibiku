@@ -221,7 +221,13 @@ export async function POST(req: NextRequest) {
     try {
       const structured = JSON.parse(resultText);
       console.log("✅ AI structuring complete:", structured);
-      return NextResponse.json({ data: structured });
+      return NextResponse.json({ 
+        data: structured,
+        ocrRawData: {
+          rawText: fullText,
+          visionResult: textDetection
+        }
+      });
     } catch (parseError) {
       console.error("Failed to parse JSON from YandexGPT response:", resultText, parseError);
       return NextResponse.json({ error: "Failed to parse structured response from AI" }, { status: 500 });

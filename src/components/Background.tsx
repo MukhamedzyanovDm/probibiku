@@ -1,113 +1,145 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Script from "next/script";
-import { usePathname } from "next/navigation";
+import React, { useEffect, useRef } from "react";
 
-// Define a type for UnicornStudio on the window object
-interface WindowWithUnicorn extends Window {
-  UnicornStudio?: {
-    isInitialized: boolean;
-    init: () => void;
-  };
+interface Blob {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  color: string;
+  angle: number;
+  speed: number;
 }
 
 export default function Background() {
-  const [mounted, setMounted] = useState(false);
-  const pathname = usePathname();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  useEffect(() => {
-    if (!mounted) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    const initUnicorn = () => {
-      // Don't initialize WebGL on mobile devices for performance
-      if (typeof window !== "undefined" && window.innerWidth < 768) {
-        return;
-      }
+    let animationFrameId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
-      const win = window as WindowWithUnicorn;
-      if (win.UnicornStudio) {
-        try {
-          // Force reset and re-initialize on route changes
-          win.UnicornStudio.isInitialized = false;
-          win.UnicornStudio.init();
-          win.UnicornStudio.isInitialized = true;
-        } catch (e) {
-          console.error("Failed to initialize UnicornStudio WebGL:", e);
+    // Create 3-4 soft fluid colored blobs with higher opacity and saturation for better density/contrast
+    const blobs: Blob[] = [
+      {
+        x: width * 0.25,
+        y: height * 0.3,
+        vx: 0.25,
+        vy: 0.15,
+        radius: Math.min(width, height) * 0.5,
+        color: "rgba(79, 70, 229, 0.42)", // Rich Indigo
+        angle: Math.random() * Math.PI * 2,
+        speed: 0.35,
+      },
+      {
+        x: width * 0.75,
+        y: height * 0.2,
+        vx: -0.15,
+        vy: 0.25,
+        radius: Math.min(width, height) * 0.55,
+        color: "rgba(14, 165, 233, 0.35)", // Saturated Sky Blue
+        angle: Math.random() * Math.PI * 2,
+        speed: 0.25,
+      },
+      {
+        x: width * 0.5,
+        y: height * 0.7,
+        vx: 0.1,
+        vy: -0.2,
+        radius: Math.min(width, height) * 0.45,
+        color: "rgba(147, 51, 234, 0.30)", // Rich Purple
+        angle: Math.random() * Math.PI * 2,
+        speed: 0.3,
+      },
+    ];
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      
+      blobs[0].radius = Math.min(width, height) * 0.5;
+      blobs[1].radius = Math.min(width, height) * 0.55;
+      blobs[2].radius = Math.min(width, height) * 0.45;
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    const animate = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      blobs.forEach((blob) => {
+        blob.angle += 0.0015;
+        blob.x += Math.cos(blob.angle) * blob.speed + blob.vx;
+        blob.y += Math.sin(blob.angle) * blob.speed + blob.vy;
+
+        if (blob.x - blob.radius > width) {
+          blob.x = -blob.radius;
+        } else if (blob.x + blob.radius < 0) {
+          blob.x = width + blob.radius;
         }
-      }
+
+        if (blob.y - blob.radius > height) {
+          blob.y = -blob.radius;
+        } else if (blob.y + blob.radius < 0) {
+          blob.y = height + blob.radius;
+        }
+
+        const gradient = ctx.createRadialGradient(
+          blob.x,
+          blob.y,
+          0,
+          blob.x,
+          blob.y,
+          blob.radius
+        );
+        gradient.addColorStop(0, blob.color);
+        gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(blob.x, blob.y, blob.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
     };
 
-    // Try initiating if script is already loaded
-    initUnicorn();
+    animate();
 
-    // Add event listener for script load just in case
-    window.addEventListener("unicorn-studio-loaded", initUnicorn);
     return () => {
-      window.removeEventListener("unicorn-studio-loaded", initUnicorn);
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", handleResize);
     };
-  }, [mounted, pathname]);
+  }, []);
 
   return (
     <>
-      {/* Script Loader for Unicorn Studio */}
-      <Script
-        src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js"
-        strategy="afterInteractive"
-        onLoad={() => {
-          const win = window as WindowWithUnicorn;
-          if (win.UnicornStudio) {
-            try {
-              win.UnicornStudio.init();
-              win.UnicornStudio.isInitialized = true;
-              window.dispatchEvent(new Event("unicorn-studio-loaded"));
-            } catch (e) {
-              console.error("Failed to init UnicornStudio on load:", e);
-            }
-          }
+      {/* High-performance fluid animation canvas with adjusted blur, contrast and opacity */}
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 w-full h-full -z-10 pointer-events-none"
+        style={{
+          filter: "blur(75px) contrast(1.3)",
+          opacity: 0.9,
         }}
       />
 
-      {/* WebGL background component */}
-      {mounted && (
-        <div 
-          key={pathname}
-          className="aura-background-component fixed top-0 w-full h-screen -z-10 opacity-30 sm:opacity-50 md:opacity-80 pointer-events-none overflow-hidden hidden md:block"
-          style={{
-            maskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)",
-            WebkitMaskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)"
-          }}
-        >
-          <div className="aura-background-component top-0 w-full -z-10 absolute h-full overflow-hidden">
-            <div 
-              data-us-project="ty3N7ZPaIU7KlWixQFIc" 
-              className="absolute w-full h-full left-0 top-0 -z-10"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* CSS Ambient Blobs */}
+      {/* Grid Pattern Overlay */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        {/* Soft blue ambient glow */}
-        <div className="aura-bg-blob-one absolute top-[-12%] left-[-12%] w-[100vw] h-[100vw] md:w-[52vw] md:h-[52vw] rounded-full bg-blue-200/20 md:bg-blue-200/35 blur-[7.5rem] will-change-transform" />
-
-        {/* Soft sky/silver glow */}
-        <div className="aura-bg-blob-two absolute bottom-[-18%] right-[-10%] w-[120vw] h-[120vw] md:w-[62vw] md:h-[62vw] rounded-full bg-sky-200/15 md:bg-sky-200/22 blur-[8.75rem] will-change-transform" />
-
-        {/* White glassy light wash */}
-        <div className="aura-bg-blob-three absolute top-[36%] left-[36%] w-[60vw] h-[60vw] md:w-[30vw] md:h-[30vw] rounded-full bg-white/55 blur-[5rem] will-change-transform" />
-
-        {/* Subtle moving dot texture */}
         <div 
-          className="aura-bg-dots absolute inset-0 opacity-[0.22]" 
+          className="absolute inset-0 opacity-[0.25]" 
           style={{
-            backgroundImage: "radial-gradient(circle at 1px 1px, rgba(15,23,42,0.09) 1px, transparent 0)",
-            backgroundSize: "2rem 2rem"
+            backgroundImage: "radial-gradient(circle at 1px 1px, rgba(15,23,42,0.10) 1px, transparent 0)",
+            backgroundSize: "2.5rem 2.5rem"
           }}
         />
       </div>

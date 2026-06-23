@@ -27,6 +27,7 @@ interface Car {
   imageUrl?: string;
   carExpenses: number;
   purchaseDate?: string;
+  insuranceExpiry?: string;
 }
 
 interface GarageDashboardClientProps {
@@ -44,6 +45,40 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [carToEdit, setCarToEdit] = useState<Car | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const alerts: string[] = [];
+  cars.forEach((car) => {
+    if (car.insuranceExpiry) {
+      const expiry = new Date(car.insuranceExpiry);
+      const today = new Date();
+      expiry.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+      const diffTime = expiry.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      const formattedDate = new Date(car.insuranceExpiry).toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+
+      if (diffDays < 0) {
+        alerts.push(`Внимание! Страховка ОСАГО для ${car.make} ${car.model} истекла ${Math.abs(diffDays)} дн. назад (${formattedDate.replace(" г.", "")})`);
+      } else if (diffDays === 0) {
+        alerts.push(`Внимание! Страховка ОСАГО для ${car.make} ${car.model} заканчивается сегодня (${formattedDate.replace(" г.", "")})`);
+      } else if (diffDays <= 30) {
+        const getDaysPlural = (n: number) => {
+          const mod10 = n % 10;
+          const mod100 = n % 100;
+          if (mod100 >= 11 && mod100 <= 19) return "дней";
+          if (mod10 === 1) return "день";
+          if (mod10 >= 2 && mod10 <= 4) return "дня";
+          return "дней";
+        };
+        const daysWord = getDaysPlural(diffDays);
+        alerts.push(`Страховка ОСАГО для ${car.make} ${car.model} заканчивается через ${diffDays} ${daysWord} (${formattedDate.replace(" г.", "")})`);
+      }
+    }
+  });
 
   const handleDeleteClick = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -135,17 +170,16 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
       </div>
 
       {/* Critical Alerts / Notifications */}
-      {activeCars > 0 && (
+      {alerts.length > 0 && (
         <div className="rounded-2xl border bg-amber-50/50 border-amber-100 p-4 mb-10 flex gap-4 text-xs">
           <ShieldAlert className="w-6 h-6 text-amber-500 shrink-0" />
           <div className="space-y-1.5">
-            <strong className="block text-slate-800">Обратите внимание (2):</strong>
-            <p className="text-slate-600">
-              • Страховка ОСАГО для автомобиля <span className="font-medium text-slate-900">Kia Sportage (У777ХХ777)</span> истекает через 14 дней.
-            </p>
-            <p className="text-slate-600">
-              • Выявлена активная отзывная кампания дилера по обновлению ПО рулевой рейки. Рекомендуется обратиться в СТО
-            </p>
+            <strong className="block text-slate-800">Обратите внимание ({alerts.length}):</strong>
+            {alerts.map((alert, idx) => (
+              <p key={idx} className="text-slate-600">
+                • {alert}
+              </p>
+            ))}
           </div>
         </div>
       )}
@@ -202,6 +236,26 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     <span className="text-xs font-mono font-medium text-slate-800">Состояние: {car.health}%</span>
                   </div>
+
+                  {/* Floating Insurance Badge if expiring soon */}
+                  {car.insuranceExpiry && (() => {
+                    const expiry = new Date(car.insuranceExpiry);
+                    const today = new Date();
+                    expiry.setHours(0, 0, 0, 0);
+                    today.setHours(0, 0, 0, 0);
+                    const diffDays = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                    if (diffDays <= 30) {
+                      return (
+                        <div className="absolute top-4 right-4 rounded-xl bg-red-50/95 backdrop-blur border border-red-100 px-3 py-1.5 shadow-md flex items-center gap-1.5 animate-pulse">
+                          <ShieldAlert className="w-3.5 h-3.5 text-red-500" />
+                          <span className="text-[10px] font-mono font-medium text-red-700">
+                            ОСАГО: {diffDays < 0 ? "Истекла" : `${diffDays} дн.`}
+                          </span>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
 
                   {/* Overlay gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />

@@ -20,12 +20,26 @@ export async function POST(req: NextRequest) {
       items, 
       totalAmount,
       type,
-      receiptImageUrl
+      receiptImageUrl,
+      ocrRawData
     } = data;
 
     if (!vehicleId || !date || !totalAmount) {
       console.error("❌ Missing required fields");
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    // Recalculate total amount on the server
+    let finalTotalAmount = "0";
+    if (items && items.length > 0) {
+      const sum = items.reduce((acc: number, item: any) => {
+        const cost = parseFloat(item.cost?.toString() || "0") || 0;
+        const qty = parseFloat(item.quantity?.toString() || "1") || 1;
+        return acc + Math.round(cost * qty * 100) / 100;
+      }, 0);
+      finalTotalAmount = (Math.round(sum * 100) / 100).toString();
+    } else {
+      finalTotalAmount = totalAmount.toString();
     }
 
     console.log("⏳ Starting DB transaction...");
@@ -36,10 +50,11 @@ export async function POST(req: NextRequest) {
         vehicleId,
         date: new Date(date).toISOString(),
         odometer: odometer ? parseInt(odometer.toString()) : 0,
-        totalAmount: totalAmount.toString(),
+        totalAmount: finalTotalAmount,
         serviceCenterName,
         receiptImageUrl: receiptImageUrl || null,
         status: "manual",
+        ocrRawData: ocrRawData || null,
       }).returning();
       console.log("✅ Service record created:", record.id);
 

@@ -51,7 +51,7 @@ export async function POST(request: Request) {
   try {
     const user = await getDemoUser();
     const body = await request.json();
-    const { make, model, year, plateNumber, currentMileage, vin, imageUrl } = body;
+    const { make, model, year, plateNumber, currentMileage, vin, imageUrl, insuranceExpiry } = body;
 
     if (!make || !model) {
       return NextResponse.json(
@@ -69,6 +69,7 @@ export async function POST(request: Request) {
       currentMileage: currentMileage ? parseInt(currentMileage) : 0,
       vin,
       imageUrl,
+      insuranceExpiry,
     }).returning();
 
     return NextResponse.json(newVehicle[0]);
@@ -99,7 +100,7 @@ export async function DELETE(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const body = await request.json();
-    const { id, make, model, year, plateNumber, currentMileage, vin, imageUrl } = body;
+    const { id, make, model, year, plateNumber, currentMileage, vin, imageUrl, insuranceExpiry } = body;
     if (!id) {
       return NextResponse.json({ error: "Id is required" }, { status: 400 });
     }
@@ -112,6 +113,7 @@ export async function PATCH(request: Request) {
         currentMileage: currentMileage ? parseInt(currentMileage) : 0,
         vin,
         imageUrl,
+        insuranceExpiry,
       })
       .where(eq(vehicles.id, id))
       .returning();

@@ -77,6 +77,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
   const [ocrLog, setOcrLog] = useState("");
   const [wasScanned, setWasScanned] = useState(false);
   const [receiptImageUrl, setReceiptImageUrl] = useState<string | null>(null);
+  const [ocrRawData, setOcrRawData] = useState<any>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -150,6 +151,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         setActiveTab("manual");
         setWasScanned(!!recordToEdit.receiptAttached);
         setReceiptImageUrl(recordToEdit.receiptImageUrl || null);
+        setOcrRawData(recordToEdit.ocrRawData || null);
         setErrors({});
       } else {
         setDate(new Date().toISOString().split("T")[0]);
@@ -161,6 +163,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         setIsOcrActive(false);
         setWasScanned(false);
         setReceiptImageUrl(null);
+        setOcrRawData(null);
         setErrors({});
       }
     }
@@ -271,6 +274,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         totalAmount: totalCalculatedCost,
         type,
         receiptImageUrl: receiptImageUrl || null,
+        ocrRawData: ocrRawData || null,
         items: items.map(item => ({
           description: item.name,
           cost: item.price,
@@ -359,7 +363,10 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
         body: JSON.stringify({ key }),
       });
       if (!analyzeRes.ok) throw new Error("Failed to analyze receipt");
-      const { data } = await analyzeRes.json();
+      const { data, ocrRawData: rawOcr } = await analyzeRes.json();
+      if (rawOcr) {
+        setOcrRawData(rawOcr);
+      }
       
       setOcrProgress(90);
       setOcrLog("Обработка результатов...");

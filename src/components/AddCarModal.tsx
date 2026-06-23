@@ -13,6 +13,7 @@ interface Car {
   mileage: number;
   purchaseDate?: string;
   imageUrl?: string;
+  insuranceExpiry?: string;
 }
 
 interface AddCarModalProps {
@@ -67,6 +68,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
   const [licensePlate, setLicensePlate] = useState("");
   const [mileage, setMileage] = useState(0);
   const [purchaseDate, setPurchaseDate] = useState("");
+  const [insuranceExpiry, setInsuranceExpiry] = useState("");
   
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState("");
@@ -85,6 +87,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
         setMileage(carToEdit.mileage);
         setPurchaseDate(carToEdit.purchaseDate || "");
         setPreviewUrl(carToEdit.imageUrl || "");
+        setInsuranceExpiry(carToEdit.insuranceExpiry || "");
       } else {
         setMake("");
         setModel("");
@@ -93,6 +96,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
         setMileage(0);
         setPurchaseDate(new Date().toISOString().split("T")[0]);
         setPreviewUrl("");
+        setInsuranceExpiry("");
       }
       setErrors({});
     }
@@ -161,6 +165,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
         plateNumber: licensePlate || null,
         currentMileage: mileage ? mileage.toString() : "0",
         imageUrl: uploadedUrl,
+        insuranceExpiry: insuranceExpiry || null,
       };
 
       const method = carToEdit ? "PATCH" : "POST";
@@ -322,6 +327,18 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
                 type="date"
                 value={purchaseDate}
                 onChange={(e) => setPurchaseDate(e.target.value)}
+                className="w-full min-w-0 text-base sm:text-sm border border-slate-200 rounded-xl pl-3 pr-2 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs text-slate-500 font-light mb-1">Дата окончания ОСАГО</label>
+              <input
+                type="date"
+                value={insuranceExpiry}
+                onChange={(e) => setInsuranceExpiry(e.target.value)}
                 className="w-full min-w-0 text-base sm:text-sm border border-slate-200 rounded-xl pl-3 pr-2 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
               />
             </div>

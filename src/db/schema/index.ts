@@ -50,6 +50,7 @@ export const vehicles = pgTable("vehicles", {
   plateNumber: varchar("plate_number", { length: 20 }),
   currentMileage: integer("current_mileage").default(0),
   imageUrl: text("image_url"),
+  insuranceExpiry: date("insurance_expiry"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

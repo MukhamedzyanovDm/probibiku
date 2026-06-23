@@ -4,7 +4,15 @@ import { Wand2 } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import AIChat from "./AIChat";
 
-export function Header({ showAccountIcon = false }: { showAccountIcon?: boolean }) {
+export function Header({ 
+  showAccountIcon = false,
+  vehicleContext,
+  garageContext
+}: { 
+  showAccountIcon?: boolean;
+  vehicleContext?: any;
+  garageContext?: any;
+}) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -74,7 +82,7 @@ export function Header({ showAccountIcon = false }: { showAccountIcon?: boolean 
                 href="#pricing"
                 className="relative transition-colors duration-300 hover:text-blue-600 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
               >
-                Цены
+                Тарифы
               </a>
             </div>
 
@@ -164,7 +172,12 @@ export function Header({ showAccountIcon = false }: { showAccountIcon?: boolean 
         </div>
       </div>
       </nav>
-      <AIChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      <AIChat 
+        isOpen={isChatOpen} 
+        onClose={() => setIsChatOpen(false)} 
+        vehicleContext={vehicleContext} 
+        garageContext={garageContext} 
+      />
     </header>
   );
 }
