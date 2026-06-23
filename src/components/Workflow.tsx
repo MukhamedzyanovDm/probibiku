@@ -1,4 +1,5 @@
 import { Upload, FileText, Target, ClipboardList, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 export default function Workflow() {
@@ -175,13 +176,13 @@ export default function Workflow() {
           >
             Возможности сервиса
           </a>
-          <a
+          <Link
             href="/login"
             className="w-full sm:w-64 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal shadow-[0_10px_24px_rgba(59,130,246,0.26),inset_0_1px_0_rgba(255,255,255,0.35)] hover:from-blue-400 hover:to-blue-500 hover:-translate-y-0.5 transition-all duration-300"
           >
             Попробовать бесплатно
             <ArrowRight className="w-[18px] h-[18px]" />
-          </a>
+          </Link>
         </div>
       </div>
     </section>

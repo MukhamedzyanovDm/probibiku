@@ -39,6 +39,7 @@ import AddRecordModal from "@/components/AddRecordModal";
 import Portal from "@/components/Portal";
 import ShareModal from "@/components/ShareModal";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/figma/BrandLogo";
 
 const SEARCH_PROVIDERS: Record<string, string> = {
   "Яндекс": "https://yandex.ru/search/?text=",
@@ -124,13 +125,40 @@ const mapDbVehicleToClientCar = (dbVehicle: any): Car => {
   };
 };
 
+const getMockRecommendations = (mileage: number) => [
+  {
+    category: "БЕЗОПАСНОСТЬ",
+    title: "Тормозная жидкость",
+    description: "Срочно замените тормозную жидкость. В истории нет записей о замене, а жидкость впитывает влагу и теряет свойства за 2 года",
+    urgency: "critical" as const
+  },
+  {
+    category: "СРОКИ ЗАМЕНЫ",
+    title: "Ремень ГРМ и ролики",
+    description: `Пробег составляет ${mileage.toLocaleString("ru-RU")} км. При отсутствии записей о замене ГРМ рекомендуется срочная замена во избежание обрыва`,
+    urgency: "critical" as const
+  },
+  {
+    category: "ДИАГНОСТИКА",
+    title: "Масло двигателя и масляный фильтр",
+    description: "Рекомендуется плановая замена через 1 500 км или 2 месяца. Вы заливали Shell Helix 5W-30",
+    urgency: "warning" as const
+  },
+  {
+    category: "ЭКОНОМИЯ ТО",
+    title: "Покупка оригинальных фильтров",
+    description: "Самостоятельный подбор оригинального фильтра Mann-Filter на маркетплейсах сэкономит до 1 200 ₽ на наценках сервиса",
+    urgency: "info" as const
+  }
+];
+
 export default function CarDetailPage() {
   const { id } = useParams() as { id: string };
   const router = useRouter();
   const [car, setCar] = useState<Car | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [recommendations, setRecommendations] = useState<Array<{ category: string; title: string; description: string }>>([]);
+  const [recommendations, setRecommendations] = useState<Array<{ category: string; title: string; description: string; urgency?: "critical" | "warning" | "info" }>>([]);
   const [isAiLoading, setIsAiLoading] = useState(false);
 
   const fetchRecommendations = async (carData: Car) => {
@@ -528,14 +556,26 @@ export default function CarDetailPage() {
             </div>
           </div>
 
-          <div className="hidden md:block relative h-56 rounded-3xl overflow-hidden bg-slate-50 border border-slate-200/80 shadow-inner">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={car.imageUrl || "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=600&q=80"}
-              alt={`${car.make} ${car.model}`}
-              className="w-full h-full object-cover"
-            />
-            {/* Health overlay indicator removed */}
+          <div className="hidden md:block relative h-56 w-full rounded-3xl overflow-hidden bg-slate-50 border border-slate-200/80 shadow-inner">
+            {car.imageUrl && (car.imageUrl.startsWith("http") || car.imageUrl.startsWith("data:")) ? (
+              <img
+                src={car.imageUrl}
+                alt={`${car.make} ${car.model}`}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-b from-[#1d2a3d] to-[#131c2b] flex items-center justify-center p-8 relative">
+                <div
+                  className="absolute inset-0 opacity-[0.06]"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px)",
+                    backgroundSize: "24px 24px",
+                  }}
+                />
+                <BrandLogo make={car.make} className="w-32 h-32 border border-white/10 shadow-lg relative z-10 p-4" />
+              </div>
+            )}
           </div>
         </div>
 
@@ -583,51 +623,39 @@ export default function CarDetailPage() {
                   </div>
                 ) : (
                   <div className="grid sm:grid-cols-2 gap-4">
-                    {recommendations.length > 0 ? (
-                      recommendations.map((rec, index) => (
-                        <div key={index} className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
-                          <span className="text-[9px] font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium">
-                            {rec.category}
-                          </span>
-                          <h4 className="text-xs font-medium text-slate-900 mt-2">{rec.title}</h4>
-                          <p className="text-[11px] text-slate-600 mt-1">{rec.description}</p>
+                    {recommendations.length > 0 || !isAiLoading ? (
+                      ((recommendations.length > 0 ? recommendations : getMockRecommendations(car.mileage))).map((rec, index) => (
+                        <div key={index} className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4 flex flex-col justify-between">
+                          <div>
+                            <div className="flex flex-wrap items-center gap-2 mb-2">
+                              <span className="text-[9px] font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium">
+                                {rec.category}
+                              </span>
+                              {rec.urgency === "critical" && (
+                                <span className="text-[9px] font-mono bg-red-50 text-red-600 border border-red-200/60 px-2 py-0.5 rounded font-medium animate-pulse">
+                                  Критично
+                                </span>
+                              )}
+                              {rec.urgency === "warning" && (
+                                <span className="text-[9px] font-mono bg-amber-50 text-amber-700 border border-amber-200/60 px-2 py-0.5 rounded font-medium">
+                                  Внимание
+                                </span>
+                              )}
+                              {rec.urgency === "info" && (
+                                <span className="text-[9px] font-mono bg-slate-100 text-slate-500 border border-slate-200/40 px-2 py-0.5 rounded font-medium">
+                                  Совет
+                                </span>
+                              )}
+                            </div>
+                            <h4 className="text-xs font-medium text-slate-900 mt-2">{rec.title}</h4>
+                            <p className="text-[11px] text-slate-600 mt-1 leading-normal">{rec.description}</p>
+                          </div>
                         </div>
                       ))
                     ) : (
-                      <>
-                        {/* Fallback mock cards if API didn't load */}
-                        <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
-                          <span className="text-[9px] font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium">СРОКИ ЗАМЕНЫ</span>
-                          <h4 className="text-xs font-medium text-slate-900 mt-2">Масло двигателя и масляный фильтр</h4>
-                          <p className="text-[11px] text-slate-600 mt-1">
-                            Рекомендуется замена через 1 500 км или 2 месяца. Вы заливали Shell Helix 5W-30
-                          </p>
-                        </div>
-
-                        <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
-                          <span className="text-[9px] font-mono bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded font-medium">ДИАГНОСТИКА ХОДОВОЙ</span>
-                          <h4 className="text-xs font-medium text-slate-900 mt-2">Амортизаторы и элементы подвески</h4>
-                          <p className="text-[11px] text-slate-600 mt-1">
-                            Исходя из пробега {car.mileage.toLocaleString("ru-RU")} км, рекомендуется выполнить осмотр сайлентблоков передних рычагов на следующем ТО
-                          </p>
-                        </div>
-
-                        <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
-                          <span className="text-[9px] font-mono bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded font-medium">ЛИКВИДНОСТЬ АВТО</span>
-                          <h4 className="text-xs font-medium text-slate-900 mt-2">Рыночная стоимость и спрос</h4>
-                          <p className="text-[11px] text-slate-600 mt-1">
-                            Данный кузов имеет высокую ликвидность на рынке. Подробная сервисная книжка увеличит цену продажи на 7-10%
-                          </p>
-                        </div>
-
-                        <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
-                          <span className="text-[9px] font-mono bg-amber-50 text-amber-600 px-2 py-0.5 rounded font-medium">ЭКОНОМИЯ ТО</span>
-                          <h4 className="text-xs font-medium text-slate-900 mt-2">Подбор запчастей</h4>
-                          <p className="text-[11px] text-slate-600 mt-1">
-                            Покупка оригинального фильтра Mann-Filter самостоятельно на маркетплейсах сэкономит до 1 200 ₽ на наценках автосервиса
-                          </p>
-                        </div>
-                      </>
+                      <div className="col-span-2 text-center py-6 text-slate-400 text-xs font-light">
+                        Рекомендации загружаются...
+                      </div>
                     )}
                   </div>
                 )

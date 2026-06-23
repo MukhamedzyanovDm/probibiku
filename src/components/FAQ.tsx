@@ -11,6 +11,7 @@ import {
   Sparkles,
   UserCheck
 } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 export default function FAQ() {
@@ -114,13 +115,13 @@ export default function FAQ() {
               </div>
 
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <a
+                <Link
                   href="/login"
                   className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 bg-white text-slate-950 text-sm font-normal border border-white shadow-[inset_0_1px_0_white] hover:bg-slate-100 hover:-translate-y-0.5 transition-all"
                 >
                   Начать бесплатно
                   <ArrowRight className="w-[18px] h-[18px]" />
-                </a>
+                </Link>
                 <a
                   href="#privacy"
                   className="inline-flex items-center justify-center rounded-full px-5 py-3 bg-white/[0.07] text-white text-sm font-normal border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-white/[0.1] transition-all"

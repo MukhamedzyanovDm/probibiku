@@ -1,6 +1,7 @@
 "use client";
 
 import { User, Lock, ArrowRight, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -12,7 +13,31 @@ export default function LoginPage() {
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const [step, setStep] = useState<"email" | "code">("email");
   const [timer, setTimer] = useState(59);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const router = useRouter();
+
+  const performLogin = async () => {
+    if (!email) return;
+    setIsLoggingIn(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.userId) {
+          document.cookie = `user_id=${data.userId}; path=/; max-age=${60 * 60 * 24 * 365}`;
+        }
+      }
+    } catch (e) {
+      console.error("Login failed:", e);
+    } finally {
+      setIsLoggingIn(false);
+      router.push("/dashboard/garage");
+    }
+  };
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -47,7 +72,7 @@ export default function LoginPage() {
     if (newCode.every(digit => digit !== "")) {
       // Direct redirect for demo purposes
       setTimeout(() => {
-        router.push("/dashboard/garage");
+        performLogin();
       }, 500);
     }
   };
@@ -72,13 +97,13 @@ export default function LoginPage() {
           
           {/* Вернуться на главный экран */}
           <div className="flex justify-start mb-6 -mt-2">
-            <a
+            <Link
               href="/"
               className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-blue-500 transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Вернуться на главную</span>
-            </a>
+            </Link>
           </div>
 
           <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500 shadow-[inset_0_1px_0_white] mx-auto mb-6">
@@ -161,28 +186,23 @@ export default function LoginPage() {
                   Назад
                 </button>
                 <button
-                  onClick={() => router.push("/dashboard/garage")}
-                  className="flex-1 rounded-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-normal py-3 shadow-[0_4px_12px_rgba(59,130,246,0.2)] transition-all duration-300"
+                  onClick={performLogin}
+                  disabled={isLoggingIn}
+                  className="flex-1 rounded-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-normal py-3 shadow-[0_4px_12px_rgba(59,130,246,0.2)] transition-all duration-300 disabled:opacity-50"
                 >
-                  Войти
+                  {isLoggingIn ? "Вход..." : "Войти"}
                 </button>
               </div>
             </div>
           )}
 
-          {/* Simple Link to Demo Garage */}
+          {/* Terms & Privacy Disclaimer */}
           <div className="mt-8 pt-6 border-t border-slate-100">
-            <a
-              href="/dashboard/garage"
-              className="text-xs text-blue-500 hover:text-blue-600 font-normal transition-colors"
-            >
-              Войти без регистрации (Демо-режим)
-            </a>
-            <p className="text-[10px] text-slate-400 mt-5 leading-relaxed">
+            <p className="text-[10px] text-slate-400 leading-relaxed">
               Авторизуясь в сервисе, вы соглашаетесь с<br />
-              <a href="/terms" className="underline hover:text-blue-500 transition-colors">Условиями использования</a>
+              <Link href="/terms" className="underline hover:text-blue-500 transition-colors">Условиями использования</Link>
               {" и "}
-              <a href="/privacy" className="underline hover:text-blue-500 transition-colors">Политикой конфиденциальности</a>
+              <Link href="/privacy" className="underline hover:text-blue-500 transition-colors">Политикой конфиденциальности</Link>
             </p>
           </div>
 

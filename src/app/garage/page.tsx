@@ -1,13 +1,13 @@
 import Background from "@/components/Background";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getVehicles, getGarageStats, getDemoUser } from "@/db/queries";
+import { getVehicles, getGarageStats, getSessionUser } from "@/db/queries";
 import { GarageDashboardClient } from "@/components/GarageDashboardClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function GaragePage() {
-  const user = await getDemoUser();
+  const user = await getSessionUser();
   const [fetchedVehicles, fetchedStats] = await Promise.all([
     getVehicles(user.id),
     getGarageStats(user.id),

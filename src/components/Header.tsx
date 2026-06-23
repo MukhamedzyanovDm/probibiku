@@ -1,5 +1,6 @@
 "use client";
 import { Wand2 } from "lucide-react";
+import Link from "next/link";
 
 import React, { useState, useEffect, useRef } from "react";
 import AIChat from "./AIChat";
@@ -125,27 +126,30 @@ export function Header({
                                 <span>10</span>
                               </span>
                             </a>
-                            <a
+                            <Link
                               href="/garage"
                               onClick={() => setDropdownOpen(false)}
                               className="px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors block"
                             >
                               Мои автомобили
-                            </a>
-                            <a
+                            </Link>
+                            <Link
                               href="/settings"
                               onClick={() => setDropdownOpen(false)}
                               className="px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors block"
                             >
                               Настройки
-                            </a>
-                            <a
+                            </Link>
+                            <Link
                               href="/"
-                              onClick={() => setDropdownOpen(false)}
+                              onClick={() => {
+                                setDropdownOpen(false);
+                                document.cookie = "user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                              }}
                               className="px-4 py-2.5 text-xs text-red-600 hover:bg-red-50/50 transition-colors block border-t border-slate-100"
                             >
                               Выйти
-                            </a>
+                            </Link>
                           </div>
                       )}
                     </div>
@@ -159,12 +163,12 @@ export function Header({
                       <Wand2 className="w-3.5 h-3.5 text-amber-500" />
                       <span>ИИ Ассистент</span>
                     </button>
-                    <a
+                    <Link
                       href="/login"
                       className="inline-flex items-center justify-center rounded-full px-4 py-2 text-xs text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition-colors duration-300"
                     >
                       Войти
-                    </a>
+                    </Link>
                   </>
                 )
               )}

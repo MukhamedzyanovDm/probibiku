@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { getPresignedDownloadUrl } from "@/lib/s3";
 import { vehicles } from "@/db/schema";
-import { getVehicleDetail, getDemoUser } from "@/db/queries";
+import { getVehicleDetail, getSessionUser } from "@/db/queries";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 
@@ -49,7 +49,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const user = await getDemoUser();
+    const user = await getSessionUser();
     const body = await request.json();
     const { make, model, year, plateNumber, currentMileage, vin, imageUrl, insuranceExpiry } = body;
 

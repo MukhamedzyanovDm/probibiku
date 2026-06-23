@@ -1,5 +1,6 @@
 "use client";
 import { Sparkles, ArrowRight, PlayCircle, Wand2 } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 export default function HeroWithAI() {
@@ -33,13 +34,13 @@ export default function HeroWithAI() {
 
           {/* CTAs */}
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
-            <a
+            <Link
               href="/login"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal shadow-[0_10px_24px_rgba(59,130,246,0.26),inset_0_1px_0_rgba(255,255,255,0.35)] hover:from-blue-400 hover:to-blue-500 hover:-translate-y-0.5 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.18)] transition-all duration-300"
             >
               Попробовать бесплатно
               <ArrowRight className="w-[18px] h-[18px]" />
-            </a>
+            </Link>
 
             <a
               href="#demo"

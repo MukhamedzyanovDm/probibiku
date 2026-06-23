@@ -1,6 +1,7 @@
 import { db } from "./index";
 import { vehicles, serviceRecords, users } from "./schema";
 import { eq, desc } from "drizzle-orm";
+import { cookies } from "next/headers";
 
 export async function getDemoUser() {
   const allUsers = await db.select().from(users).limit(1);
@@ -13,6 +14,36 @@ export async function getDemoUser() {
     phone: "+79991234567",
   }).returning();
   return newUser;
+}
+
+export async function getUserById(id: string) {
+  const found = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  if (found.length > 0) {
+    return found[0];
+  }
+  return null;
+}
+
+export async function getUserByEmail(email: string) {
+  const found = await db.select().from(users).where(eq(users.email, email.toLowerCase().trim())).limit(1);
+  if (found.length > 0) {
+    return found[0];
+  }
+  // Auto-create test user if they log in
+  const [newUser] = await db.insert(users).values({
+    email: email.toLowerCase().trim(),
+  }).returning();
+  return newUser;
+}
+
+export async function getSessionUser() {
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("user_id")?.value;
+  if (userId) {
+    const found = await getUserById(userId);
+    if (found) return found;
+  }
+  return await getDemoUser();
 }
 
 export async function getVehicles(userId: string) {

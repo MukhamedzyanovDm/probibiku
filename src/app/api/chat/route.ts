@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
 
     if (vehicleContext) {
       const historyStr = (vehicleContext.serviceHistory || [])
+        .slice(0, 10)
         .map((h: any) => `- ${h.date}: ${h.type} на пробеге ${h.mileage} км. Описание: ${h.description}. Стоимость: ${h.cost} руб. Запчасти: ${h.parts || "нет"}`)
         .join("\n");
 
@@ -75,7 +76,7 @@ ${garageStr}
     ];
 
     const body = {
-      modelUri: `gpt://${YC_FOLDER_ID}/yandexgpt/latest`,
+      modelUri: `gpt://${YC_FOLDER_ID}/yandexgpt-lite/latest`,
       completionOptions: {
         stream: false,
         temperature: 0.6,

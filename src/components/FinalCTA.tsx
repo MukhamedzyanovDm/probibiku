@@ -1,4 +1,5 @@
 import { Sparkles, CheckCircle2, ArrowRight, ShieldCheck, Database, RotateCcw } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 export default function FinalCTA() {
@@ -93,13 +94,13 @@ export default function FinalCTA() {
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
+            <Link
               href="/login"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 bg-gradient-to-b from-white to-blue-50 border border-white text-blue-600 text-sm font-normal shadow-[0_14px_30px_rgba(15,23,42,0.18),inset_0_1px_0_white] hover:from-white hover:to-white hover:-translate-y-0.5 active:shadow-[inset_0_2px_4px_rgba(15,23,42,0.08)] transition-all duration-300"
             >
               Попробовать бесплатно
               <ArrowRight className="w-5 h-5" />
-            </a>
+            </Link>
             <a
               href="#demo"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 bg-white/14 border border-white/24 text-white text-sm font-normal shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] hover:bg-white/20 hover:-translate-y-0.5 transition-all duration-300"
