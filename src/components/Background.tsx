@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface Blob {
   x: number;
@@ -13,10 +13,28 @@ interface Blob {
   speed: number;
 }
 
+/**
+ * On mobile (screen width <= 768px) we skip the canvas animation entirely
+ * and render a lightweight static CSS gradient instead.
+ * This avoids the GPU-killing `blur(75px)` filter that causes input lag
+ * and general sluggishness on phones.
+ */
 export default function Background() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile once on mount (SSR-safe)
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
+    // Skip canvas animation on mobile
+    if (isMobile) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -27,7 +45,7 @@ export default function Background() {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    // Create 3-4 soft fluid colored blobs with higher opacity and saturation for better density/contrast
+    // Create 3 soft fluid colored blobs
     const blobs: Blob[] = [
       {
         x: width * 0.25,
@@ -65,7 +83,7 @@ export default function Background() {
       if (!canvas) return;
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
-      
+
       blobs[0].radius = Math.min(width, height) * 0.5;
       blobs[1].radius = Math.min(width, height) * 0.55;
       blobs[2].radius = Math.min(width, height) * 0.45;
@@ -119,27 +137,41 @@ export default function Background() {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <>
-      {/* High-performance fluid animation canvas with adjusted blur, contrast and opacity */}
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 w-full h-full -z-10 pointer-events-none"
-        style={{
-          filter: "blur(75px) contrast(1.3)",
-          opacity: 0.9,
-        }}
-      />
+      {isMobile ? (
+        /* Lightweight static gradient for mobile — no canvas, no blur, no GPU drain */
+        <div
+          className="fixed inset-0 -z-10 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 20% 30%, rgba(79,70,229,0.18) 0%, transparent 70%)," +
+              "radial-gradient(ellipse 70% 50% at 80% 20%, rgba(14,165,233,0.14) 0%, transparent 70%)," +
+              "radial-gradient(ellipse 60% 50% at 50% 75%, rgba(147,51,234,0.12) 0%, transparent 70%)",
+          }}
+        />
+      ) : (
+        /* High-performance fluid animation canvas (desktop only) */
+        <canvas
+          ref={canvasRef}
+          className="fixed inset-0 w-full h-full -z-10 pointer-events-none"
+          style={{
+            filter: "blur(75px) contrast(1.3)",
+            opacity: 0.9,
+          }}
+        />
+      )}
 
       {/* Grid Pattern Overlay */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div 
-          className="absolute inset-0 opacity-[0.25]" 
+        <div
+          className="absolute inset-0 opacity-[0.25]"
           style={{
-            backgroundImage: "radial-gradient(circle at 1px 1px, rgba(15,23,42,0.10) 1px, transparent 0)",
-            backgroundSize: "2.5rem 2.5rem"
+            backgroundImage:
+              "radial-gradient(circle at 1px 1px, rgba(15,23,42,0.10) 1px, transparent 0)",
+            backgroundSize: "2.5rem 2.5rem",
           }}
         />
       </div>
