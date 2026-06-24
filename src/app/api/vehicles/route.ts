@@ -5,6 +5,7 @@ import { getVehicleDetail, getSessionUser } from "@/db/queries";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { getCarImageUrl } from "@/lib/wikipedia-image";
+import { normalizeCar } from "@/lib/car-normalizer";
 
 export async function GET(request: Request) {
   try {
@@ -76,11 +77,14 @@ export async function POST(request: Request) {
       );
     }
 
+    // AI Normalization (translates cyrillic, fixes typos)
+    const { make: normalizedMake, model: normalizedModel } = await normalizeCar(make, model);
+
     // Auto-fetch Wikipedia image if missing
     let finalImageUrl = imageUrl || null;
     if (!finalImageUrl) {
       try {
-        finalImageUrl = await getCarImageUrl(make, model);
+        finalImageUrl = await getCarImageUrl(normalizedMake, normalizedModel);
       } catch (wikiError) {
         console.error("Failed to auto-fetch Wikipedia image in POST /api/vehicles:", wikiError);
       }
@@ -88,8 +92,8 @@ export async function POST(request: Request) {
 
     const newVehicle = await db.insert(vehicles).values({
       userId: user.id,
-      make,
-      model,
+      make: normalizedMake,
+      model: normalizedModel,
       year: year ? parseInt(year) : null,
       plateNumber,
       currentMileage: currentMileage ? parseInt(currentMileage) : 0,
@@ -135,17 +139,26 @@ export async function PATCH(request: Request) {
 
     let finalImageUrl = imageUrl || null;
     
+    // AI Normalization (translates cyrillic, fixes typos)
+    let normalizedMake = make;
+    let normalizedModel = model;
+    if (make && model) {
+      const normalized = await normalizeCar(make, model);
+      normalizedMake = normalized.make;
+      normalizedModel = normalized.model;
+    }
+    
     // If make or model changed, and the image is from Wikipedia, reset it to auto-fetch the new model image
-    if (existing && (existing.make !== make || existing.model !== model)) {
+    if (existing && (existing.make !== normalizedMake || existing.model !== normalizedModel)) {
       const isWikiImage = existing.imageUrl && (existing.imageUrl.includes("wikipedia.org") || existing.imageUrl.includes("wikimedia.org"));
       if (isWikiImage || !imageUrl) {
         finalImageUrl = null;
       }
     }
 
-    if (!finalImageUrl && make && model) {
+    if (!finalImageUrl && normalizedMake && normalizedModel) {
       try {
-        finalImageUrl = await getCarImageUrl(make, model);
+        finalImageUrl = await getCarImageUrl(normalizedMake, normalizedModel);
       } catch (wikiError) {
         console.error("Failed to auto-fetch Wikipedia image in PATCH /api/vehicles:", wikiError);
       }
@@ -153,8 +166,8 @@ export async function PATCH(request: Request) {
 
     const updated = await db.update(vehicles)
       .set({
-        make,
-        model,
+        make: normalizedMake,
+        model: normalizedModel,
         year: year ? parseInt(year) : null,
         plateNumber,
         currentMileage: currentMileage ? parseInt(currentMileage) : 0,
