@@ -125,11 +125,11 @@ export default function HeroWithAI() {
           >
             <div className="absolute -inset-8 rounded-[3rem] bg-gradient-to-br from-blue-600/20 via-sky-600/10 to-transparent blur-3xl" />
 
-            <div className="relative">
+            <div className="relative p-3.5 rounded-[2.25rem] bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] shadow-[0_30px_80px_-35px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.08)]">
               {/* AI Assistant Chat Mockup Container */}
-              <div className="rounded-[1.5rem] bg-slate-900/90 border border-slate-800 shadow-[0_30px_80px_-35px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)] overflow-hidden">
+              <div className="rounded-[1.5rem] bg-slate-950/70 border border-white/[0.06] overflow-hidden">
                 {/* Mockup Top Bar */}
-                <div className="px-5 py-4 flex items-center justify-between border-b border-slate-800 bg-slate-900">
+                <div className="px-5 py-4 flex items-center justify-between border-b border-white/[0.06] bg-slate-950/50">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-500/40" />
@@ -142,20 +142,20 @@ export default function HeroWithAI() {
                 </div>
 
                 {/* Chat Content Panel */}
-                <div className="p-5 sm:p-6 h-[390px] flex flex-col justify-between bg-slate-950/40">
+                <div className="p-5 sm:p-6 h-[390px] flex flex-col justify-between bg-slate-950/20">
                   {/* Scrollable Message List (driven purely by CSS animations) */}
                   <div className="flex-1 overflow-hidden pr-1 min-h-0">
                     <div className="css-chat-container">
                       {/* Message 1 (User) */}
                       <div className="css-chat-msg-1 flex flex-col max-w-[85%] ml-auto items-end overflow-hidden">
-                        <div className="rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed bg-blue-600 text-white shadow-md shadow-blue-600/10 rounded-tr-none">
+                        <div className="rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed bg-blue-600/90 text-white shadow-lg shadow-blue-500/10 rounded-tr-none">
                           Когда меняли задние стойки?
                         </div>
                       </div>
 
                       {/* AI Typing 1 */}
                       <div className="css-chat-typing-1 flex flex-col items-start max-w-[85%] mr-auto overflow-hidden">
-                        <div className="rounded-2xl rounded-tl-none px-4 py-3 bg-slate-900 border border-slate-800 text-slate-400 shadow-sm flex items-center gap-1">
+                        <div className="rounded-2xl rounded-tl-none px-4 py-3 bg-white/[0.05] border border-white/[0.05] text-slate-400 shadow-sm flex items-center gap-1">
                           <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                           <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
                           <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
@@ -164,21 +164,21 @@ export default function HeroWithAI() {
 
                       {/* Message 2 (AI) */}
                       <div className="css-chat-msg-2 flex flex-col max-w-[85%] mr-auto items-start overflow-hidden">
-                        <div className="rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed bg-slate-900 border border-slate-800 text-slate-200 shadow-sm rounded-tl-none">
+                        <div className="rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed bg-white/[0.05] border border-white/[0.05] text-slate-200 shadow-sm rounded-tl-none animate-none">
                           Задние стойки амортизаторов (Kayaba) заменялись 12 мая 2025 г. при пробеге 72 100 км.
                         </div>
                       </div>
 
                       {/* Message 3 (User) */}
                       <div className="css-chat-msg-3 flex flex-col max-w-[85%] ml-auto items-end overflow-hidden">
-                        <div className="rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed bg-blue-600 text-white shadow-md shadow-blue-600/10 rounded-tr-none">
+                        <div className="rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed bg-blue-600/90 text-white shadow-lg shadow-blue-500/10 rounded-tr-none">
                           Когда мне нужно ехать на ТО?
                         </div>
                       </div>
 
                       {/* AI Typing 2 */}
                       <div className="css-chat-typing-2 flex flex-col items-start max-w-[85%] mr-auto overflow-hidden">
-                        <div className="rounded-2xl rounded-tl-none px-4 py-3 bg-slate-900 border border-slate-800 text-slate-400 shadow-sm flex items-center gap-1">
+                        <div className="rounded-2xl rounded-tl-none px-4 py-3 bg-white/[0.05] border border-white/[0.05] text-slate-400 shadow-sm flex items-center gap-1">
                           <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                           <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
                           <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
@@ -187,7 +187,7 @@ export default function HeroWithAI() {
 
                       {/* Message 4 (AI) */}
                       <div className="css-chat-msg-4 flex flex-col max-w-[85%] mr-auto items-start overflow-hidden">
-                        <div className="rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed bg-slate-900 border border-slate-800 text-slate-200 shadow-sm rounded-tl-none">
+                        <div className="rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed bg-white/[0.05] border border-white/[0.05] text-slate-200 shadow-sm rounded-tl-none">
                           Следующее ТО-6 рекомендуется пройти через 1 500 км (на пробеге 90 000 км) или к августу 2026 г.
                         </div>
                       </div>
@@ -195,13 +195,13 @@ export default function HeroWithAI() {
                   </div>
 
                   {/* Simulated Input Area */}
-                  <div className="mt-4 border-t border-slate-800 pt-3.5 flex items-center justify-between text-[11px] text-slate-500 font-light">
+                  <div className="mt-4 border-t border-white/[0.06] pt-3.5 flex items-center justify-between text-[11px] text-slate-500 font-light">
                     <div className="flex items-center gap-1.5">
                       <Wand2 className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
                       <span>Связан с базой ТО</span>
                     </div>
-                    <div className="rounded-full bg-slate-900 px-3 py-1.5 flex items-center gap-1.5 border border-slate-800 shadow-sm cursor-text hover:bg-slate-800/80 transition-colors">
-                      <span className="text-slate-500">Спросить ИИ...</span>
+                    <div className="rounded-full bg-white/[0.05] px-3 py-1.5 flex items-center gap-1.5 border border-white/[0.05] shadow-sm cursor-text hover:bg-white/[0.08] transition-colors">
+                      <span className="text-slate-400">Спросить ИИ...</span>
                       <ArrowRight className="w-3.5 h-3.5 text-blue-400" />
                     </div>
                   </div>
