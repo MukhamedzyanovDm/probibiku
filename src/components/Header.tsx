@@ -53,7 +53,7 @@ export function Header({
       <nav className="max-w-7xl mx-auto px-6 pt-5">
         <div className={`relative rounded-full transition-all duration-300 px-4 py-3 ${
           isScrolled 
-            ? "bg-white/55 backdrop-blur-xl border border-white shadow-[0_30px_80px_-45px_rgba(15,23,42,0.35),inset_0_1px_0_rgba(255,255,255,1)]" 
+            ? "bg-white/75 backdrop-blur-xl border border-white shadow-[0_30px_80px_-45px_rgba(15,23,42,0.35),inset_0_1px_0_rgba(255,255,255,1)]" 
             : "bg-transparent border border-transparent shadow-none"
         }`}>
 
