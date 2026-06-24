@@ -55,8 +55,15 @@ export async function normalizeCar(rawMake: string, rawModel: string): Promise<{
       return { make: rawMake, model: rawModel };
     }
 
-    // Clean up potential markdown formatting block
-    const jsonStr = text.replace(/^```json\s*/i, "").replace(/```$/, "").trim();
+    // Clean up potential markdown formatting block by extracting content between curly braces
+    const startIndex = text.indexOf("{");
+    const endIndex = text.lastIndexOf("}");
+    let jsonStr = text;
+    if (startIndex !== -1 && endIndex !== -1 && endIndex > startIndex) {
+      jsonStr = text.substring(startIndex, endIndex + 1);
+    } else {
+      jsonStr = text.replace(/^```json\s*/i, "").replace(/```$/, "").trim();
+    }
     const result = JSON.parse(jsonStr);
 
     if (result && typeof result.make === "string" && typeof result.model === "string") {
