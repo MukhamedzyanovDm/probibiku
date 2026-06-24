@@ -28,7 +28,7 @@ export function Header({
     setMounted(true);
     
     const handleScroll = () => {
-      setScrollActive(window.scrollY > 10);
+      setScrollActive(window.scrollY > 24);
     };
     
     // Check initial scroll on mount
