@@ -2,6 +2,7 @@
 import { Sparkles, ArrowRight, PlayCircle, Wand2 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { motion } from "framer-motion";
 
 export default function HeroWithAI() {
   return (
@@ -11,29 +12,47 @@ export default function HeroWithAI() {
         {/* Hero Copy */}
         <div className="text-center lg:text-left min-w-0">
           {/* Hero Label */}
-          <div className="inline-flex items-center gap-2 mb-8 select-none">
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+            className="inline-flex items-center gap-2 mb-8 select-none"
+          >
             <span className="w-7 h-7 rounded-full bg-gradient-to-b from-blue-50 to-white border border-blue-100 shadow-[inset_0_1px_0_white] flex items-center justify-center">
               <Sparkles className="w-3.5 h-3.5 text-blue-500" />
             </span>
             <span className="font-mono text-xs font-medium tracking-[-0.04em] text-slate-500">
               Умный помощник автовладельца
             </span>
-          </div>
+          </motion.div>
 
           {/* Hero Headline */}
-          <h1
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-slate-950 leading-[1.05] max-w-5xl font-sans"
             style={{ textShadow: "0 1px 1px rgba(255,255,255,0.8)" }}
           >
             <span className="block">Вы помните сколько потратили на машину в прошлом году?</span>
-          </h1>
+          </motion.h1>
 
-          <p className="mt-8 text-base md:text-lg leading-8 text-slate-600 font-light max-w-2xl mx-auto lg:mx-0">
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+            className="mt-8 text-base md:text-lg leading-8 text-slate-600 font-light max-w-2xl mx-auto lg:mx-0"
+          >
             Мы тоже нет. Поэтому и сделали Пробибику. Больше никаких «ой, а когда там масло меняли?». Просто сфотографируйте чек из автосервиса — Пробибику запомнит всё сам и вовремя скажет, что нужно сделать дальше
-          </p>
+          </motion.p>
 
           {/* CTAs */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3"
+          >
             <Link
               href="/login"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal shadow-[0_10px_24px_rgba(59,130,246,0.26),inset_0_1px_0_rgba(255,255,255,0.35)] hover:from-blue-400 hover:to-blue-500 hover:-translate-y-0.5 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.18)] transition-all duration-300"
@@ -49,10 +68,15 @@ export default function HeroWithAI() {
               <PlayCircle className="w-[18px] h-[18px] text-blue-500" />
               Как это работает
             </a>
-          </div>
+          </motion.div>
 
           {/* Social Proof Row */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
+            className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
+          >
             {/* Avatar Stack */}
             <div className="flex -space-x-2.5 overflow-hidden">
               <img
@@ -80,11 +104,16 @@ export default function HeroWithAI() {
             <p className="text-xs text-slate-500 font-light font-sans text-center lg:text-left">
               <span className="font-semibold text-slate-900">1 013 ответственных автовладельцев</span> уже контролируют свои расходы с нами
             </p>
-          </div>
+          </motion.div>
         </div>
 
         {/* Hero Product Mockup */}
-        <div className="relative lg:pl-4 min-w-0">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.96, y: 25 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+          className="relative lg:pl-4 min-w-0"
+        >
           <div className="absolute -inset-8 rounded-[3rem] bg-gradient-to-br from-blue-200/40 via-white/20 to-sky-200/30 blur-3xl" />
 
           <div className="relative">
@@ -170,7 +199,7 @@ export default function HeroWithAI() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -159,7 +159,7 @@ export default function Background() {
           className="fixed inset-0 w-full h-full -z-10 pointer-events-none"
           style={{
             filter: "blur(75px) contrast(1.3)",
-            opacity: 0.9,
+            opacity: 1.0,
           }}
         />
       )}
