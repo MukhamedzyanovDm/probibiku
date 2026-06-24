@@ -127,13 +127,13 @@ export default function HeroWithAI() {
 
             <div className="relative p-3.5 rounded-[2.25rem] bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] shadow-[0_30px_80px_-35px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.08)]">
               {/* AI Assistant Chat Mockup Container */}
-              <div className="rounded-[1.5rem] bg-transparent border border-white/[0.06] overflow-hidden">
+              <div className="rounded-[1.5rem] bg-transparent overflow-hidden">
                 {/* Mockup Top Bar */}
-                <div className="px-5 py-4 flex items-center justify-between border-b border-white/[0.06] bg-transparent">
+                <div className="px-5 py-4 flex items-center justify-between bg-transparent">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/40" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/40" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
                   </div>
                   <div className="flex items-center gap-1.5 font-mono text-[10px] font-medium tracking-tight text-slate-400 uppercase">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
