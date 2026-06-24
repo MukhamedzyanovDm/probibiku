@@ -37,6 +37,19 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
       data-scroll-behavior="smooth"
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('unhandledrejection', function(event) {
+                if (!event.reason || event.reason instanceof Event || (event.reason.message && event.reason.message.includes('ResizeObserver'))) {
+                  event.preventDefault();
+                }
+              });
+            `
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans">
         {children}
       </body>
