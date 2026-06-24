@@ -104,3 +104,13 @@ export const serviceRecordsRelations = relations(serviceRecords, ({ one, many })
 export const workItemsRelations = relations(workItems, ({ one }) => ({
   record: one(serviceRecords, { fields: [workItems.recordId], references: [serviceRecords.id] }),
 }));
+
+// 5. Vehicle Image Cache (Wikipedia URLs cache)
+export const vehicleImageCache = pgTable("vehicle_image_cache", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  make: varchar("make", { length: 100 }).notNull(),
+  model: varchar("model", { length: 100 }).notNull(),
+  imageUrl: text("image_url").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+

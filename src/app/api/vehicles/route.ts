@@ -4,6 +4,7 @@ import { vehicles } from "@/db/schema";
 import { getVehicleDetail, getSessionUser } from "@/db/queries";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
+import { getCarImageUrl } from "@/lib/wikipedia-image";
 
 export async function GET(request: Request) {
   try {
@@ -15,6 +16,21 @@ export async function GET(request: Request) {
     const vehicle = await getVehicleDetail(id);
     if (!vehicle) {
       return NextResponse.json({ error: "Vehicle not found" }, { status: 404 });
+    }
+
+    // Auto-fetch and save Wikipedia image if missing
+    if (!vehicle.imageUrl) {
+      try {
+        const wikiUrl = await getCarImageUrl(vehicle.make, vehicle.model);
+        if (wikiUrl) {
+          vehicle.imageUrl = wikiUrl;
+          await db.update(vehicles)
+            .set({ imageUrl: wikiUrl })
+            .where(eq(vehicles.id, id));
+        }
+      } catch (wikiError) {
+        console.error("Failed to auto-fetch Wikipedia image in GET /api/vehicles:", wikiError);
+      }
     }
 
     // Generate presigned download URLs for all service record receipts
@@ -60,6 +76,16 @@ export async function POST(request: Request) {
       );
     }
 
+    // Auto-fetch Wikipedia image if missing
+    let finalImageUrl = imageUrl || null;
+    if (!finalImageUrl) {
+      try {
+        finalImageUrl = await getCarImageUrl(make, model);
+      } catch (wikiError) {
+        console.error("Failed to auto-fetch Wikipedia image in POST /api/vehicles:", wikiError);
+      }
+    }
+
     const newVehicle = await db.insert(vehicles).values({
       userId: user.id,
       make,
@@ -68,7 +94,7 @@ export async function POST(request: Request) {
       plateNumber,
       currentMileage: currentMileage ? parseInt(currentMileage) : 0,
       vin,
-      imageUrl,
+      imageUrl: finalImageUrl,
       insuranceExpiry,
     }).returning();
 
@@ -104,6 +130,16 @@ export async function PATCH(request: Request) {
     if (!id) {
       return NextResponse.json({ error: "Id is required" }, { status: 400 });
     }
+
+    let finalImageUrl = imageUrl || null;
+    if (!finalImageUrl && make && model) {
+      try {
+        finalImageUrl = await getCarImageUrl(make, model);
+      } catch (wikiError) {
+        console.error("Failed to auto-fetch Wikipedia image in PATCH /api/vehicles:", wikiError);
+      }
+    }
+
     const updated = await db.update(vehicles)
       .set({
         make,
@@ -112,7 +148,7 @@ export async function PATCH(request: Request) {
         plateNumber,
         currentMileage: currentMileage ? parseInt(currentMileage) : 0,
         vin,
-        imageUrl,
+        imageUrl: finalImageUrl,
         insuranceExpiry,
       })
       .where(eq(vehicles.id, id))

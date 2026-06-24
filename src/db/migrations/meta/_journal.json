@@ -15,6 +15,13 @@
       "when": 1782283825174,
       "tag": "0001_hot_doctor_doom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782285731729,
+      "tag": "0002_flawless_frog_thor",
+      "breakpoints": true
     }
   ]
 }
