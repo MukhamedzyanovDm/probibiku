@@ -436,7 +436,7 @@ export default function CarDetailPage() {
           <div className="lg:col-span-8 space-y-8">
             
             {/* 1. AI Insights Panel */}
-            <div className="rounded-[2rem] bg-white border border-slate-200/80 p-6 shadow-[0_12px_36px_-18px_rgba(15,23,42,0.05)]">
+            <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
               <div className="flex items-center gap-2 border-b border-slate-100 pb-4 mb-4">
                 <Sparkles className="w-5 h-5 text-blue-500" />
                 <h3 className="text-base font-medium text-slate-900">Умный помощник</h3>
@@ -515,7 +515,7 @@ export default function CarDetailPage() {
             {/* 2. Interactive SVG Charts */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               {/* Fuel chart */}
-              <div className="rounded-[2rem] bg-white border border-slate-200/80 p-5 shadow-[0_12px_36px_-18px_rgba(15,23,42,0.05)]">
+              <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
                   <h4 className="text-xs font-medium text-slate-800">Расход топлива (средний)</h4>
                   <span className="text-[10px] font-mono text-blue-500 bg-blue-50 px-2 py-0.5 rounded">
@@ -523,10 +523,11 @@ export default function CarDetailPage() {
                   </span>
                 </div>
                 {renderFuelChart()}
+                {/* Visual gap */}
               </div>
 
               {/* Cost distribution bar */}
-              <div className="rounded-[2rem] bg-white border border-slate-200/80 p-5 shadow-[0_12px_36px_-18px_rgba(15,23,42,0.05)] flex flex-col justify-between">
+              <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl flex flex-col justify-between">
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
                     <h4 className="text-xs font-medium text-slate-800">Структура расходов авто</h4>
@@ -561,7 +562,7 @@ export default function CarDetailPage() {
             </div>
 
             {/* 3. Service History list */}
-            <div className="rounded-[2rem] bg-white border border-slate-200/80 p-6 shadow-[0_12px_36px_-18px_rgba(15,23,42,0.05)]">
+            <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
               <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between border-b border-slate-100 pb-4 mb-6">
                 <h3 className="text-base font-medium text-slate-900 flex items-center gap-2">
                   <FileText className="w-5 h-5 text-blue-500" />
@@ -664,7 +665,7 @@ export default function CarDetailPage() {
           <div className="lg:col-span-4 space-y-8">
             
             {/* 1. Parts Checklist */}
-            <div className="rounded-[2rem] bg-white border border-slate-200/80 p-5 shadow-[0_12px_36px_-18px_rgba(15,23,42,0.05)]">
+            <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
               <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                   Спецификация запчастей
@@ -787,7 +788,7 @@ export default function CarDetailPage() {
             </div>
 
             {/* 2. Fast Actions Card */}
-            <div className="rounded-[2rem] bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-700 p-6 text-white relative overflow-hidden shadow-[0_15px_35px_-10px_rgba(59,130,246,0.25)]">
+            <div className="rounded-[2.5rem] bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-700 p-6 text-white relative overflow-hidden shadow-[0_15px_35px_-10px_rgba(59,130,246,0.25)]">
               <div className="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-white/10 blur-2xl pointer-events-none" />
               <h3 className="text-base font-normal mb-2 flex items-center gap-2">
                 <Sparkles className="w-4 h-4" />

@@ -141,7 +141,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
         
         {/* Card 1: Expenses */}
-        <div className="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-[0_10px_30px_-15px_rgba(15,23,42,0.05)]">
+        <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
           <p className="text-xs text-slate-400 uppercase tracking-wider font-mono">Суммарные расходы</p>
           <p className="text-2xl font-semibold text-slate-900 mt-2 font-mono">
             {stats.totalSpent}
@@ -150,14 +150,14 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
         </div>
 
         {/* Card 2: Active Cars */}
-        <div className="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-[0_10px_30px_-15px_rgba(15,23,42,0.05)]">
+        <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
           <p className="text-xs text-slate-400 uppercase tracking-wider font-mono">Активные автомобили</p>
           <p className="text-2xl font-semibold text-slate-900 mt-2 font-mono">{activeCars}</p>
           <p className="text-[10px] text-slate-600 mt-1">Доступно слотов в личном кабинете: 5</p>
         </div>
 
         {/* Card 3: Days to Maintenance */}
-        <div className="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-[0_10px_30px_-15px_rgba(15,23,42,0.05)]">
+        <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
           <p className="text-xs text-slate-400 uppercase tracking-wider font-mono">До ближайшего ТО</p>
           <p className="text-2xl font-semibold text-blue-600 mt-2 font-mono">
             {stats.nextService}
@@ -207,7 +207,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
               <div
                 key={car.id}
                 onClick={() => router.push(`/garage/${car.id}`)}
-                className="group relative block overflow-hidden rounded-[2rem] bg-white border border-slate-200/80 shadow-[0_15px_40px_-20px_rgba(15,23,42,0.05)] hover:shadow-[0_20px_50px_-25px_rgba(15,23,42,0.12)] hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                className="group relative block overflow-hidden rounded-[2.5rem] bg-white/70 border border-white shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl hover:shadow-[0_40px_80px_-20px_rgba(15,23,42,0.22),inset_0_2px_0_white] hover:-translate-y-1 transition-all duration-300 cursor-pointer"
               >
                 {/* Aspect Ratio Box for Image */}
                 <div className="relative h-48 w-full bg-slate-50 flex items-center justify-center border-b border-slate-100 overflow-hidden">
