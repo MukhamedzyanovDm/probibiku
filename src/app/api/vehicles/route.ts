@@ -131,7 +131,18 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "Id is required" }, { status: 400 });
     }
 
+    const [existing] = await db.select().from(vehicles).where(eq(vehicles.id, id));
+
     let finalImageUrl = imageUrl || null;
+    
+    // If make or model changed, and the image is from Wikipedia, reset it to auto-fetch the new model image
+    if (existing && (existing.make !== make || existing.model !== model)) {
+      const isWikiImage = existing.imageUrl && (existing.imageUrl.includes("wikipedia.org") || existing.imageUrl.includes("wikimedia.org"));
+      if (isWikiImage || !imageUrl) {
+        finalImageUrl = null;
+      }
+    }
+
     if (!finalImageUrl && make && model) {
       try {
         finalImageUrl = await getCarImageUrl(make, model);
