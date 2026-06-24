@@ -303,12 +303,12 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
                   }
                 }}
                 onBlur={() => {
-                  if (year === "" || year < 1900 || year > new Date().getFullYear() + 1) {
+                  if (year === "" || year < 1900 || year > new Date().getFullYear()) {
                     setYear(carToEdit ? carToEdit.year : new Date().getFullYear());
                   }
                 }}
                 min={1950}
-                max={new Date().getFullYear() + 1}
+                max={new Date().getFullYear()}
                 className="w-full text-base sm:text-sm border border-slate-200 rounded-xl px-3.5 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
               />
             </div>
