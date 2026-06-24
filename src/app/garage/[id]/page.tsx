@@ -441,7 +441,7 @@ export default function CarDetailPage() {
   return (
     <>
       <Background />
-      <Header showAccountIcon={true} vehicleContext={car || undefined} />
+      <Header showAccountIcon={true} vehicleContext={car || undefined} forceScrolled={true} />
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-32 pb-20 font-sans min-h-screen">
         

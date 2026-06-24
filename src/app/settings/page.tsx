@@ -110,7 +110,7 @@ export default function SettingsPage() {
   return (
     <>
       <Background />
-      <Header showAccountIcon={true} />
+      <Header showAccountIcon={true} forceScrolled={true} />
 
       <main className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-32 pb-20 font-sans min-h-screen">
         

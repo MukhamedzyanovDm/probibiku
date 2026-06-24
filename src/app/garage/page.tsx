@@ -45,7 +45,7 @@ export default async function GaragePage() {
   return (
     <>
       <Background />
-      <Header showAccountIcon={true} garageContext={vehicles} />
+      <Header showAccountIcon={true} garageContext={vehicles} forceScrolled={true} />
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-32 pb-20 font-sans min-h-screen">
         <GarageDashboardClient
           cars={vehicles}

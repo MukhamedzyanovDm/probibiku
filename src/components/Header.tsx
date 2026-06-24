@@ -8,23 +8,27 @@ import AIChat from "./AIChat";
 export function Header({ 
   showAccountIcon = false,
   vehicleContext,
-  garageContext
+  garageContext,
+  forceScrolled = false
 }: { 
   showAccountIcon?: boolean;
   vehicleContext?: any;
   garageContext?: any;
+  forceScrolled?: boolean;
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollActive, setScrollActive] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const isScrolled = forceScrolled || scrollActive;
 
   useEffect(() => {
     setMounted(true);
     
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setScrollActive(window.scrollY > 10);
     };
     
     // Check initial scroll on mount
