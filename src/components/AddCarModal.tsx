@@ -64,7 +64,7 @@ function compressImage(file: File, maxWidth = 1200, quality = 0.85): Promise<Blo
 export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddCarModalProps) {
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
-  const [year, setYear] = useState(new Date().getFullYear());
+  const [year, setYear] = useState<number | "">(new Date().getFullYear());
   const [licensePlate, setLicensePlate] = useState("");
   const [mileage, setMileage] = useState(0);
   const [purchaseDate, setPurchaseDate] = useState("");
@@ -161,7 +161,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
         id: carToEdit?.id,
         make,
         model,
-        year: year ? year.toString() : null,
+        year: year ? year.toString() : new Date().getFullYear().toString(),
         plateNumber: licensePlate || null,
         currentMileage: mileage ? mileage.toString() : "0",
         imageUrl: uploadedUrl,
@@ -289,7 +289,24 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
               <input
                 type="number"
                 value={year}
-                onChange={(e) => setYear(Number(e.target.value))}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setYear(val === "" ? "" : Number(val));
+                }}
+                onFocus={(e) => {
+                  try {
+                    e.target.select();
+                  } catch (err) {
+                    if (year === new Date().getFullYear() || (carToEdit && year === carToEdit.year)) {
+                      setYear("");
+                    }
+                  }
+                }}
+                onBlur={() => {
+                  if (year === "" || year < 1900 || year > new Date().getFullYear() + 1) {
+                    setYear(carToEdit ? carToEdit.year : new Date().getFullYear());
+                  }
+                }}
                 min={1950}
                 max={new Date().getFullYear() + 1}
                 className="w-full text-base sm:text-sm border border-slate-200 rounded-xl px-3.5 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
