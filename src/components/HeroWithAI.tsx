@@ -135,7 +135,7 @@ export default function HeroWithAI() {
                     <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
                     <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
                   </div>
-                  <div className="flex items-center gap-1.5 font-mono text-[10px] font-medium tracking-tight text-slate-400 uppercase">
+                  <div className="flex items-center gap-1.5 font-mono text-[10px] font-medium tracking-tight text-white uppercase">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span>ИИ Ассистент Пробибику</span>
                   </div>
