@@ -154,7 +154,9 @@ export default function LoginPage() {
                 {code.map((digit, idx) => (
                   <input
                     key={idx}
-                    type="text"
+                    type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     maxLength={1}
                     value={digit}
                     onChange={(e) => handleCodeChange(e.target, idx)}

@@ -96,6 +96,13 @@ export async function POST(req: NextRequest) {
         console.log("ℹ️ Mileage update not needed or vehicle not found");
       }
 
+      // 4. Reset advice history hash to force AI advice re-generation
+      console.log("🔄 Resetting advice history hash...");
+      await tx.update(vehicles)
+        .set({ adviceHistoryHash: null })
+        .where(eq(vehicles.id, vehicleId));
+      console.log("✅ Advice history hash reset");
+
       return record;
     });
 
@@ -188,6 +195,13 @@ export async function PATCH(req: NextRequest) {
           .where(eq(vehicles.id, vehicleId));
         console.log("✅ Mileage updated");
       }
+
+      // 4. Reset advice history hash to force AI advice re-generation
+      console.log("🔄 Resetting advice history hash...");
+      await tx.update(vehicles)
+        .set({ adviceHistoryHash: null })
+        .where(eq(vehicles.id, vehicleId));
+      console.log("✅ Advice history hash reset");
     });
 
     const duration = Date.now() - startTime;
@@ -217,7 +231,20 @@ export async function DELETE(req: NextRequest) {
     // 2. Delete the record from database
     await db.delete(serviceRecords).where(eq(serviceRecords.id, id));
 
-    // 3. Delete the file from S3 bucket if it exists
+    // 3. Reset advice history hash to force AI advice re-generation
+    if (record?.vehicleId) {
+      try {
+        console.log("🔄 Resetting advice history hash...");
+        await db.update(vehicles)
+          .set({ adviceHistoryHash: null })
+          .where(eq(vehicles.id, record.vehicleId));
+        console.log("✅ Advice history hash reset");
+      } catch (dbError) {
+        console.error("Failed to reset advice history hash:", dbError);
+      }
+    }
+
+    // 4. Delete the file from S3 bucket if it exists
     if (record?.receiptImageUrl) {
       try {
         console.log(`🗑 Deleting receipt image from S3: ${record.receiptImageUrl}`);

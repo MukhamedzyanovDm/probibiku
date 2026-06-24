@@ -51,6 +51,8 @@ export const vehicles = pgTable("vehicles", {
   currentMileage: integer("current_mileage").default(0),
   imageUrl: text("image_url"),
   insuranceExpiry: date("insurance_expiry"),
+  adviceCache: text("advice_cache"),        // JSON-строка с 4 советами
+  adviceHistoryHash: text("advice_history_hash"), // SHA-256 хэш
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
