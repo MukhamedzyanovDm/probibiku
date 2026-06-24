@@ -64,12 +64,12 @@ export function Header({
               <img 
                 src="/Probibiku_small_logo.svg" 
                 alt="ПРОБИБИКУ" 
-                className={`h-[24px] w-auto lg:hidden transition-all duration-300 ${isScrolled ? "" : "brightness-0 invert"}`}
+                className="h-[24px] w-auto lg:hidden" 
               />
               <img 
                 src="/Probibiku_main_logo.svg" 
                 alt="ПРОБИБИКУ" 
-                className={`h-[24px] w-auto hidden lg:block transition-all duration-300 ${isScrolled ? "" : "brightness-0 invert"}`}
+                className="h-[24px] w-auto hidden lg:block" 
               />
             </a>
 
