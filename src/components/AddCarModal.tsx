@@ -74,7 +74,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
   const [previewUrl, setPreviewUrl] = useState("");
   
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{ make?: string; model?: string }>({});
+  const [errors, setErrors] = useState<{ make?: string; model?: string; year?: string }>({});
 
   useEffect(() => {
     if (isOpen) {
@@ -106,12 +106,18 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newErrors: { make?: string; model?: string } = {};
+    const newErrors: { make?: string; model?: string; year?: string } = {};
     if (!make.trim()) {
       newErrors.make = "Пожалуйста, введите марку автомобиля";
     }
     if (!model.trim()) {
       newErrors.model = "Пожалуйста, введите модель автомобиля";
+    }
+
+    const currentYear = new Date().getFullYear();
+    const yearNum = Number(year);
+    if (year !== "" && (isNaN(yearNum) || yearNum < 1950 || yearNum > currentYear)) {
+      newErrors.year = `Год выпуска должен быть от 1950 до ${currentYear}`;
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -292,6 +298,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
                 onChange={(e) => {
                   const val = e.target.value;
                   setYear(val === "" ? "" : Number(val));
+                  if (errors.year) setErrors((prev) => ({ ...prev, year: undefined }));
                 }}
                 onFocus={(e) => {
                   try {
@@ -311,6 +318,9 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
                 max={new Date().getFullYear()}
                 className="w-full text-base sm:text-sm border border-slate-200 rounded-xl px-3.5 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
               />
+              {errors.year && (
+                <p className="text-red-500 text-[10px] mt-1 font-light">{errors.year}</p>
+              )}
             </div>
 
             <div>
