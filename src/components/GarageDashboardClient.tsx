@@ -12,6 +12,7 @@ import {
 import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import AddCarModal from "@/components/AddCarModal";
+import GarageLoader from "@/components/GarageLoader";
 import Portal from "@/components/Portal";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/figma/BrandLogo";
@@ -331,6 +332,9 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
         }}
         carToEdit={carToEdit}
       />
+
+      {/* Garage Loader overlay when database / server transition is pending */}
+      <GarageLoader isOpen={isPending} />
 
       {/* Delete Confirmation Modal */}
       {deleteConfirmId && (
