@@ -9,12 +9,12 @@ export default function HeroWithAI() {
     <section className="relative w-full overflow-hidden bg-slate-950 text-white pt-32 md:pt-40 pb-20">
       {/* Background Image with opacity */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center opacity-35 pointer-events-none select-none"
+        className="absolute inset-0 z-0 bg-cover bg-center opacity-100 pointer-events-none select-none"
         style={{ backgroundImage: "url('/dlue-background.jpg')" }}
       />
       
       {/* Soft overlay gradients for depth */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/10 via-slate-950/40 to-slate-950 pointer-events-none" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-slate-950/10 to-slate-950 pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-[1.02fr_0.98fr] gap-12 lg:gap-16 items-center">
