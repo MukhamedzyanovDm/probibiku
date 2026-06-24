@@ -68,6 +68,15 @@ export async function getCarImageUrl(make: string, model: string): Promise<strin
     }
   }
 
+  // If no image found, fallback to DeLorean DMC-12 as a cool easter egg / default vehicle photo
+  if (!imageUrl) {
+    try {
+      imageUrl = await fetchWikipediaImage("DeLorean DMC-12", "en");
+    } catch (fallbackError) {
+      console.error("Failed to fetch DeLorean fallback image:", fallbackError);
+    }
+  }
+
   // Save string (empty if not found) to prevent repeated failed requests
   const urlToSave = imageUrl || "";
 
