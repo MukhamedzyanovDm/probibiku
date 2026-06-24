@@ -159,6 +159,7 @@ export default function LoginPage() {
                     pattern="[0-9]*"
                     maxLength={1}
                     value={digit}
+                    autoFocus={idx === 0}
                     onChange={(e) => handleCodeChange(e.target, idx)}
                     onKeyDown={(e) => handleKeyDown(e, idx)}
                     className="w-12 h-12 text-center text-lg font-mono font-medium border border-slate-200 focus:border-blue-500 bg-slate-50/50 focus:bg-white rounded-xl outline-none transition-all"
