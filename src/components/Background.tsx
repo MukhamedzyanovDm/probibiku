@@ -144,7 +144,7 @@ export default function Background() {
       {isMobile ? (
         /* Lightweight static gradient for mobile — no canvas, no blur, no GPU drain */
         <div
-          className="fixed inset-0 -z-10 pointer-events-none"
+          className="fixed inset-0 z-0 pointer-events-none"
           style={{
             background:
               "radial-gradient(ellipse 80% 60% at 20% 30%, rgba(79,70,229,0.18) 0%, transparent 70%)," +
@@ -156,7 +156,7 @@ export default function Background() {
         /* High-performance fluid animation canvas (desktop only) */
         <canvas
           ref={canvasRef}
-          className="fixed inset-0 w-full h-full -z-10 pointer-events-none"
+          className="fixed inset-0 w-full h-full z-0 pointer-events-none"
           style={{
             filter: "blur(75px) contrast(1.3)",
             opacity: 1.0,
