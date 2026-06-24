@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function HeroWithAI() {
   return (
-    <section className="relative w-full overflow-hidden bg-slate-950 text-white pt-32 md:pt-40 pb-20">
+    <section className="relative w-full min-h-screen flex items-center overflow-hidden bg-slate-950 text-white pt-32 md:pt-40 pb-20 rounded-b-[2.25rem]">
       {/* Background Image with opacity */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center opacity-100 pointer-events-none select-none"
@@ -16,7 +16,7 @@ export default function HeroWithAI() {
       {/* Soft overlay gradients for depth */}
       <div className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-slate-950/10 to-slate-950 pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
         <div className="grid lg:grid-cols-[1.02fr_0.98fr] gap-12 lg:gap-16 items-center">
           {/* Hero Copy */}
           <div className="text-center lg:text-left min-w-0">
@@ -129,7 +129,7 @@ export default function HeroWithAI() {
               {/* AI Assistant Chat Mockup Container */}
               <div className="rounded-[1.5rem] bg-transparent overflow-hidden">
                 {/* Mockup Top Bar */}
-                <div className="px-5 py-4 flex items-center justify-between bg-transparent">
+                <div className="px-5 py-2.5 flex items-center justify-between bg-transparent">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
                     <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
@@ -142,7 +142,7 @@ export default function HeroWithAI() {
                 </div>
 
                 {/* Chat Content Panel */}
-                <div className="p-5 sm:p-6 h-[390px] flex flex-col justify-between bg-slate-950/70">
+                <div className="p-5 sm:p-6 h-[390px] flex flex-col justify-between bg-slate-950/70 rounded-t-[1.5rem]">
                   {/* Scrollable Message List (driven purely by CSS animations) */}
                   <div className="flex-1 overflow-hidden pr-1 min-h-0">
                     <div className="css-chat-container">

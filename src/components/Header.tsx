@@ -17,10 +17,21 @@ export function Header({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
+    
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    
+    // Check initial scroll on mount
+    handleScroll();
+    
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -40,7 +51,11 @@ export function Header({
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       <nav className="max-w-7xl mx-auto px-6 pt-5">
-        <div className="relative rounded-full bg-white/55 backdrop-blur-xl border border-white shadow-[0_30px_80px_-45px_rgba(15,23,42,0.35),inset_0_1px_0_rgba(255,255,255,1)] px-4 py-3">
+        <div className={`relative rounded-full transition-all duration-300 px-4 py-3 ${
+          isScrolled 
+            ? "bg-white/55 backdrop-blur-xl border border-white shadow-[0_30px_80px_-45px_rgba(15,23,42,0.35),inset_0_1px_0_rgba(255,255,255,1)]" 
+            : "bg-transparent border border-transparent shadow-none"
+        }`}>
 
           {/* Nav Content */}
           <div className="relative z-10 flex items-center justify-between">
@@ -49,39 +64,57 @@ export function Header({
               <img 
                 src="/Probibiku_small_logo.svg" 
                 alt="ПРОБИБИКУ" 
-                className="h-[24px] w-auto lg:hidden" 
+                className={`h-[24px] w-auto lg:hidden transition-all duration-300 ${isScrolled ? "" : "brightness-0 invert"}`}
               />
               <img 
                 src="/Probibiku_main_logo.svg" 
                 alt="ПРОБИБИКУ" 
-                className="h-[24px] w-auto hidden lg:block" 
+                className={`h-[24px] w-auto hidden lg:block transition-all duration-300 ${isScrolled ? "" : "brightness-0 invert"}`}
               />
             </a>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-7 text-xs text-slate-600 font-normal">
+            <div className={`hidden md:flex items-center gap-7 text-xs font-normal transition-colors duration-300 ${
+              isScrolled ? "text-slate-600" : "text-white/90"
+            }`}>
               <a
                 href="#features"
-                className="relative transition-colors duration-300 hover:text-blue-600 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+                className={`relative transition-colors duration-300 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
+                  isScrolled 
+                    ? "hover:text-blue-600 after:bg-blue-500" 
+                    : "hover:text-white after:bg-white"
+                }`}
               >
                 Возможности
               </a>
               <a
                 href="#demo"
-                className="relative transition-colors duration-300 hover:text-blue-600 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+                className={`relative transition-colors duration-300 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
+                  isScrolled 
+                    ? "hover:text-blue-600 after:bg-blue-500" 
+                    : "hover:text-white after:bg-white"
+                }`}
               >
                 Как это работает
               </a>
 
               <a
                 href="#privacy"
-                className="relative transition-colors duration-300 hover:text-blue-600 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+                className={`relative transition-colors duration-300 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
+                  isScrolled 
+                    ? "hover:text-blue-600 after:bg-blue-500" 
+                    : "hover:text-white after:bg-white"
+                }`}
               >
                 Безопасность
               </a>
               <a
                 href="#pricing"
-                className="relative transition-colors duration-300 hover:text-blue-600 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+                className={`relative transition-colors duration-300 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
+                  isScrolled 
+                    ? "hover:text-blue-600 after:bg-blue-500" 
+                    : "hover:text-white after:bg-white"
+                }`}
               >
                 Тарифы
               </a>
@@ -94,15 +127,21 @@ export function Header({
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => setIsChatOpen(true)}
-                      className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium text-slate-800 bg-white hover:bg-amber-50/20 border border-amber-400/70 hover:border-amber-500 shadow-[0_4px_12px_rgba(245,158,11,0.08),inset_0_1px_0_white] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all duration-300 hover:-translate-y-0.5 cursor-pointer ${
+                        isScrolled
+                          ? "text-slate-800 bg-white border border-amber-400/70 hover:border-amber-500 shadow-[0_4px_12px_rgba(245,158,11,0.08),inset_0_1px_0_white]"
+                          : "text-amber-300 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20"
+                      }`}
                     >
-                      <Wand2 className="w-3.5 h-3.5 text-amber-500" />
+                      <Wand2 className={`w-3.5 h-3.5 ${isScrolled ? "text-amber-500" : "text-amber-400"}`} />
                       <span>ИИ Ассистент</span>
                     </button>
                     <div className="relative" ref={dropdownRef}>
                       <button
                         onClick={() => setDropdownOpen(!dropdownOpen)}
-                        className="text-slate-600 hover:text-blue-600 transition-colors flex items-center justify-center cursor-pointer"
+                        className={`transition-colors flex items-center justify-center cursor-pointer ${
+                          isScrolled ? "text-slate-600 hover:text-blue-600" : "text-white/90 hover:text-white"
+                        }`}
                         title="Личный кабинет"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[28px] h-[28px]">
@@ -158,14 +197,22 @@ export function Header({
                   <>
                     <button
                       onClick={() => setIsChatOpen(true)}
-                      className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium text-slate-800 bg-white hover:bg-amber-50/20 border border-amber-400/70 hover:border-amber-500 shadow-[0_4px_12px_rgba(245,158,11,0.08),inset_0_1px_0_white] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all duration-300 hover:-translate-y-0.5 cursor-pointer ${
+                        isScrolled
+                          ? "text-slate-800 bg-white border border-amber-400/70 hover:border-amber-500 shadow-[0_4px_12px_rgba(245,158,11,0.08),inset_0_1px_0_white]"
+                          : "text-amber-300 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20"
+                      }`}
                     >
-                      <Wand2 className="w-3.5 h-3.5 text-amber-500" />
+                      <Wand2 className={`w-3.5 h-3.5 ${isScrolled ? "text-amber-500" : "text-amber-400"}`} />
                       <span>ИИ Ассистент</span>
                     </button>
                     <Link
                       href="/login"
-                      className="inline-flex items-center justify-center rounded-full px-4 py-2 text-xs text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition-colors duration-300"
+                      className={`inline-flex items-center justify-center rounded-full px-4 py-2 text-xs transition-colors duration-300 ${
+                        isScrolled 
+                          ? "text-slate-700 bg-white hover:bg-slate-50 border border-slate-200" 
+                          : "text-white bg-white/10 hover:bg-white/15 border border-white/20 backdrop-blur-sm"
+                      }`}
                     >
                       Войти
                     </Link>
