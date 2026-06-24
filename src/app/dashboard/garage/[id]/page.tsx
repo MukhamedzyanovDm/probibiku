@@ -69,6 +69,81 @@ const getMockRecommendations = (mileage: number) => [
   }
 ];
 
+const mapDbVehicleToClientCar = (dbVehicle: any): Car => {
+  const serviceHistory: ServiceRecord[] = (dbVehicle.serviceRecords || []).map((rec: any) => {
+    const partsList = (rec.items || [])
+      .filter((item: any) => item.category === "parts")
+      .map((item: any) => item.description)
+      .join(", ");
+    
+    const workDescriptions = (rec.items || [])
+      .map((item: any) => {
+        if (item.quantity && parseFloat(item.quantity) !== 1) {
+          return `${item.description} (${item.quantity} шт.)`;
+        }
+        return item.description;
+      })
+      .join("\n");
+
+    const fullDescription = rec.serviceCenterName 
+      ? `СТО: ${rec.serviceCenterName}\n${workDescriptions}` 
+      : workDescriptions;
+
+    let type: "ТО" | "Ремонт" | "Тюнинг" | "Другое" = "Другое";
+    const hasRepair = (rec.items || []).some((item: any) => item.category === "repair");
+    const hasMaint = (rec.items || []).some((item: any) => item.category === "maintenance");
+    const hasTuning = (rec.items || []).some((item: any) => item.category === "tuning");
+    if (hasRepair) type = "Ремонт";
+    else if (hasMaint) type = "ТО";
+    else if (hasTuning) type = "Тюнинг";
+
+    return {
+      id: rec.id,
+      date: rec.date ? rec.date.split("T")[0] : "",
+      type,
+      mileage: rec.odometer || 0,
+      cost: parseFloat(rec.totalAmount) || 0,
+      description: fullDescription || "Запись обслуживания",
+      parts: partsList,
+      receiptAttached: rec.status === "processed" || rec.status === "manual" || !!rec.receiptImageUrl,
+      receiptUrl: rec.receiptUrl || undefined,
+      receiptImageUrl: rec.receiptImageUrl || undefined,
+      items: rec.items,
+      serviceCenterName: rec.serviceCenterName || undefined
+    };
+  });
+
+  let parts: any[] = [];
+  if (typeof window !== "undefined") {
+    const storedParts = localStorage.getItem(`parts_for_${dbVehicle.id}`);
+    if (storedParts) {
+      try {
+        parts = JSON.parse(storedParts);
+      } catch (e) {
+        parts = [];
+      }
+    }
+  }
+
+  const fuelHistory = [8.0, 8.2, 7.9, 8.1, 8.3];
+
+  return {
+    id: dbVehicle.id,
+    make: dbVehicle.make,
+    model: dbVehicle.model,
+    year: dbVehicle.year || new Date().getFullYear(),
+    licensePlate: dbVehicle.plateNumber || "",
+    mileage: dbVehicle.currentMileage || 0,
+    purchaseDate: dbVehicle.createdAt ? dbVehicle.createdAt.split("T")[0] : "",
+    health: 95,
+    imageUrl: dbVehicle.imageUrl || undefined,
+    insuranceExpiry: dbVehicle.insuranceExpiry || undefined,
+    fuelHistory,
+    serviceHistory,
+    parts
+  };
+};
+
 export default function CarDetailPage() {
   const { id } = useParams() as { id: string };
   const router = useRouter();
@@ -110,7 +185,20 @@ export default function CarDetailPage() {
   const [newPartName, setNewPartName] = useState("");
   const [newPartNumber, setNewPartNumber] = useState("");
 
-  const loadCar = () => {
+  const loadCar = async () => {
+    try {
+      const decodedId = decodeURIComponent(id);
+      const res = await fetch(`/api/vehicles?id=${decodedId}`);
+      if (res.ok) {
+        const dbVehicle = await res.json();
+        const clientCar = mapDbVehicleToClientCar(dbVehicle);
+        setCar(clientCar);
+        return;
+      }
+    } catch (err) {
+      console.error("Failed to load car details from API, using fallback", err);
+    }
+
     const decodedId = decodeURIComponent(id);
     const fetched = getCarById(decodedId);
     if (!fetched) {

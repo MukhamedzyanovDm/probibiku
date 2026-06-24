@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getVehicles, getGarageStats, getSessionUser } from "@/db/queries";
 import { GarageDashboardClient } from "@/components/GarageDashboardClient";
+import { getCarImageUrl } from "@/lib/wikipedia-image";
 
 export const dynamic = "force-dynamic";
 
@@ -13,22 +14,33 @@ export default async function GaragePage() {
     getGarageStats(user.id),
   ]);
 
-  const vehicles = fetchedVehicles.map((v) => {
-    const carExpenses = v.serviceRecords?.reduce((sum, s) => sum + parseFloat(s.totalAmount), 0) || 0;
+  const vehicles = await Promise.all(
+    fetchedVehicles.map(async (v) => {
+      const carExpenses = v.serviceRecords?.reduce((sum, s) => sum + parseFloat(s.totalAmount), 0) || 0;
 
-    return {
-      id: v.id,
-      make: v.make,
-      model: v.model,
-      year: v.year || new Date().getFullYear(),
-      licensePlate: v.plateNumber || "",
-      mileage: v.currentMileage || 0,
-      health: 95, // default health status placeholder
-      imageUrl: v.imageUrl || undefined,
-      insuranceExpiry: v.insuranceExpiry || undefined,
-      carExpenses,
-    };
-  });
+      let imageUrl = v.imageUrl || undefined;
+      if (!imageUrl) {
+        try {
+          imageUrl = (await getCarImageUrl(v.make, v.model)) || undefined;
+        } catch (wikiError) {
+          console.error("Failed to auto-fetch Wikipedia image for public list:", wikiError);
+        }
+      }
+
+      return {
+        id: v.id,
+        make: v.make,
+        model: v.model,
+        year: v.year || new Date().getFullYear(),
+        licensePlate: v.plateNumber || "",
+        mileage: v.currentMileage || 0,
+        health: 95, // default health status placeholder
+        imageUrl,
+        insuranceExpiry: v.insuranceExpiry || undefined,
+        carExpenses,
+      };
+    })
+  );
 
   return (
     <>
