@@ -259,12 +259,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   height: 100%;
 }
 
-.css-chat-msg-1 { animation: chat-msg-1 16s infinite ease-in-out; }
-.css-chat-typing-1 { animation: chat-typing-1 16s infinite ease-in-out; }
-.css-chat-msg-2 { animation: chat-msg-2 16s infinite ease-in-out; }
-.css-chat-msg-3 { animation: chat-msg-3 16s infinite ease-in-out; }
-.css-chat-typing-2 { animation: chat-typing-2 16s infinite ease-in-out; }
-.css-chat-msg-4 { animation: chat-msg-4 16s infinite ease-in-out; }
+.css-chat-msg-1 { animation: chat-msg-1 10s infinite ease-in-out; }
+.css-chat-typing-1 { animation: chat-typing-1 10s infinite ease-in-out; }
+.css-chat-msg-2 { animation: chat-msg-2 10s infinite ease-in-out; }
+.css-chat-msg-3 { animation: chat-msg-3 10s infinite ease-in-out; }
+.css-chat-typing-2 { animation: chat-typing-2 10s infinite ease-in-out; }
+.css-chat-msg-4 { animation: chat-msg-4 10s infinite ease-in-out; }
 
 @keyframes chat-msg-1 {
   0%, 4% { opacity: 0; max-height: 0; transform: translateY(15px); margin-bottom: 0; padding-top: 0; padding-bottom: 0; }

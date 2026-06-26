@@ -9,8 +9,22 @@ import {
   Trash2
 } from "lucide-react";
 
-import React, { useState, useTransition } from "react";
+import React, { useState, useTransition, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar
+} from "recharts";
 import AddCarModal from "@/components/AddCarModal";
 import GarageLoader from "@/components/GarageLoader";
 import Portal from "@/components/Portal";
@@ -29,6 +43,19 @@ interface Car {
   carExpenses: number;
   purchaseDate?: string;
   insuranceExpiry?: string;
+  serviceHistory?: {
+    id: string;
+    date: string;
+    cost: number;
+    items?: {
+      id: string;
+      recordId: string;
+      description: string;
+      category: "maintenance" | "repair" | "parts" | "tuning" | null;
+      cost: string;
+      quantity: string | null;
+    }[];
+  }[];
 }
 
 interface GarageDashboardClientProps {
@@ -40,12 +67,120 @@ interface GarageDashboardClientProps {
   };
 }
 
+const CustomComparisonTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    const total = payload.reduce((sum: number, entry: any) => sum + (entry.value || 0), 0);
+    return (
+      <div className="bg-slate-950/90 text-white p-3 rounded-2xl border border-white/10 shadow-xl backdrop-blur-md text-xs font-sans min-w-[180px]">
+        <p className="font-semibold text-sm mb-2 border-b border-white/10 pb-1">{label}</p>
+        <div className="space-y-1">
+          {payload.map((entry: any, index: number) => {
+            if (!entry.value) return null;
+            return (
+              <div key={index} className="flex justify-between items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                  <span className="text-slate-300">{entry.name}</span>
+                </div>
+                <span className="font-mono font-medium">
+                  {entry.value.toLocaleString("ru-RU")} ₽
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <div className="mt-2 pt-1 border-t border-white/10 flex justify-between items-center font-semibold">
+          <span>Итого:</span>
+          <span className="font-mono">{total.toLocaleString("ru-RU")} ₽</span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [carToEdit, setCarToEdit] = useState<Car | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
+  const [timeframe, setTimeframe] = useState<string>("all");
+
+  const comparisonChartData = useMemo(() => {
+    return cars.map(car => {
+      const categorySums: Record<string, number> = {
+        "ТО": 0,
+        "Ремонт": 0,
+        "Запчасти": 0,
+        "Тюнинг": 0,
+        "Прочее": 0,
+      };
+
+      let total = 0;
+
+      if (car.serviceHistory) {
+        let history = [...car.serviceHistory];
+        
+        // Filter by timeframe
+        if (timeframe === "6m") {
+          const cutoff = new Date();
+          cutoff.setMonth(cutoff.getMonth() - 6);
+          history = history.filter((h) => new Date(h.date) >= cutoff);
+        } else if (timeframe === "1y") {
+          const cutoff = new Date();
+          cutoff.setFullYear(cutoff.getFullYear() - 1);
+          history = history.filter((h) => new Date(h.date) >= cutoff);
+        }
+
+        history.forEach((record) => {
+          if (record.items && record.items.length > 0) {
+            let itemsSum = 0;
+            record.items.forEach((item: any) => {
+              const cat = item.category;
+              const cost = parseFloat(item.cost) || 0;
+              const qty = parseFloat(item.quantity) || 1;
+              const itemCost = cost * qty;
+              
+              let clientCat = "Прочее";
+              if (cat === "maintenance") clientCat = "ТО";
+              else if (cat === "repair") clientCat = "Ремонт";
+              else if (cat === "parts") clientCat = "Запчасти";
+              else if (cat === "tuning") clientCat = "Тюнинг";
+
+              categorySums[clientCat] += itemCost;
+              itemsSum += itemCost;
+              total += itemCost;
+            });
+            
+            if (record.cost > itemsSum) {
+              categorySums["Прочее"] += (record.cost - itemsSum);
+              total += (record.cost - itemsSum);
+            }
+          } else {
+            categorySums["Прочее"] += record.cost;
+            total += record.cost;
+          }
+        });
+      }
+
+      return {
+        name: `${car.make} ${car.model}`,
+        "ТО": categorySums["ТО"],
+        "Ремонт": categorySums["Ремонт"],
+        "Запчасти": categorySums["Запчасти"],
+        "Тюнинг": categorySums["Тюнинг"],
+        "Прочее": categorySums["Прочее"],
+        totalSpent: total,
+      };
+    }).sort((a, b) => b.totalSpent - a.totalSpent);
+  }, [cars, timeframe]);
+
+  const hasAnyExpenses = useMemo(() => {
+    return comparisonChartData.some(item => item.totalSpent > 0);
+  }, [comparisonChartData]);
+
   const alerts: string[] = [];
   cars.forEach((car) => {
     if (car.insuranceExpiry) {
@@ -182,6 +317,115 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
               </p>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Analytics Charts Section */}
+      {cars.length > 0 && (
+        <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl mb-10 animate-in fade-in duration-300">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5 mb-6">
+            <div>
+              <h2 className="text-xl font-normal tracking-tight text-slate-900">Сравнение расходов автопарка</h2>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wider font-mono mt-0.5">
+                Распределение трат между всеми машинами в гараже
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-full border border-slate-200/50 self-start sm:self-auto">
+              <button
+                onClick={() => setTimeframe("all")}
+                className={`text-[11px] font-medium px-3 py-1 rounded-full transition-all cursor-pointer ${
+                  timeframe === "all" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                Все время
+              </button>
+              <button
+                onClick={() => setTimeframe("1y")}
+                className={`text-[11px] font-medium px-3 py-1 rounded-full transition-all cursor-pointer ${
+                  timeframe === "1y" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                Год
+              </button>
+              <button
+                onClick={() => setTimeframe("6m")}
+                className={`text-[11px] font-medium px-3 py-1 rounded-full transition-all cursor-pointer ${
+                  timeframe === "6m" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                6 месяцев
+              </button>
+            </div>
+          </div>
+
+          {!hasAnyExpenses ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <p className="text-slate-400 text-xs font-light">
+                Нет данных о расходах за выбранный период
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Responsive container for Stacked Bar Chart */}
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={comparisonChartData}
+                    layout="vertical"
+                    margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
+                    <XAxis
+                      type="number"
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fontSize: 10, fill: "#94a3b8" }}
+                      tickFormatter={(v) => `${v.toLocaleString("ru-RU")} ₽`}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="name"
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fontSize: 11, fill: "#334155", fontWeight: 500 }}
+                      width={120}
+                    />
+                    <Tooltip content={<CustomComparisonTooltip />} cursor={{ fill: "rgba(148, 163, 184, 0.04)" }} />
+                    <Bar dataKey="ТО" stackId="a" fill="#3b82f6" radius={[0, 0, 0, 0]} />
+                    <Bar dataKey="Ремонт" stackId="a" fill="#8b5cf6" radius={[0, 0, 0, 0]} />
+                    <Bar dataKey="Запчасти" stackId="a" fill="#ec4899" radius={[0, 0, 0, 0]} />
+                    <Bar dataKey="Тюнинг" stackId="a" fill="#10b981" radius={[0, 0, 0, 0]} />
+                    <Bar dataKey="Прочее" stackId="a" fill="#94a3b8" radius={[0, 6, 6, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Custom Legend */}
+              <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 border-t border-slate-100 pt-4 text-[11px] font-medium">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded shrink-0" style={{ backgroundColor: "#3b82f6" }} />
+                  <span className="text-slate-600">ТО</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded shrink-0" style={{ backgroundColor: "#8b5cf6" }} />
+                  <span className="text-slate-600">Ремонт</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded shrink-0" style={{ backgroundColor: "#ec4899" }} />
+                  <span className="text-slate-600">Запчасти</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded shrink-0" style={{ backgroundColor: "#10b981" }} />
+                  <span className="text-slate-600">Тюнинг</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded shrink-0" style={{ backgroundColor: "#94a3b8" }} />
+                  <span className="text-slate-600">Прочее</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

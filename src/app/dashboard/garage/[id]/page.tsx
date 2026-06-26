@@ -17,10 +17,11 @@ import {
   Download,
   Pencil,
   Globe,
-  ShieldAlert
+  ShieldAlert,
+  XCircle
 } from "lucide-react";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Background from "@/components/Background";
@@ -177,6 +178,12 @@ export default function CarDetailPage() {
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [partToDeleteId, setPartToDeleteId] = useState<string | null>(null);
   const [recordToEdit, setRecordToEdit] = useState<ServiceRecord | null>(null);
+  const [viewingRecord, setViewingRecord] = useState<ServiceRecord | null>(null);
+  const lastOpenTimeRef = useRef<number>(0);
+  const openRecordDetails = (rec: ServiceRecord) => {
+    lastOpenTimeRef.current = Date.now();
+    setViewingRecord(rec);
+  };
   const [isSearchSettingsOpen, setIsSearchSettingsOpen] = useState(false);
   const [searchProvider, setSearchProvider] = useState("Яндекс");
   const [customSearchUrl, setCustomSearchUrl] = useState("https://yandex.ru/search/?text={query}");
@@ -678,7 +685,11 @@ export default function CarDetailPage() {
               ) : (
                 <div className="space-y-4">
                   {car.serviceHistory.map((rec) => (
-                    <div key={rec.id} className="border border-slate-200/60 rounded-2xl p-5 hover:bg-slate-50/30 transition-colors">
+                    <div 
+                      key={rec.id} 
+                      onClick={() => openRecordDetails(rec)}
+                      className="border border-slate-200/60 rounded-2xl p-5 hover:bg-slate-50/30 hover:border-blue-300 hover:shadow-sm active:scale-[0.99] transition-all cursor-pointer text-left"
+                    >
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className={`inline-flex items-center gap-1 rounded-full text-[10px] font-mono font-medium px-2 py-0.5 ${
@@ -691,7 +702,7 @@ export default function CarDetailPage() {
                           <span className="text-xs text-slate-400 font-mono">{rec.date}</span>
                           
                           {rec.receiptAttached && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-2.5 py-0.5 text-[9px] font-medium shadow-[0_2px_8px_rgba(16,185,129,0.15)] hover:brightness-105 transition-all select-none cursor-default">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-2.5 py-0.5 text-[9px] font-medium shadow-[0_2px_8px_rgba(16,185,129,0.15)] hover:brightness-105 transition-all select-none cursor-default" onClick={(e) => e.stopPropagation()}>
                               <BadgeCheck className="w-3 h-3 text-white" />
                               Проверено ИИ (+10% доверия)
                             </span>
@@ -699,12 +710,15 @@ export default function CarDetailPage() {
                         </div>
                         
                         <div className="text-left sm:text-right shrink-0">
-                          <p className="text-sm font-semibold text-slate-900 font-mono">{rec.cost.toLocaleString("ru-RU")} ₽</p>
-                          <p className="text-[10px] text-slate-400 font-mono mt-0.5">на пробеге {rec.mileage.toLocaleString("ru-RU")} км</p>
+                          <p className="text-sm font-semibold text-slate-900 font-mono whitespace-nowrap">{rec.cost.toLocaleString("ru-RU")} ₽</p>
+                          <p className="text-[10px] text-slate-400 font-mono mt-0.5 whitespace-nowrap">на пробеге {rec.mileage.toLocaleString("ru-RU")} км</p>
                         </div>
                       </div>
                       
-                      <p className="text-xs text-slate-600 leading-relaxed mb-3 whitespace-pre-line">{rec.description}</p>
+                      <div className="flex items-center gap-1.5 text-xs text-slate-600 mb-3">
+                        <span className="font-medium text-slate-400">СТО:</span>
+                        <span className="font-semibold text-slate-700">{rec.serviceCenterName || "Автосервис (вручную)"}</span>
+                      </div>
                       
                       <div className="flex flex-wrap items-center justify-between gap-3 mt-2 pt-3 border-t border-slate-100">
                         {rec.parts ? (
@@ -717,9 +731,12 @@ export default function CarDetailPage() {
                           <div />
                         )}
                         
-                        <div className="flex items-center gap-2 ml-auto shrink-0">
+                        <div className="flex items-center gap-2 ml-auto shrink-0" onClick={(e) => e.stopPropagation()}>
                           <button
-                            onClick={() => handleEditRecord(rec)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditRecord(rec);
+                            }}
                             className="relative group w-8 h-8 rounded-full bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-500 flex items-center justify-center transition-all active:scale-95 cursor-pointer shrink-0"
                           >
                             <Pencil className="w-3.5 h-3.5" />
@@ -730,7 +747,10 @@ export default function CarDetailPage() {
                           
                           {rec.receiptAttached && (
                             <button
-                              onClick={() => handleDownloadReceipt(rec)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDownloadReceipt(rec);
+                              }}
                               className="relative group w-8 h-8 rounded-full bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-500 flex items-center justify-center transition-all active:scale-95 cursor-pointer shrink-0"
                             >
                               <Download className="w-4 h-4" />
@@ -753,9 +773,10 @@ export default function CarDetailPage() {
           <div className="lg:col-span-4 space-y-8">
             
             {/* 1. Parts Checklist */}
-            <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
+                <h3 className="text-base font-medium text-slate-900 flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-blue-500" />
                   Спецификация запчастей
                 </h3>
                 <button
@@ -911,11 +932,142 @@ export default function CarDetailPage() {
           recordToEdit={recordToEdit}
         />
 
-        <ShareModal
-          isOpen={isShareOpen}
-          onClose={() => setIsShareOpen(false)}
-          car={car}
-        />
+        {/* Viewing Record Modal */}
+        {viewingRecord && (
+          <Portal>
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+              {/* Backdrop */}
+              <div 
+                className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm transition-opacity duration-300 animate-in fade-in" 
+                onClick={() => {
+                  if (Date.now() - lastOpenTimeRef.current > 400) {
+                    setViewingRecord(null);
+                  }
+                }}
+              />
+              
+              {/* Modal Content */}
+              <div className="relative w-full max-w-2xl rounded-[2.5rem] bg-white border border-slate-200/80 shadow-2xl p-6 sm:p-8 z-10 animate-in zoom-in-95 duration-200 max-h-[85vh] flex flex-col">
+                {/* Modal Header */}
+                <div className="flex justify-between items-start gap-4 pb-4 border-b border-slate-100">
+                  <div className="text-left">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className={`inline-flex items-center gap-1 rounded-full text-[10px] font-mono font-medium px-2.5 py-0.5 ${
+                        viewingRecord.type === "ТО" ? "bg-blue-50 text-blue-600 border border-blue-100" :
+                        viewingRecord.type === "Ремонт" ? "bg-indigo-50 text-indigo-600 border border-indigo-100" :
+                        "bg-slate-50 text-slate-600 border border-slate-100"
+                      }`}>
+                        {viewingRecord.type}
+                      </span>
+                      <span className="text-xs text-slate-400 font-mono">{viewingRecord.date}</span>
+                    </div>
+                    <h3 className="text-base font-bold text-slate-900 leading-tight">
+                      Детали обслуживания
+                    </h3>
+                  </div>
+                  
+                  <button 
+                    onClick={() => setViewingRecord(null)}
+                    className="text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
+                  >
+                    <XCircle className="w-6 h-6" />
+                  </button>
+                </div>
+
+                {/* Modal Body */}
+                <div className="flex-1 overflow-y-auto py-5 space-y-6 scrollbar-hide text-left">
+                  {/* General Info Grid */}
+                  <div className="grid grid-cols-2 gap-4 bg-slate-50/50 border border-slate-100 rounded-2xl p-4">
+                    <div>
+                      <span className="text-[10px] text-slate-400 font-mono uppercase block">СТО (Автосервис)</span>
+                      <span className="text-xs font-semibold text-slate-800 mt-0.5 block">
+                        {viewingRecord.serviceCenterName || "Автосервис"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 font-mono uppercase block">Пробег</span>
+                      <span className="text-xs font-semibold text-slate-800 mt-0.5 block">
+                        {viewingRecord.mileage.toLocaleString("ru-RU")} км
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Work Items Table / List */}
+                  <div>
+                    <h4 className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-3">
+                      Выполненные работы и запчасти
+                    </h4>
+
+                    {viewingRecord.items && viewingRecord.items.length > 0 ? (
+                      <div className="space-y-2 max-h-[350px] overflow-y-auto pr-1 scrollbar-hide">
+                        {viewingRecord.items.map((item: any, idx: number) => {
+                          const qty = parseFloat(item.quantity?.toString() || "1") || 1;
+                          const price = parseFloat(item.cost?.toString() || "0") || 0;
+                          const sum = price * qty;
+                          return (
+                            <div key={idx} className="bg-slate-50/50 border border-slate-100 rounded-xl p-3 flex flex-col gap-1 text-left">
+                              <p className="font-normal text-slate-800 text-xs leading-relaxed">{item.description}</p>
+                              <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                                <span>{qty} шт.</span>
+                                <span className="font-semibold text-slate-700">Итого: {sum.toLocaleString("ru-RU")} ₽</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="bg-slate-50/30 border border-slate-100 rounded-2xl p-4">
+                        <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">
+                          {viewingRecord.description}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Parts List shortcut if present */}
+                  {viewingRecord.parts && (
+                    <div className="pt-2 border-t border-slate-100">
+                      <h4 className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                        Использованные детали
+                      </h4>
+                      <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/30 border border-slate-100 rounded-2xl p-4">
+                        {viewingRecord.parts}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Modal Footer */}
+                <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-auto">
+                  <div className="flex flex-col text-left">
+                    <span className="text-[10px] text-slate-400 font-mono uppercase">Итоговая стоимость</span>
+                    <span className="text-lg font-bold text-slate-900 font-mono">
+                      {viewingRecord.cost.toLocaleString("ru-RU")} ₽
+                    </span>
+                  </div>
+                  
+                  <div className="flex flex-col-reverse sm:flex-row gap-3 w-full sm:w-auto">
+                    <button
+                      onClick={() => {
+                        setViewingRecord(null);
+                        handleEditRecord(viewingRecord);
+                      }}
+                      className="flex-1 rounded-full border border-slate-200 text-slate-600 text-sm font-normal py-3 px-6 bg-white hover:bg-slate-50 transition-colors cursor-pointer text-center"
+                    >
+                      Редактировать
+                    </button>
+                    <button
+                      onClick={() => setViewingRecord(null)}
+                      className="flex-1 rounded-full bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal py-3 px-6 shadow-[0_4px_12px_rgba(59,130,246,0.2)] hover:from-blue-600 hover:to-blue-700 transition-all cursor-pointer text-center"
+                    >
+                      Закрыть
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Portal>
+        )}
 
         {/* Delete Part Confirmation Modal */}
         {partToDeleteId && (

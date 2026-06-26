@@ -50,7 +50,11 @@ export async function getVehicles(userId: string) {
   return await db.query.vehicles.findMany({
     where: eq(vehicles.userId, userId),
     with: {
-      serviceRecords: true,
+      serviceRecords: {
+        with: {
+          items: true,
+        },
+      },
     },
   });
 }

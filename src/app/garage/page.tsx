@@ -38,6 +38,12 @@ export default async function GaragePage() {
         imageUrl,
         insuranceExpiry: v.insuranceExpiry || undefined,
         carExpenses,
+        serviceHistory: v.serviceRecords?.map(rec => ({
+          id: rec.id,
+          date: rec.date ? rec.date.split("T")[0] : "",
+          cost: parseFloat(rec.totalAmount) || 0,
+          items: rec.items || []
+        })) || [],
       };
     })
   );

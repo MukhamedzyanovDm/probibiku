@@ -25,10 +25,23 @@ import {
   Download,
   Pencil,
   Globe,
-  ShieldAlert
+  ShieldAlert,
+  XCircle
 } from "lucide-react";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell
+} from "recharts";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Background from "@/components/Background";
@@ -152,6 +165,38 @@ const getMockRecommendations = (mileage: number) => [
   }
 ];
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-slate-950/90 text-white p-3 rounded-2xl border border-white/10 shadow-xl backdrop-blur-md text-xs font-sans">
+        <p className="font-mono text-slate-400 mb-1">{label}</p>
+        <p className="font-semibold text-sm">
+          {payload[0].value.toLocaleString("ru-RU")} ₽
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
+const CustomDonutTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-slate-950/90 text-white p-3 rounded-2xl border border-white/10 shadow-xl backdrop-blur-md text-xs font-sans">
+        <p className="font-semibold text-sm flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ backgroundColor: data.color }} />
+          {data.name}
+        </p>
+        <p className="font-mono text-slate-400 mt-1">
+          {data.value.toLocaleString("ru-RU")} ₽ ({data.percentage}%)
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function CarDetailPage() {
   const { id } = useParams() as { id: string };
   const router = useRouter();
@@ -160,6 +205,7 @@ export default function CarDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [recommendations, setRecommendations] = useState<Array<{ category: string; title: string; description: string; urgency?: "critical" | "warning" | "info" }>>([]);
   const [isAiLoading, setIsAiLoading] = useState(false);
+  const [timeframe, setTimeframe] = useState<string>("all");
 
   const fetchRecommendations = async (carData: Car) => {
     setIsAiLoading(true);
@@ -188,6 +234,12 @@ export default function CarDetailPage() {
   const [partToDeleteId, setPartToDeleteId] = useState<string | null>(null);
   const [recordToDeleteId, setRecordToDeleteId] = useState<string | null>(null);
   const [recordToEdit, setRecordToEdit] = useState<ServiceRecord | null>(null);
+  const [viewingRecord, setViewingRecord] = useState<ServiceRecord | null>(null);
+  const lastOpenTimeRef = useRef<number>(0);
+  const openRecordDetails = (rec: ServiceRecord) => {
+    lastOpenTimeRef.current = Date.now();
+    setViewingRecord(rec);
+  };
   const [isSearchSettingsOpen, setIsSearchSettingsOpen] = useState(false);
   const [searchProvider, setSearchProvider] = useState("Яндекс");
   const [customSearchUrl, setCustomSearchUrl] = useState("https://yandex.ru/search/?text={query}");
@@ -429,14 +481,122 @@ export default function CarDetailPage() {
   };
 
   // Calculate maintenance vs repair breakdown
-  const repairCosts = car.serviceHistory.filter(s => s.type === "Ремонт").reduce((sum, s) => sum + s.cost, 0);
-  const maintCosts = car.serviceHistory.filter(s => s.type === "ТО").reduce((sum, s) => sum + s.cost, 0);
-  const otherCosts = car.serviceHistory.filter(s => s.type !== "Ремонт" && s.type !== "ТО").reduce((sum, s) => sum + s.cost, 0);
+  const repairCosts = car ? car.serviceHistory.filter(s => s.type === "Ремонт").reduce((sum, s) => sum + s.cost, 0) : 0;
+  const maintCosts = car ? car.serviceHistory.filter(s => s.type === "ТО").reduce((sum, s) => sum + s.cost, 0) : 0;
+  const otherCosts = car ? car.serviceHistory.filter(s => s.type !== "Ремонт" && s.type !== "ТО").reduce((sum, s) => sum + s.cost, 0) : 0;
   
   const totalCost = repairCosts + maintCosts + otherCosts || 1;
   const repairPct = Math.round((repairCosts / totalCost) * 100);
   const maintPct = Math.round((maintCosts / totalCost) * 100);
   const otherPct = Math.round((otherCosts / totalCost) * 100);
+
+  // 1. Filter and compile history for current vehicle
+  const filteredHistory = useMemo(() => {
+    if (!car || !car.serviceHistory) return [];
+    
+    let history = [...car.serviceHistory];
+
+    // Sort by date ascending
+    history.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    // Filter by timeframe
+    if (timeframe === "6m") {
+      const cutoff = new Date();
+      cutoff.setMonth(cutoff.getMonth() - 6);
+      history = history.filter((h) => new Date(h.date) >= cutoff);
+    } else if (timeframe === "1y") {
+      const cutoff = new Date();
+      cutoff.setFullYear(cutoff.getFullYear() - 1);
+      history = history.filter((h) => new Date(h.date) >= cutoff);
+    }
+
+    return history;
+  }, [car, timeframe]);
+
+  // 2. Prepare Monthly dynamics data
+  const monthlyChartData = useMemo(() => {
+    if (filteredHistory.length === 0) return [];
+
+    const groups: Record<string, { monthStr: string; sortKey: string; amount: number }> = {};
+    
+    filteredHistory.forEach((record) => {
+      if (!record.date) return;
+      const d = new Date(record.date);
+      const sortKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      const monthStr = d.toLocaleString("ru-RU", { month: "short", year: "2-digit" }).replace(" г.", "");
+      
+      if (!groups[sortKey]) {
+        groups[sortKey] = { monthStr, sortKey, amount: 0 };
+      }
+      groups[sortKey].amount += record.cost;
+    });
+
+    return Object.values(groups).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+  }, [filteredHistory]);
+
+  // 3. Prepare Category data
+  const categoryChartData = useMemo(() => {
+    const categorySums: Record<string, number> = {
+      "ТО": 0,
+      "Ремонт": 0,
+      "Запчасти": 0,
+      "Тюнинг": 0,
+      "Прочее": 0,
+    };
+
+    let total = 0;
+
+    filteredHistory.forEach((record) => {
+      if (record.items && record.items.length > 0) {
+        let itemsSum = 0;
+        record.items.forEach((item: any) => {
+          const cat = item.category;
+          const cost = parseFloat(item.cost) || 0;
+          const qty = parseFloat(item.quantity) || 1;
+          const itemCost = cost * qty;
+          
+          let clientCat = "Прочее";
+          if (cat === "maintenance") clientCat = "ТО";
+          else if (cat === "repair") clientCat = "Ремонт";
+          else if (cat === "parts") clientCat = "Запчасти";
+          else if (cat === "tuning") clientCat = "Тюнинг";
+
+          categorySums[clientCat] += itemCost;
+          itemsSum += itemCost;
+          total += itemCost;
+        });
+        
+        if (record.cost > itemsSum) {
+          categorySums["Прочее"] += (record.cost - itemsSum);
+          total += (record.cost - itemsSum);
+        }
+      } else {
+        categorySums["Прочее"] += record.cost;
+        total += record.cost;
+      }
+    });
+
+    const colors: Record<string, string> = {
+      "ТО": "#3b82f6",
+      "Ремонт": "#8b5cf6",
+      "Запчасти": "#ec4899",
+      "Тюнинг": "#10b981",
+      "Прочее": "#94a3b8",
+    };
+
+    return Object.entries(categorySums)
+      .filter(([, value]) => value > 0)
+      .map(([name, value]) => ({
+        name,
+        value,
+        percentage: total > 0 ? Math.round((value / total) * 100) : 0,
+        color: colors[name] || "#94a3b8",
+      }));
+  }, [filteredHistory]);
+
+  const totalFilteredSpent = useMemo(() => {
+    return filteredHistory.reduce((sum, h) => sum + h.cost, 0);
+  }, [filteredHistory]);
 
   return (
     <>
@@ -675,40 +835,161 @@ export default function CarDetailPage() {
                 {renderFuelChart()}
               </div>
 
-              {/* Cost distribution bar */}
-              <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl flex flex-col justify-between">
+              {/* Cost distribution donut */}
+              <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl flex flex-col justify-between min-h-[220px]">
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
                     <h4 className="text-xs font-medium text-slate-800">Структура расходов авто</h4>
                     <span className="text-[10px] font-mono text-slate-500">
-                      Процентное соотношение
+                      Распределение по категориям
                     </span>
                   </div>
                   
-                  {/* Visual Stacked Bar */}
-                  <div className="w-full bg-slate-100 h-6 rounded-full overflow-hidden flex mb-6">
-                    {maintPct > 0 && <div className="bg-blue-500 h-full flex items-center justify-center text-[10px] text-white font-medium" style={{ width: `${maintPct}%` }} title={`ТО: ${maintPct}%`}>{maintPct > 15 ? "ТО" : ""}</div>}
-                    {repairPct > 0 && <div className="bg-indigo-500 h-full flex items-center justify-center text-[10px] text-white font-medium" style={{ width: `${repairPct}%` }} title={`Ремонт: ${repairPct}%`}>{repairPct > 15 ? "Рем" : ""}</div>}
-                    {otherPct > 0 && <div className="bg-slate-400 h-full flex items-center justify-center text-[10px] text-white font-medium" style={{ width: `${otherPct}%` }} title={`Прочее: ${otherPct}%`}>{otherPct > 15 ? "Другое" : ""}</div>}
-                  </div>
-                </div>
+                  {categoryChartData.length === 0 ? (
+                    <div className="flex items-center justify-center py-8 text-center text-slate-400 text-[11px] font-light">
+                      Нет данных о расходах
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center gap-4">
+                      {/* Donut graphic */}
+                      <div className="h-28 w-28 relative flex items-center justify-center shrink-0">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <RechartsTooltip content={<CustomDonutTooltip />} />
+                            <Pie
+                              data={categoryChartData}
+                              cx="50%"
+                              cy="50%"
+                              innerRadius={35}
+                              outerRadius={50}
+                              paddingAngle={2}
+                              dataKey="value"
+                            >
+                              {categoryChartData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Pie>
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
 
-                <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-center text-[11px] text-slate-600 pt-2">
-                  <div className="flex items-center gap-1.5">
-                    <span className="inline-block w-2.5 h-2.5 rounded-full bg-blue-500" />
-                    <span>ТО ({maintPct}%)</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="inline-block w-2.5 h-2.5 rounded-full bg-indigo-500" />
-                    <span>Ремонт ({repairPct}%)</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="inline-block w-2.5 h-2.5 rounded-full bg-slate-400" />
-                    <span>Другое ({otherPct}%)</span>
-                  </div>
+                      {/* Legend Labels */}
+                      <div className="flex-1 space-y-1 max-w-[140px]">
+                        {categoryChartData.slice(0, 5).map((item, idx) => (
+                          <div key={idx} className="flex items-center justify-between text-[10px] border-b border-slate-100/50 pb-0.5">
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              <span
+                                className="inline-block w-2 h-2 rounded-full shrink-0"
+                                style={{ backgroundColor: item.color }}
+                              />
+                              <span className="text-slate-600 truncate font-medium">{item.name}</span>
+                            </div>
+                            <span className="text-slate-900 font-mono font-semibold">
+                              {item.percentage}%
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
+
+            {/* Monthly Dynamics Area Chart */}
+            {car && car.serviceHistory.length > 0 && (
+              <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl mt-8">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-5">
+                  <div>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono">
+                      Динамика трат по месяцам
+                    </h3>
+                    <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                      Хронология расходов на обслуживание
+                    </p>
+                  </div>
+                  
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="text-xs font-semibold font-mono text-slate-800 self-start sm:self-auto">
+                      Итого за период: {totalFilteredSpent.toLocaleString("ru-RU")} ₽
+                    </span>
+
+                    <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-full border border-slate-200/50">
+                      <button
+                        onClick={() => setTimeframe("all")}
+                        className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full transition-all cursor-pointer ${
+                          timeframe === "all" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
+                        }`}
+                      >
+                        Все время
+                      </button>
+                      <button
+                        onClick={() => setTimeframe("1y")}
+                        className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full transition-all cursor-pointer ${
+                          timeframe === "1y" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
+                        }`}
+                      >
+                        Год
+                      </button>
+                      <button
+                        onClick={() => setTimeframe("6m")}
+                        className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full transition-all cursor-pointer ${
+                          timeframe === "6m" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
+                        }`}
+                      >
+                        6 мес.
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {monthlyChartData.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <p className="text-slate-400 text-xs font-light">
+                      Нет данных о расходах за выбранный период
+                    </p>
+                  </div>
+                ) : (
+                  <div className="h-56 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart
+                        data={monthlyChartData}
+                        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                      >
+                        <defs>
+                          <linearGradient id="colorSpentDetail" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2}/>
+                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                        <XAxis
+                          dataKey="monthStr"
+                          tickLine={false}
+                          axisLine={false}
+                          tick={{ fontSize: 9, fill: "#94a3b8" }}
+                        />
+                        <YAxis
+                          tickLine={false}
+                          axisLine={false}
+                          tick={{ fontSize: 9, fill: "#94a3b8" }}
+                          tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
+                        />
+                        <RechartsTooltip content={<CustomTooltip />} />
+                        <Area
+                          type="monotone"
+                          dataKey="amount"
+                          stroke="#6366f1"
+                          strokeWidth={2}
+                          fillOpacity={1}
+                          fill="url(#colorSpentDetail)"
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* 3. Service History list */}
             <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
@@ -739,7 +1020,11 @@ export default function CarDetailPage() {
               ) : (
                 <div className="space-y-4">
                   {car.serviceHistory.map((rec) => (
-                    <div key={rec.id} className="border border-slate-200/60 rounded-2xl p-5 hover:bg-slate-50/30 transition-colors">
+                    <div 
+                      key={rec.id} 
+                      onClick={() => openRecordDetails(rec)}
+                      className="border border-slate-200/60 rounded-2xl p-5 hover:bg-slate-50/30 hover:border-blue-300 hover:shadow-sm active:scale-[0.99] transition-all cursor-pointer text-left"
+                    >
                       <div className="flex justify-between items-start gap-3 mb-3">
                         <div className="flex-1 min-w-0 space-y-2">
                           <div className="flex items-center gap-2">
@@ -755,32 +1040,36 @@ export default function CarDetailPage() {
                           
                           {rec.receiptAttached && (
                             <div>
-                              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-2.5 py-0.5 text-[9px] font-medium shadow-[0_2px_8px_rgba(16,185,129,0.15)] hover:brightness-105 transition-all select-none cursor-default">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-2.5 py-0.5 text-[9px] font-medium shadow-[0_2px_8px_rgba(16,185,129,0.15)] hover:brightness-105 transition-all select-none cursor-default" onClick={(e) => e.stopPropagation()}>
                                 <BadgeCheck className="w-3 h-3 text-white" />
                                 Проверено ИИ (+10% доверия)
                               </span>
                             </div>
                           )}
                           
-                          <div className="flex items-baseline gap-2 mt-1">
-                            <span className="text-sm font-semibold text-slate-900 font-mono">{rec.cost.toLocaleString("ru-RU")} ₽</span>
-                            <span className="text-[10px] text-slate-400 font-mono">на пробеге {rec.mileage.toLocaleString("ru-RU")} км</span>
+                          <div className="flex flex-col items-start sm:flex-row sm:items-baseline gap-0.5 sm:gap-2 mt-1">
+                            <span className="text-sm font-semibold text-slate-900 font-mono whitespace-nowrap">{rec.cost.toLocaleString("ru-RU")} ₽</span>
+                            <span className="text-[10px] text-slate-400 font-mono whitespace-nowrap">на пробеге {rec.mileage.toLocaleString("ru-RU")} км</span>
                           </div>
                         </div>
                         
-                        <div className="shrink-0">
+                        <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <button
                                 className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-all active:scale-95 cursor-pointer shrink-0"
                                 title="Действия"
+                                onClick={(e) => e.stopPropagation()}
                               >
                                 <MoreVertical className="w-4 h-4" />
                               </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-40 rounded-2xl p-1.5 border border-slate-200/80 bg-white shadow-lg animate-in fade-in-50 zoom-in-95 duration-100 z-50">
                               <DropdownMenuItem
-                                onClick={() => handleEditRecord(rec)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEditRecord(rec);
+                                }}
                                 className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-slate-700 hover:bg-slate-50 cursor-pointer focus:bg-slate-50 focus:text-slate-900 outline-none"
                               >
                                 <Pencil className="w-3.5 h-3.5 text-slate-400" />
@@ -789,7 +1078,10 @@ export default function CarDetailPage() {
                               
                               {rec.receiptAttached && (
                                 <DropdownMenuItem
-                                  onClick={() => handleDownloadReceipt(rec)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDownloadReceipt(rec);
+                                  }}
                                   className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-slate-700 hover:bg-slate-50 cursor-pointer focus:bg-slate-50 focus:text-slate-900 outline-none"
                                 >
                                   <Download className="w-3.5 h-3.5 text-slate-400" />
@@ -800,7 +1092,10 @@ export default function CarDetailPage() {
                               <DropdownMenuSeparator className="my-1 border-t border-slate-100" />
                               
                               <DropdownMenuItem
-                                onClick={() => setRecordToDeleteId(rec.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setRecordToDeleteId(rec.id);
+                                }}
                                 className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-red-600 hover:bg-red-50 cursor-pointer focus:bg-red-50 focus:text-red-700 outline-none"
                               >
                                 <Trash2 className="w-3.5 h-3.5 text-red-500" />
@@ -811,7 +1106,10 @@ export default function CarDetailPage() {
                         </div>
                       </div>
                       
-                      <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">{rec.description}</p>
+                      <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                        <span className="font-medium text-slate-400">СТО:</span>
+                        <span className="font-semibold text-slate-700">{rec.serviceCenterName || "Автосервис (вручную)"}</span>
+                      </div>
 
                       {rec.parts && (
                         <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono uppercase min-w-0 mt-3 pt-2.5 border-t border-slate-100">
@@ -832,9 +1130,10 @@ export default function CarDetailPage() {
           <div className="lg:col-span-4 space-y-8">
             
             {/* 1. Parts Checklist */}
-            <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
+                <h3 className="text-base font-medium text-slate-900 flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-blue-500" />
                   Спецификация запчастей
                 </h3>
                 <button
@@ -995,6 +1294,143 @@ export default function CarDetailPage() {
           onClose={() => setIsShareOpen(false)}
           car={car}
         />
+
+        {/* Viewing Record Modal */}
+        {viewingRecord && (
+          <Portal>
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+              {/* Backdrop */}
+              <div 
+                className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm transition-opacity duration-300 animate-in fade-in" 
+                onClick={() => {
+                  if (Date.now() - lastOpenTimeRef.current > 400) {
+                    setViewingRecord(null);
+                  }
+                }}
+              />
+              
+              {/* Modal Content */}
+              <div className="relative w-full max-w-2xl rounded-[2.5rem] bg-white border border-slate-200/80 shadow-2xl p-6 sm:p-8 z-10 animate-in zoom-in-95 duration-200 max-h-[85vh] flex flex-col">
+                {/* Modal Header */}
+                <div className="flex justify-between items-start gap-4 pb-4 border-b border-slate-100">
+                  <div className="text-left">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className={`inline-flex items-center gap-1 rounded-full text-[10px] font-mono font-medium px-2.5 py-0.5 ${
+                        viewingRecord.type === "ТО" ? "bg-blue-50 text-blue-600 border border-blue-100" :
+                        viewingRecord.type === "Ремонт" ? "bg-indigo-50 text-indigo-600 border border-indigo-100" :
+                        "bg-slate-50 text-slate-600 border border-slate-100"
+                      }`}>
+                        {viewingRecord.type}
+                      </span>
+                      <span className="text-xs text-slate-400 font-mono">{viewingRecord.date}</span>
+                    </div>
+                    <h3 className="text-base font-bold text-slate-900 leading-tight">
+                      Детали обслуживания
+                    </h3>
+                  </div>
+                  
+                  <button 
+                    onClick={() => setViewingRecord(null)}
+                    className="text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
+                  >
+                    <XCircle className="w-6 h-6" />
+                  </button>
+                </div>
+
+                {/* Modal Body */}
+                <div className="flex-1 overflow-y-auto py-5 space-y-6 scrollbar-hide text-left">
+                  {/* General Info Grid */}
+                  <div className="grid grid-cols-2 gap-4 bg-slate-50/50 border border-slate-100 rounded-2xl p-4">
+                    <div>
+                      <span className="text-[10px] text-slate-400 font-mono uppercase block">СТО (Автосервис)</span>
+                      <span className="text-xs font-semibold text-slate-800 mt-0.5 block">
+                        {viewingRecord.serviceCenterName || "Автосервис"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 font-mono uppercase block">Пробег</span>
+                      <span className="text-xs font-semibold text-slate-800 mt-0.5 block">
+                        {viewingRecord.mileage.toLocaleString("ru-RU")} км
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Work Items Table / List */}
+                  <div>
+                    <h4 className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-3">
+                      Выполненные работы и запчасти
+                    </h4>
+
+                    {viewingRecord.items && viewingRecord.items.length > 0 ? (
+                      <div className="space-y-2 max-h-[350px] overflow-y-auto pr-1 scrollbar-hide">
+                        {viewingRecord.items.map((item: any, idx: number) => {
+                          const qty = parseFloat(item.quantity?.toString() || "1") || 1;
+                          const price = parseFloat(item.cost?.toString() || "0") || 0;
+                          const sum = price * qty;
+                          return (
+                            <div key={idx} className="bg-slate-50/50 border border-slate-100 rounded-xl p-3 flex flex-col gap-1 text-left">
+                              <p className="font-normal text-slate-800 text-xs leading-relaxed">{item.description}</p>
+                              <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                                <span>{qty} шт.</span>
+                                <span className="font-semibold text-slate-700">Итого: {sum.toLocaleString("ru-RU")} ₽</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="bg-slate-50/30 border border-slate-100 rounded-2xl p-4">
+                        <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">
+                          {viewingRecord.description}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Parts List shortcut if present */}
+                  {viewingRecord.parts && (
+                    <div className="pt-2 border-t border-slate-100">
+                      <h4 className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                        Использованные детали
+                      </h4>
+                      <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/30 border border-slate-100 rounded-2xl p-4">
+                        {viewingRecord.parts}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Modal Footer */}
+                <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-auto">
+                  <div className="flex flex-col text-left">
+                    <span className="text-[10px] text-slate-400 font-mono uppercase">Итоговая стоимость</span>
+                    <span className="text-lg font-bold text-slate-900 font-mono">
+                      {viewingRecord.cost.toLocaleString("ru-RU")} ₽
+                    </span>
+                  </div>
+                  
+                  <div className="flex flex-col-reverse sm:flex-row gap-3 w-full sm:w-auto">
+                    <button
+                      onClick={() => {
+                        setViewingRecord(null);
+                        handleEditRecord(viewingRecord);
+                      }}
+                      className="flex-1 rounded-full border border-slate-200 text-slate-600 text-sm font-normal py-3 px-6 bg-white hover:bg-slate-50 transition-colors cursor-pointer text-center"
+                    >
+                      Редактировать
+                    </button>
+                    <button
+                      onClick={() => setViewingRecord(null)}
+                      className="flex-1 rounded-full bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-700 text-white text-sm font-normal py-3 px-6 shadow-[0_4px_12px_rgba(59,130,246,0.2)] hover:from-blue-600 hover:to-blue-700 transition-all cursor-pointer text-center"
+                    >
+                      Закрыть
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Portal>
+        )}
 
         {/* Delete Record Confirmation Modal */}
         {recordToDeleteId && (

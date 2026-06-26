@@ -43,20 +43,20 @@ export const HeroChatMockup = () => {
         timer = setTimeout(() => {
           setVisibleMessages(prev => [...prev, currentMsg]);
           setIndex(prev => prev + 1);
-        }, 1000);
+        }, 600);
       } else {
         setIsTyping(true);
         timer = setTimeout(() => {
           setIsTyping(false);
           setVisibleMessages(prev => [...prev, currentMsg]);
           setIndex(prev => prev + 1);
-        }, 2000);
+        }, 1200);
       }
     } else {
       timer = setTimeout(() => {
         setVisibleMessages([]);
         setIndex(0);
-      }, 4000);
+      }, 2500);
     }
 
     return () => clearTimeout(timer);
