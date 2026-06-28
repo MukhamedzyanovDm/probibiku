@@ -17,7 +17,7 @@ export default function PWAPromote() {
           
           {/* Left Column: Interactive Phone Mockup */}
           <div className="flex justify-center order-2 md:order-1">
-            <div className="relative w-[280px] h-[560px] bg-slate-900 rounded-[3rem] p-3 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.3)] border-4 border-slate-800 ring-1 ring-slate-700/50 flex flex-col overflow-hidden group">
+            <div className="relative w-[280px] h-[560px] bg-white/40 backdrop-blur-xl rounded-[3rem] p-3 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.15)] border-4 border-white/80 ring-1 ring-slate-200/50 flex flex-col overflow-hidden group">
               {/* Speaker / Dynamic Island notch */}
               <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-30 flex items-center justify-between px-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-slate-800" />
