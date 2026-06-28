@@ -26,14 +26,22 @@ export default function PWAPromote() {
               </div>
 
               {/* Phone screen internal container */}
-              <div className="w-full h-full bg-slate-950 rounded-[2.3rem] overflow-hidden relative flex flex-col pt-8 pb-4 px-4 select-none">
+              <div 
+                className="w-full h-full rounded-[2.3rem] overflow-hidden relative flex flex-col pt-8 pb-4 px-4 select-none border border-slate-200/40"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 80% 60% at 20% 30%, rgba(79,70,229,0.18) 0%, transparent 70%)," +
+                    "radial-gradient(ellipse 70% 50% at 80% 20%, rgba(14,165,233,0.14) 0%, transparent 70%)," +
+                    "radial-gradient(ellipse 60% 50% at 50% 75%, rgba(147,51,234,0.12) 0%, transparent 70%), #f8fafc",
+                }}
+              >
                 {/* Status Bar */}
-                <div className="flex justify-between items-center text-[10px] font-semibold text-slate-400 px-2 mb-4 font-mono">
+                <div className="flex justify-between items-center text-[10px] font-semibold text-slate-600 px-2 mb-4 font-mono">
                   <span>09:41</span>
                   <div className="flex items-center gap-1">
                     <span>5G</span>
-                    <div className="w-4 h-2 border border-slate-500 rounded-sm p-0.5 flex items-center">
-                      <div className="w-full h-full bg-slate-400 rounded-2xs" />
+                    <div className="w-4 h-2 border border-slate-400 rounded-sm p-0.5 flex items-center">
+                      <div className="w-full h-full bg-slate-600 rounded-2xs" />
                     </div>
                   </div>
                 </div>
@@ -41,19 +49,19 @@ export default function PWAPromote() {
                 {/* Simulated HomeScreen */}
                 <div className="flex-1 flex flex-col justify-between">
                   {/* Fake widget */}
-                  <div className="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-3 backdrop-blur-md">
+                  <div className="bg-white/80 border border-slate-200/60 rounded-2xl p-3 shadow-sm backdrop-blur-md">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-md bg-blue-500 flex items-center justify-center text-[10px] text-white font-bold">
                         П
                       </div>
                       <div className="leading-tight">
-                        <p className="text-[10px] font-semibold text-white">Мой гараж</p>
+                        <p className="text-[10px] font-semibold text-slate-900">Мой гараж</p>
                         <p className="text-[8px] text-slate-400">Пробибику</p>
                       </div>
                     </div>
-                    <div className="mt-2.5 pt-2 border-t border-slate-800/60 flex justify-between text-[8px] text-slate-400 font-mono">
+                    <div className="mt-2.5 pt-2 border-t border-slate-100 flex justify-between text-[8px] text-slate-500 font-mono">
                       <span>Траты: 42 500 ₽</span>
-                      <span className="text-emerald-400">Здоровье: 95%</span>
+                      <span className="text-emerald-600 font-semibold">Здоровье: 95%</span>
                     </div>
                   </div>
 
@@ -64,19 +72,19 @@ export default function PWAPromote() {
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-green-500 to-emerald-400 flex items-center justify-center shadow-md">
                         <span className="text-[14px] text-white">💬</span>
                       </div>
-                      <span className="text-[8px] text-slate-400">Чаты</span>
+                      <span className="text-[8px] text-slate-600">Чаты</span>
                     </div>
                     <div className="flex flex-col items-center gap-1">
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-md">
                         <span className="text-[14px] text-white">✈️</span>
                       </div>
-                      <span className="text-[8px] text-slate-400">Почта</span>
+                      <span className="text-[8px] text-slate-600">Почта</span>
                     </div>
                     <div className="flex flex-col items-center gap-1">
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 flex items-center justify-center shadow-md">
                         <span className="text-[14px] text-white">🎵</span>
                       </div>
-                      <span className="text-[8px] text-slate-400">Музыка</span>
+                      <span className="text-[8px] text-slate-600">Музыка</span>
                     </div>
 
                     {/* Probibiku app icon */}
@@ -85,21 +93,20 @@ export default function PWAPromote() {
                       <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/50 p-2 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)] animate-bounce">
                         <img src="/Probibiku_small_logo.svg" alt="Пробибику" className="w-full h-full object-contain" />
                       </div>
-                      <span className="text-[8px] font-semibold text-white">Пробибику</span>
+                      <span className="text-[8px] font-semibold text-slate-800">Пробибику</span>
                     </div>
                   </div>
 
                   {/* Dock bar */}
-                  <div className="bg-slate-900/60 border border-slate-800/50 rounded-2xl p-2.5 backdrop-blur-md flex justify-around items-center">
-                    <div className="w-8 h-8 rounded-lg bg-slate-800" />
-                    <div className="w-8 h-8 rounded-lg bg-slate-800" />
-                    <div className="w-8 h-8 rounded-lg bg-slate-800" />
-                    <div className="w-8 h-8 rounded-lg bg-slate-800" />
+                  <div className="bg-white/60 border border-slate-200/50 rounded-2xl p-2.5 backdrop-blur-md flex justify-around items-center shadow-xs">
+                    <div className="w-8 h-8 rounded-lg bg-slate-200/70" />
+                    <div className="w-8 h-8 rounded-lg bg-slate-200/70" />
+                    <div className="w-8 h-8 rounded-lg bg-slate-200/70" />
+                    <div className="w-8 h-8 rounded-lg bg-slate-200/70" />
                   </div>
                 </div>
 
-                {/* Home Indicator */}
-                <div className="w-24 h-1 bg-slate-700 rounded-full mx-auto mt-3" />
+                <div className="w-24 h-1 bg-slate-300 rounded-full mx-auto mt-3" />
               </div>
             </div>
           </div>
