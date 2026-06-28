@@ -11,6 +11,7 @@ import Pricing from "@/components/Pricing";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import FinalCTA from "@/components/FinalCTA";
+import PWAPromote from "@/components/PWAPromote";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -35,6 +36,7 @@ export default function Home() {
         <Pricing />
         <FAQ />
         <FinalCTA />
+        <PWAPromote />
       </main>
 
       {/* Footer */}
