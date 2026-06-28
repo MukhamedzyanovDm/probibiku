@@ -111,9 +111,9 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
-      setYAxisWidth(window.innerWidth < 640 ? 90 : 160);
+      setYAxisWidth(window.innerWidth < 640 ? 75 : 110);
       const handleResize = () => {
-        setYAxisWidth(window.innerWidth < 640 ? 90 : 160);
+        setYAxisWidth(window.innerWidth < 640 ? 75 : 110);
       };
       window.addEventListener("resize", handleResize);
       return () => window.removeEventListener("resize", handleResize);
@@ -386,7 +386,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
                   <BarChart
                     data={comparisonChartData}
                     layout="vertical"
-                    margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+                    margin={{ top: 5, right: 10, left: -15, bottom: 5 }}
                     barSize={14}
                   >
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
