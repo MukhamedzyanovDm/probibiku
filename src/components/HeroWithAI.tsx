@@ -25,14 +25,10 @@ export default function HeroWithAI() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-              className="inline-flex items-center gap-2 mb-8 select-none"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 shadow-[0_4px_12px_-3px_rgba(0,0,0,0.1)] backdrop-blur-md text-xs font-semibold text-white tracking-normal mb-8 select-none"
             >
-              <span className="w-7 h-7 rounded-full bg-blue-500/10 border border-blue-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center">
-                <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-              </span>
-              <span className="font-mono text-xs font-medium tracking-[-0.04em] text-slate-400">
-                Умный помощник автовладельца
-              </span>
+              <Sparkles className="w-3.5 h-3.5 text-blue-300 shrink-0" />
+              <span>Умный помощник автовладельца</span>
             </motion.div>
 
             {/* Hero Headline */}
