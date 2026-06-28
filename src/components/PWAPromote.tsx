@@ -82,7 +82,7 @@ export default function PWAPromote() {
                     {/* Probibiku app icon */}
                     <div className="flex flex-col items-center gap-1 relative">
                       <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping pointer-events-none" />
-                      <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700/80 p-2 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)] animate-bounce">
+                      <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/50 p-2 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)] animate-bounce">
                         <img src="/Probibiku_small_logo.svg" alt="Пробибику" className="w-full h-full object-contain" />
                       </div>
                       <span className="text-[8px] font-semibold text-white">Пробибику</span>
