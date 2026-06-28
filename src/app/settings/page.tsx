@@ -138,7 +138,7 @@ export default function SettingsPage() {
           <form onSubmit={handleSave} className="space-y-10">
             {/* Section 1: User Avatar & Basic Data */}
             <div className="space-y-6">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-100 pb-3">
+              <h3 className="text-xs font-semibold text-slate-400 border-b border-slate-100 pb-3">
                 Личные данные
               </h3>
 
@@ -195,7 +195,7 @@ export default function SettingsPage() {
 
             {/* Section 2: Notifications settings */}
             <div className="space-y-6">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-100 pb-3">
+              <h3 className="text-xs font-semibold text-slate-400 border-b border-slate-100 pb-3">
                 Каналы уведомлений
               </h3>
 
@@ -250,13 +250,13 @@ export default function SettingsPage() {
 
             {/* Section 3: Billing / Credits info */}
             <div className="space-y-6">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-100 pb-3">
+              <h3 className="text-xs font-semibold text-slate-400 border-b border-slate-100 pb-3">
                 Мой баланс
               </h3>
 
               <div className="flex items-center justify-between p-5 rounded-3xl bg-gradient-to-br from-amber-500 to-amber-600 border border-amber-600 shadow-sm text-white">
                 <div>
-                  <p className="text-[10px] font-mono text-amber-100 uppercase tracking-wider">Доступные кредиты</p>
+                  <p className="text-[10px] text-amber-100">Доступные кредиты</p>
                   <p className="text-3xl font-semibold mt-1 font-mono">10</p>
                 </div>
                 <button
@@ -271,7 +271,7 @@ export default function SettingsPage() {
 
             {/* Section 4: Danger zone */}
             <div className="space-y-6">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-red-500 border-b border-red-100 pb-3">
+              <h3 className="text-xs font-semibold text-red-500 border-b border-red-100 pb-3">
                 Опасная зона
               </h3>
 

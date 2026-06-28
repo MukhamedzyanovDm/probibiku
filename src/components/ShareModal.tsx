@@ -17,8 +17,8 @@ export default function ShareModal({ isOpen, onClose, car }: ShareModalProps) {
   if (!isOpen) return null;
 
   const shareUrl = typeof window !== "undefined" 
-    ? `${window.location.origin}/maintenance/${car.make.toLowerCase()}/${car.model.toLowerCase()}`
-    : `https://probibiku.ru/maintenance/${car.make.toLowerCase()}/${car.model.toLowerCase()}`;
+    ? `${window.location.origin}/share/${car.id}`
+    : `https://probibiku.ru/share/${car.id}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl);
@@ -48,27 +48,13 @@ export default function ShareModal({ isOpen, onClose, car }: ShareModalProps) {
         </div>
 
         <div className="text-center space-y-4">
-          {/* Simulated QR Code */}
-          <div className="w-40 h-40 mx-auto bg-slate-50 border border-slate-150 rounded-2xl flex items-center justify-center p-4 shadow-[0_4px_12px_rgba(15,23,42,0.02)]">
-            {/* Simple representation of QR code with CSS */}
-            <div className="w-full h-full bg-slate-950 rounded relative overflow-hidden flex flex-wrap gap-1 p-2">
-              <div className="w-8 h-8 bg-white border border-black absolute top-2 left-2 flex items-center justify-center">
-                <div className="w-4 h-4 bg-black" />
-              </div>
-              <div className="w-8 h-8 bg-white border border-black absolute top-2 right-2 flex items-center justify-center">
-                <div className="w-4 h-4 bg-black" />
-              </div>
-              <div className="w-8 h-8 bg-white border border-black absolute bottom-2 left-2 flex items-center justify-center">
-                <div className="w-4 h-4 bg-black" />
-              </div>
-              {/* Fake inner pixels */}
-              <div className="absolute inset-x-8 inset-y-8 flex flex-wrap gap-1 opacity-80">
-                <div className="w-2 h-2 bg-white" /><div className="w-2 h-2 bg-white" />
-                <div className="w-2 h-2 bg-white" /><div className="w-2 h-2 bg-white" />
-                <div className="w-2 h-2 bg-white" /><div className="w-2 h-2 bg-white" />
-                <div className="w-2 h-2 bg-white" /><div className="w-2 h-2 bg-white" />
-              </div>
-            </div>
+          {/* Real QR Code */}
+          <div className="w-40 h-40 mx-auto bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-center p-2.5 shadow-[0_4px_12px_rgba(15,23,42,0.02)]">
+            <img 
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(shareUrl)}`} 
+              alt="QR-код публичной сервисной книжки" 
+              className="w-full h-full object-contain rounded-lg"
+            />
           </div>
 
           <div>

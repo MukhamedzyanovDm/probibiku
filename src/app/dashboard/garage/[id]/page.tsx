@@ -482,11 +482,11 @@ export default function CarDetailPage() {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-8 pt-6 border-t border-slate-100">
               <div>
-                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Общие траты</p>
+                <p className="text-[10px] text-slate-400 font-medium">Общие траты</p>
                 <p className="text-xl font-semibold text-slate-900 mt-1 font-mono">{totalSpend.toLocaleString("ru-RU")} ₽</p>
               </div>
               <div>
-                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Пробег после ТО</p>
+                <p className="text-[10px] text-slate-400 font-medium">Пробег после ТО</p>
                 {mileageSinceLastService < 0 ? (
                   <div className="flex flex-col mt-1">
                     <p className="text-sm font-semibold text-red-500 font-mono">Ошибка в датах ТО</p>
@@ -790,7 +790,7 @@ export default function CarDetailPage() {
 
               {isSearchSettingsOpen && (
                 <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-3 mb-4 space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-200 text-left">
-                  <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider font-mono block">Где искать запчасти?</span>
+                  <span className="text-[10px] font-semibold text-slate-400 block">Где искать запчасти?</span>
                   
                   <div className="grid grid-cols-3 gap-1">
                     {Object.keys(SEARCH_PROVIDERS).map((prov) => (
@@ -979,13 +979,13 @@ export default function CarDetailPage() {
                   {/* General Info Grid */}
                   <div className="grid grid-cols-2 gap-4 bg-slate-50/50 border border-slate-100 rounded-2xl p-4">
                     <div>
-                      <span className="text-[10px] text-slate-400 font-mono uppercase block">СТО (Автосервис)</span>
+                      <span className="text-[10px] text-slate-400 block">СТО (Автосервис)</span>
                       <span className="text-xs font-semibold text-slate-800 mt-0.5 block">
                         {viewingRecord.serviceCenterName || "Автосервис"}
                       </span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-400 font-mono uppercase block">Пробег</span>
+                      <span className="text-[10px] text-slate-400 block">Пробег</span>
                       <span className="text-xs font-semibold text-slate-800 mt-0.5 block">
                         {viewingRecord.mileage.toLocaleString("ru-RU")} км
                       </span>
@@ -994,7 +994,7 @@ export default function CarDetailPage() {
 
                   {/* Work Items Table / List */}
                   <div>
-                    <h4 className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-3">
+                    <h4 className="text-[10px] font-semibold text-slate-400 mb-3">
                       Выполненные работы и запчасти
                     </h4>
 
@@ -1027,7 +1027,7 @@ export default function CarDetailPage() {
                   {/* Parts List shortcut if present */}
                   {viewingRecord.parts && (
                     <div className="pt-2 border-t border-slate-100">
-                      <h4 className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                      <h4 className="text-[10px] font-semibold text-slate-400 mb-2">
                         Использованные детали
                       </h4>
                       <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/30 border border-slate-100 rounded-2xl p-4">
@@ -1040,7 +1040,7 @@ export default function CarDetailPage() {
                 {/* Modal Footer */}
                 <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-auto">
                   <div className="flex flex-col text-left">
-                    <span className="text-[10px] text-slate-400 font-mono uppercase">Итоговая стоимость</span>
+                    <span className="text-[10px] text-slate-400">Итоговая стоимость</span>
                     <span className="text-lg font-bold text-slate-900 font-mono">
                       {viewingRecord.cost.toLocaleString("ru-RU")} ₽
                     </span>

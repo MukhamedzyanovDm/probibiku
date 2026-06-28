@@ -258,7 +258,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
         <div>
           <h1 className="text-3xl font-normal tracking-tight text-slate-900">Мой гараж</h1>
-          <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-mono">
+          <p className="text-xs text-slate-400 mt-1">
             Обзор личного автопарка и расходов
           </p>
         </div>
@@ -278,7 +278,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
         
         {/* Card 1: Expenses */}
         <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
-          <p className="text-xs text-slate-400 uppercase tracking-wider font-mono">Суммарные расходы</p>
+          <p className="text-xs text-slate-400 font-medium">Суммарные расходы</p>
           <p className="text-2xl font-semibold text-slate-900 mt-2 font-mono">
             {stats.totalSpent}
           </p>
@@ -287,14 +287,14 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
 
         {/* Card 2: Active Cars */}
         <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
-          <p className="text-xs text-slate-400 uppercase tracking-wider font-mono">Активные автомобили</p>
+          <p className="text-xs text-slate-400 font-medium">Активные автомобили</p>
           <p className="text-2xl font-semibold text-slate-900 mt-2 font-mono">{activeCars}</p>
           <p className="text-[10px] text-slate-600 mt-1">Доступно слотов в личном кабинете: 5</p>
         </div>
 
         {/* Card 3: Days to Maintenance */}
         <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
-          <p className="text-xs text-slate-400 uppercase tracking-wider font-mono">До ближайшего ТО</p>
+          <p className="text-xs text-slate-400 font-medium">До ближайшего ТО</p>
           <p className="text-2xl font-semibold text-blue-600 mt-2 font-mono">
             {stats.nextService}
           </p>
@@ -326,7 +326,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5 mb-6">
             <div>
               <h2 className="text-xl font-normal tracking-tight text-slate-900">Сравнение расходов автопарка</h2>
-              <p className="text-[10px] text-slate-400 uppercase tracking-wider font-mono mt-0.5">
+              <p className="text-[11px] text-slate-400 mt-0.5">
                 Распределение трат между всеми машинами в гараже
               </p>
             </div>
@@ -374,6 +374,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
                     data={comparisonChartData}
                     layout="vertical"
                     margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+                    barSize={14}
                   >
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
                     <XAxis
@@ -389,7 +390,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
                       tickLine={false}
                       axisLine={false}
                       tick={{ fontSize: 11, fill: "#334155", fontWeight: 500 }}
-                      width={120}
+                      width={160}
                     />
                     <Tooltip content={<CustomComparisonTooltip />} cursor={{ fill: "rgba(148, 163, 184, 0.04)" }} />
                     <Bar dataKey="ТО" stackId="a" fill="#3b82f6" radius={[0, 0, 0, 0]} />

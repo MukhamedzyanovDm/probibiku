@@ -248,6 +248,124 @@ export default function CarDetailPage() {
   const [newPartName, setNewPartName] = useState("");
   const [newPartNumber, setNewPartNumber] = useState("");
 
+  // Calculate maintenance vs repair breakdown
+  const repairCosts = car ? car.serviceHistory.filter(s => s.type === "Ремонт").reduce((sum, s) => sum + s.cost, 0) : 0;
+  const maintCosts = car ? car.serviceHistory.filter(s => s.type === "ТО").reduce((sum, s) => sum + s.cost, 0) : 0;
+  const otherCosts = car ? car.serviceHistory.filter(s => s.type !== "Ремонт" && s.type !== "ТО").reduce((sum, s) => sum + s.cost, 0) : 0;
+  
+  const totalCost = repairCosts + maintCosts + otherCosts || 1;
+  const repairPct = Math.round((repairCosts / totalCost) * 100);
+  const maintPct = Math.round((maintCosts / totalCost) * 100);
+  const otherPct = Math.round((otherCosts / totalCost) * 100);
+
+  // 1. Filter and compile history for current vehicle
+  const filteredHistory = useMemo(() => {
+    if (!car || !car.serviceHistory) return [];
+    
+    let history = [...car.serviceHistory];
+
+    // Sort by date ascending
+    history.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    // Filter by timeframe
+    if (timeframe === "6m") {
+      const cutoff = new Date();
+      cutoff.setMonth(cutoff.getMonth() - 6);
+      history = history.filter((h) => new Date(h.date) >= cutoff);
+    } else if (timeframe === "1y") {
+      const cutoff = new Date();
+      cutoff.setFullYear(cutoff.getFullYear() - 1);
+      history = history.filter((h) => new Date(h.date) >= cutoff);
+    }
+
+    return history;
+  }, [car, timeframe]);
+
+  // 2. Prepare Monthly dynamics data
+  const monthlyChartData = useMemo(() => {
+    if (filteredHistory.length === 0) return [];
+
+    const groups: Record<string, { monthStr: string; sortKey: string; amount: number }> = {};
+    
+    filteredHistory.forEach((record) => {
+      if (!record.date) return;
+      const d = new Date(record.date);
+      const sortKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      const monthStr = d.toLocaleString("ru-RU", { month: "short", year: "2-digit" }).replace(" г.", "");
+      
+      if (!groups[sortKey]) {
+        groups[sortKey] = { monthStr, sortKey, amount: 0 };
+      }
+      groups[sortKey].amount += record.cost;
+    });
+
+    return Object.values(groups).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+  }, [filteredHistory]);
+
+  // 3. Prepare Category data
+  const categoryChartData = useMemo(() => {
+    const categorySums: Record<string, number> = {
+      "ТО": 0,
+      "Ремонт": 0,
+      "Запчасти": 0,
+      "Тюнинг": 0,
+      "Прочее": 0,
+    };
+
+    let total = 0;
+
+    filteredHistory.forEach((record) => {
+      if (record.items && record.items.length > 0) {
+        let itemsSum = 0;
+        record.items.forEach((item: any) => {
+          const cat = item.category;
+          const cost = parseFloat(item.cost) || 0;
+          const qty = parseFloat(item.quantity) || 1;
+          const itemCost = cost * qty;
+          
+          let clientCat = "Прочее";
+          if (cat === "maintenance") clientCat = "ТО";
+          else if (cat === "repair") clientCat = "Ремонт";
+          else if (cat === "parts") clientCat = "Запчасти";
+          else if (cat === "tuning") clientCat = "Тюнинг";
+
+          categorySums[clientCat] += itemCost;
+          itemsSum += itemCost;
+          total += itemCost;
+        });
+        
+        if (record.cost > itemsSum) {
+          categorySums["Прочее"] += (record.cost - itemsSum);
+          total += (record.cost - itemsSum);
+        }
+      } else {
+        categorySums["Прочее"] += record.cost;
+        total += record.cost;
+      }
+    });
+
+    const colors: Record<string, string> = {
+      "ТО": "#3b82f6",
+      "Ремонт": "#8b5cf6",
+      "Запчасти": "#ec4899",
+      "Тюнинг": "#10b981",
+      "Прочее": "#94a3b8",
+    };
+
+    return Object.entries(categorySums)
+      .filter(([, value]) => value > 0)
+      .map(([name, value]) => ({
+        name,
+        value,
+        percentage: total > 0 ? Math.round((value / total) * 100) : 0,
+        color: colors[name] || "#94a3b8",
+      }));
+  }, [filteredHistory]);
+
+  const totalFilteredSpent = useMemo(() => {
+    return filteredHistory.reduce((sum, h) => sum + h.cost, 0);
+  }, [filteredHistory]);
+
   const loadCar = async () => {
     setIsLoading(true);
     setError(null);
@@ -480,124 +598,6 @@ export default function CarDetailPage() {
     );
   };
 
-  // Calculate maintenance vs repair breakdown
-  const repairCosts = car ? car.serviceHistory.filter(s => s.type === "Ремонт").reduce((sum, s) => sum + s.cost, 0) : 0;
-  const maintCosts = car ? car.serviceHistory.filter(s => s.type === "ТО").reduce((sum, s) => sum + s.cost, 0) : 0;
-  const otherCosts = car ? car.serviceHistory.filter(s => s.type !== "Ремонт" && s.type !== "ТО").reduce((sum, s) => sum + s.cost, 0) : 0;
-  
-  const totalCost = repairCosts + maintCosts + otherCosts || 1;
-  const repairPct = Math.round((repairCosts / totalCost) * 100);
-  const maintPct = Math.round((maintCosts / totalCost) * 100);
-  const otherPct = Math.round((otherCosts / totalCost) * 100);
-
-  // 1. Filter and compile history for current vehicle
-  const filteredHistory = useMemo(() => {
-    if (!car || !car.serviceHistory) return [];
-    
-    let history = [...car.serviceHistory];
-
-    // Sort by date ascending
-    history.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-    // Filter by timeframe
-    if (timeframe === "6m") {
-      const cutoff = new Date();
-      cutoff.setMonth(cutoff.getMonth() - 6);
-      history = history.filter((h) => new Date(h.date) >= cutoff);
-    } else if (timeframe === "1y") {
-      const cutoff = new Date();
-      cutoff.setFullYear(cutoff.getFullYear() - 1);
-      history = history.filter((h) => new Date(h.date) >= cutoff);
-    }
-
-    return history;
-  }, [car, timeframe]);
-
-  // 2. Prepare Monthly dynamics data
-  const monthlyChartData = useMemo(() => {
-    if (filteredHistory.length === 0) return [];
-
-    const groups: Record<string, { monthStr: string; sortKey: string; amount: number }> = {};
-    
-    filteredHistory.forEach((record) => {
-      if (!record.date) return;
-      const d = new Date(record.date);
-      const sortKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-      const monthStr = d.toLocaleString("ru-RU", { month: "short", year: "2-digit" }).replace(" г.", "");
-      
-      if (!groups[sortKey]) {
-        groups[sortKey] = { monthStr, sortKey, amount: 0 };
-      }
-      groups[sortKey].amount += record.cost;
-    });
-
-    return Object.values(groups).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
-  }, [filteredHistory]);
-
-  // 3. Prepare Category data
-  const categoryChartData = useMemo(() => {
-    const categorySums: Record<string, number> = {
-      "ТО": 0,
-      "Ремонт": 0,
-      "Запчасти": 0,
-      "Тюнинг": 0,
-      "Прочее": 0,
-    };
-
-    let total = 0;
-
-    filteredHistory.forEach((record) => {
-      if (record.items && record.items.length > 0) {
-        let itemsSum = 0;
-        record.items.forEach((item: any) => {
-          const cat = item.category;
-          const cost = parseFloat(item.cost) || 0;
-          const qty = parseFloat(item.quantity) || 1;
-          const itemCost = cost * qty;
-          
-          let clientCat = "Прочее";
-          if (cat === "maintenance") clientCat = "ТО";
-          else if (cat === "repair") clientCat = "Ремонт";
-          else if (cat === "parts") clientCat = "Запчасти";
-          else if (cat === "tuning") clientCat = "Тюнинг";
-
-          categorySums[clientCat] += itemCost;
-          itemsSum += itemCost;
-          total += itemCost;
-        });
-        
-        if (record.cost > itemsSum) {
-          categorySums["Прочее"] += (record.cost - itemsSum);
-          total += (record.cost - itemsSum);
-        }
-      } else {
-        categorySums["Прочее"] += record.cost;
-        total += record.cost;
-      }
-    });
-
-    const colors: Record<string, string> = {
-      "ТО": "#3b82f6",
-      "Ремонт": "#8b5cf6",
-      "Запчасти": "#ec4899",
-      "Тюнинг": "#10b981",
-      "Прочее": "#94a3b8",
-    };
-
-    return Object.entries(categorySums)
-      .filter(([, value]) => value > 0)
-      .map(([name, value]) => ({
-        name,
-        value,
-        percentage: total > 0 ? Math.round((value / total) * 100) : 0,
-        color: colors[name] || "#94a3b8",
-      }));
-  }, [filteredHistory]);
-
-  const totalFilteredSpent = useMemo(() => {
-    return filteredHistory.reduce((sum, h) => sum + h.cost, 0);
-  }, [filteredHistory]);
-
   return (
     <>
       <Background />
@@ -697,11 +697,11 @@ export default function CarDetailPage() {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-8 pt-6 border-t border-slate-100">
               <div>
-                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Общие траты</p>
+                <p className="text-[10px] text-slate-400 font-medium">Общие траты</p>
                 <p className="text-xl font-semibold text-slate-900 mt-1 font-mono">{totalSpend.toLocaleString("ru-RU")} ₽</p>
               </div>
               <div>
-                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Пробег после ТО</p>
+                <p className="text-[10px] text-slate-400 font-medium">Пробег после ТО</p>
                 {mileageSinceLastService < 0 ? (
                   <div className="flex flex-col mt-1">
                     <p className="text-sm font-semibold text-red-500 font-mono">Ошибка в датах ТО</p>
@@ -901,10 +901,10 @@ export default function CarDetailPage() {
               <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl mt-8">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-5">
                   <div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono">
+                    <h3 className="text-xs font-semibold text-slate-400">
                       Динамика трат по месяцам
                     </h3>
-                    <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                    <p className="text-[11px] text-slate-400 mt-0.5">
                       Хронология расходов на обслуживание
                     </p>
                   </div>
@@ -1147,7 +1147,7 @@ export default function CarDetailPage() {
 
               {isSearchSettingsOpen && (
                 <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-3 mb-4 space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-200 text-left">
-                  <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider font-mono block">Где искать запчасти?</span>
+                  <span className="text-[10px] font-semibold text-slate-400 block">Где искать запчасти?</span>
                   
                   <div className="grid grid-cols-3 gap-1">
                     {Object.keys(SEARCH_PROVIDERS).map((prov) => (
@@ -1342,13 +1342,13 @@ export default function CarDetailPage() {
                   {/* General Info Grid */}
                   <div className="grid grid-cols-2 gap-4 bg-slate-50/50 border border-slate-100 rounded-2xl p-4">
                     <div>
-                      <span className="text-[10px] text-slate-400 font-mono uppercase block">СТО (Автосервис)</span>
+                      <span className="text-[10px] text-slate-400 block">СТО (Автосервис)</span>
                       <span className="text-xs font-semibold text-slate-800 mt-0.5 block">
                         {viewingRecord.serviceCenterName || "Автосервис"}
                       </span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-400 font-mono uppercase block">Пробег</span>
+                      <span className="text-[10px] text-slate-400 block">Пробег</span>
                       <span className="text-xs font-semibold text-slate-800 mt-0.5 block">
                         {viewingRecord.mileage.toLocaleString("ru-RU")} км
                       </span>
@@ -1357,7 +1357,7 @@ export default function CarDetailPage() {
 
                   {/* Work Items Table / List */}
                   <div>
-                    <h4 className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-3">
+                    <h4 className="text-[10px] font-semibold text-slate-400 mb-3">
                       Выполненные работы и запчасти
                     </h4>
 
@@ -1390,7 +1390,7 @@ export default function CarDetailPage() {
                   {/* Parts List shortcut if present */}
                   {viewingRecord.parts && (
                     <div className="pt-2 border-t border-slate-100">
-                      <h4 className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                      <h4 className="text-[10px] font-semibold text-slate-400 mb-2">
                         Использованные детали
                       </h4>
                       <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/30 border border-slate-100 rounded-2xl p-4">
@@ -1403,7 +1403,7 @@ export default function CarDetailPage() {
                 {/* Modal Footer */}
                 <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-auto">
                   <div className="flex flex-col text-left">
-                    <span className="text-[10px] text-slate-400 font-mono uppercase">Итоговая стоимость</span>
+                    <span className="text-[10px] text-slate-400">Итоговая стоимость</span>
                     <span className="text-lg font-bold text-slate-900 font-mono">
                       {viewingRecord.cost.toLocaleString("ru-RU")} ₽
                     </span>

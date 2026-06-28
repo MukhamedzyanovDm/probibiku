@@ -224,7 +224,7 @@ export function GarageClient({ vehicles, stats, recentRecords, userName = "Дм�
                 <CardContent className="p-5">
                   <div className="flex items-center gap-2 mb-2">
                     <stat.icon className="w-4 h-4 text-slate-400" />
-                    <p className="text-slate-500 text-[11px] font-bold uppercase tracking-wider">{stat.title}</p>
+                    <p className="text-slate-500 text-[11px] font-semibold">{stat.title}</p>
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xl font-bold text-slate-900 leading-none">{stat.value}</span>
@@ -260,7 +260,7 @@ export function GarageClient({ vehicles, stats, recentRecords, userName = "Дм�
                             <Gauge className="w-4 h-4" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-slate-400 tracking-widest leading-none">Пробег</span>
+                            <span className="text-[10px] font-semibold text-slate-400 leading-none">Пробег</span>
                             <span className="text-sm font-bold text-slate-700 mt-1">{car.currentMileage?.toLocaleString("ru-RU")} км</span>
                           </div>
                         </div>
@@ -269,14 +269,14 @@ export function GarageClient({ vehicles, stats, recentRecords, userName = "Дм�
                             <Calendar className="w-4 h-4" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-slate-400 tracking-widest leading-none">Последнее ТО</span>
+                            <span className="text-[10px] font-semibold text-slate-400 leading-none">Последнее ТО</span>
                             <span className="text-sm font-bold text-slate-700 mt-1">{car.lastService || "Нет записей"}</span>
                           </div>
                         </div>
                       </div>
 
                       <div className="mt-8 space-y-2.5">
-                        <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider">
+                        <div className="flex items-center justify-between text-[10px] font-semibold">
                             <span className="text-slate-400">Состояние узлов</span>
                             <span className="text-slate-900">{car.health || 100}%</span>
                         </div>
