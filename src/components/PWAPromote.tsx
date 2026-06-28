@@ -112,7 +112,7 @@ export default function PWAPromote() {
           </div>
 
           {/* Right Column: Instructions */}
-          <div className="space-y-6 order-1 md:order-2 max-w-md w-full mx-auto md:mx-0">
+          <div className="space-y-6 order-1 md:order-2 max-w-lg md:max-w-xl w-full mx-auto md:mx-0">
             <div className="space-y-2">
               <span className="text-xs font-semibold tracking-wider text-blue-500 uppercase">
                 Всегда под рукой
@@ -120,7 +120,7 @@ export default function PWAPromote() {
               <h2 className="text-3xl sm:text-4xl font-normal tracking-tight text-slate-900 leading-tight">
                 Установите ПРОБИБИКУ на экран смартфона
               </h2>
-              <p className="text-slate-500 text-sm leading-relaxed max-w-md pt-2">
+              <p className="text-slate-500 text-sm leading-relaxed pt-2">
                 Мы уже работаем над созданием нативных мобильных приложений. А пока вы можете добавить веб-версию на домашний экран — она работает быстро, поддерживает оффлайн-режим и не занимает память
               </p>
             </div>
