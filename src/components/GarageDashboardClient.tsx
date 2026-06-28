@@ -107,6 +107,18 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const [timeframe, setTimeframe] = useState<string>("all");
+  const [yAxisWidth, setYAxisWidth] = React.useState(120);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setYAxisWidth(window.innerWidth < 640 ? 90 : 160);
+      const handleResize = () => {
+        setYAxisWidth(window.innerWidth < 640 ? 90 : 160);
+      };
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []);
 
   const comparisonChartData = useMemo(() => {
     return cars.map(car => {
@@ -389,8 +401,8 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
                       dataKey="name"
                       tickLine={false}
                       axisLine={false}
-                      tick={{ fontSize: 11, fill: "#334155", fontWeight: 500 }}
-                      width={160}
+                      tick={{ fontSize: yAxisWidth < 100 ? 9 : 11, fill: "#334155", fontWeight: 500 }}
+                      width={yAxisWidth}
                     />
                     <Tooltip content={<CustomComparisonTooltip />} cursor={{ fill: "rgba(148, 163, 184, 0.04)" }} />
                     <Bar dataKey="ТО" stackId="a" fill="#3b82f6" radius={[0, 0, 0, 0]} />
