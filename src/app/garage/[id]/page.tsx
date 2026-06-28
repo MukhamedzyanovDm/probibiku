@@ -334,9 +334,10 @@ export default function CarDetailPage() {
           total += itemCost;
         });
         
-        if (record.cost > itemsSum) {
-          categorySums["Прочее"] += (record.cost - itemsSum);
-          total += (record.cost - itemsSum);
+        const diff = Math.round((record.cost - itemsSum) * 100) / 100;
+        if (diff > 0.01) {
+          categorySums["Прочее"] += diff;
+          total += diff;
         }
       } else {
         categorySums["Прочее"] += record.cost;
