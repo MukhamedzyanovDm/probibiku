@@ -7,10 +7,10 @@ export default function Workflow() {
     <section id="workflow" className="max-w-7xl mx-auto px-6 py-20 font-sans">
       {/* Section Intro */}
       <div className="text-center max-w-5xl mx-auto mb-16">
-        <p className="font-mono text-xs font-medium tracking-[-0.04em] text-blue-500 mb-4">
+        <span className="inline-block px-3 py-1 rounded-full bg-white/60 border border-white/80 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.04)] backdrop-blur-md text-xs font-semibold text-blue-500 tracking-normal mb-4 select-none">
           Как это работает
-        </p>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-slate-950 leading-[1.05] max-w-5xl mx-auto">
+        </span>
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-slate-950 leading-[1.05] max-w-5xl mx-auto font-sans">
           Четыре простых шага
           <span className="block">от бумажного чека до отчета</span>
         </h2>

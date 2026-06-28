@@ -6,11 +6,11 @@ export default function Features() {
     <section id="features" className="max-w-7xl mx-auto px-6 py-20">
       {/* Section Intro */}
       <div className="text-center max-w-5xl mx-auto mb-14 font-sans">
-        <p className="font-mono text-xs font-medium tracking-[-0.04em] text-blue-500 mb-4">
+        <span className="inline-block px-3 py-1 rounded-full bg-white/60 border border-white/80 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.04)] backdrop-blur-md text-xs font-semibold text-blue-500 tracking-normal mb-4 select-none">
           Возможности сервиса
-        </p>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-slate-950 leading-[1.05] max-w-5xl mx-auto">
-        Пробибику собирает всё
+        </span>
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-slate-950 leading-[1.05] max-w-5xl mx-auto font-sans">
+          Пробибику собирает всё
           <span className="block">в одном месте</span>
         </h2>
         <p className="mt-6 text-base md:text-lg leading-8 text-slate-600 font-light max-w-3xl mx-auto">

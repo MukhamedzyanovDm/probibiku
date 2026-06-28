@@ -114,10 +114,10 @@ export default function PWAPromote() {
           {/* Right Column: Instructions */}
           <div className="space-y-6 order-1 md:order-2 max-w-2xl w-full mx-auto md:mx-0">
             <div className="space-y-2">
-              <span className="text-xs font-semibold tracking-wider text-blue-500 uppercase">
+              <span className="inline-block px-3 py-1 rounded-full bg-white/60 border border-white/80 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.04)] backdrop-blur-md text-xs font-semibold text-blue-500 tracking-normal mb-4 select-none">
                 Всегда под рукой
               </span>
-              <h2 className="text-3xl sm:text-4xl font-normal tracking-tight text-slate-900 leading-tight">
+              <h2 className="text-3xl sm:text-4xl font-normal tracking-tight text-slate-900 leading-tight font-sans">
                 Установите ПРОБИБИКУ на экран смартфона
               </h2>
               <p className="text-slate-500 text-sm leading-relaxed pt-2">

@@ -9,10 +9,10 @@ export default function OCRDemo() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[60%] rounded-full bg-gradient-to-tr from-blue-100/30 via-sky-100/20 to-indigo-100/30 blur-[100px] pointer-events-none" />
 
       <div className="relative z-10 text-center max-w-3xl mx-auto mb-16">
-        <span className="font-mono text-xs font-semibold tracking-wider text-blue-500 bg-blue-50/80 px-3 py-1 rounded-full border border-blue-100">
-          Видео демонстрация
+        <span className="inline-block px-3 py-1 rounded-full bg-white/60 border border-white/80 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.04)] backdrop-blur-md text-xs font-semibold text-blue-500 tracking-normal mb-4 select-none">
+          Демонстрация
         </span>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-slate-950 mt-4 leading-tight">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight text-slate-950 leading-tight font-sans mt-4">
           Как это работает в действии
         </h2>
         <p className="mt-4 text-base md:text-lg text-slate-600 font-light">
