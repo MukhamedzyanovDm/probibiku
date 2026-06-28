@@ -12,11 +12,11 @@ export default function PWAPromote() {
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-72 h-72 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-indigo-50/50 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
           
           {/* Left Column: Interactive Phone Mockup */}
-          <div className="flex justify-center order-2 md:order-1">
+          <div className="flex justify-center md:justify-end order-2 md:order-1">
             <div className="relative w-[280px] h-[560px] bg-white/40 backdrop-blur-xl rounded-[3rem] p-3 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.15)] border-4 border-white/80 ring-1 ring-slate-200/50 flex flex-col overflow-hidden group">
               {/* Speaker / Dynamic Island notch */}
               <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-30 flex items-center justify-between px-3">
@@ -112,7 +112,7 @@ export default function PWAPromote() {
           </div>
 
           {/* Right Column: Instructions */}
-          <div className="space-y-6 order-1 md:order-2">
+          <div className="space-y-6 order-1 md:order-2 max-w-md w-full mx-auto md:mx-0">
             <div className="space-y-2">
               <span className="text-xs font-semibold tracking-wider text-blue-500 uppercase">
                 Всегда под рукой
