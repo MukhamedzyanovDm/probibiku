@@ -12,8 +12,8 @@ export default function PWAPromote() {
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-72 h-72 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-indigo-50/50 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-8 md:gap-12 lg:gap-16 items-center">
           
           {/* Left Column: Interactive Phone Mockup */}
           <div className="flex justify-center md:justify-end order-2 md:order-1">
@@ -112,7 +112,7 @@ export default function PWAPromote() {
           </div>
 
           {/* Right Column: Instructions */}
-          <div className="space-y-6 order-1 md:order-2 max-w-lg md:max-w-xl w-full mx-auto md:mx-0">
+          <div className="space-y-6 order-1 md:order-2 max-w-2xl w-full mx-auto md:mx-0">
             <div className="space-y-2">
               <span className="text-xs font-semibold tracking-wider text-blue-500 uppercase">
                 Всегда под рукой
