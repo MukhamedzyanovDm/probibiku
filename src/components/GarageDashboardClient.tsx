@@ -290,7 +290,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
         
         {/* Card 1: Expenses */}
-        <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
+        <div className="rounded-2xl bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
           <p className="text-xs text-slate-400 font-medium">Суммарные расходы</p>
           <p className="text-2xl font-semibold text-slate-900 mt-2 font-mono">
             {stats.totalSpent}
@@ -299,14 +299,14 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
         </div>
 
         {/* Card 2: Active Cars */}
-        <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
+        <div className="rounded-2xl bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
           <p className="text-xs text-slate-400 font-medium">Активные автомобили</p>
           <p className="text-2xl font-semibold text-slate-900 mt-2 font-mono">{activeCars}</p>
           <p className="text-[10px] text-slate-600 mt-1">Доступно слотов в личном кабинете: 5</p>
         </div>
 
         {/* Card 3: Days to Maintenance */}
-        <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
+        <div className="rounded-2xl bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
           <p className="text-xs text-slate-400 font-medium">До ближайшего ТО</p>
           <p className="text-2xl font-semibold text-blue-600 mt-2 font-mono">
             {stats.nextService}
@@ -335,7 +335,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
 
       {/* Analytics Charts Section */}
       {cars.length > 0 && (
-        <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl mb-10 animate-in fade-in duration-300">
+        <div className="rounded-2xl bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl mb-10 animate-in fade-in duration-300">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5 mb-6">
             <div>
               <h2 className="text-xl font-normal tracking-tight text-slate-900">Сравнение расходов автопарка</h2>
@@ -445,7 +445,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
 
       {/* Cars List Grid */}
       {cars.length === 0 ? (
-        <div className="text-center py-20 bg-white/50 border border-slate-200 rounded-[2rem] p-10">
+        <div className="text-center py-20 bg-white/50 border border-slate-200 rounded-2xl p-10">
           <CarIcon className="w-12 h-12 text-slate-300 mb-4 mx-auto" />
           <h3 className="text-lg font-medium text-slate-900">В вашем гараже пусто</h3>
           <p className="text-sm text-slate-600 max-w-sm mx-auto mt-2 mb-6">
@@ -466,7 +466,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
               <div
                 key={car.id}
                 onClick={() => router.push(`/garage/${car.id}`)}
-                className="group relative block overflow-hidden rounded-[2.5rem] bg-white/70 border border-white shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl hover:shadow-[0_40px_80px_-20px_rgba(15,23,42,0.22),inset_0_2px_0_white] hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                className="group relative block overflow-hidden rounded-2xl bg-white/70 border border-white shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl hover:shadow-[0_40px_80px_-20px_rgba(15,23,42,0.22),inset_0_2px_0_white] hover:-translate-y-1 transition-all duration-300 cursor-pointer"
               >
                 {/* Aspect Ratio Box for Image */}
                 <div className="relative h-48 w-full bg-slate-50 flex items-center justify-center border-b border-slate-100 overflow-hidden">
@@ -605,7 +605,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
             />
             
             {/* Modal Content */}
-            <div className="relative w-full max-w-sm rounded-[2rem] bg-white border border-slate-200/80 shadow-2xl p-6 z-10 animate-in zoom-in-95 duration-200">
+            <div className="relative w-full max-w-sm rounded-2xl bg-white border border-slate-200/80 shadow-2xl p-6 z-10 animate-in zoom-in-95 duration-200">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-500 mb-4 shadow-[0_4px_12px_rgba(239,68,68,0.1)]">
                   <Trash2 className="w-5 h-5" />

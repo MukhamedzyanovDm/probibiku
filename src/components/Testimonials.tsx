@@ -71,7 +71,7 @@ export default function Testimonials() {
         {REVIEWS.map((rev, idx) => (
           <div
             key={idx}
-            className="group relative rounded-[2rem] bg-white/60 border border-slate-200/60 shadow-[0_10px_30px_-15px_rgba(15,23,42,0.05),inset_0_1px_0_white] p-6 hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(15,23,42,0.1),inset_0_1px_0_white] transition-all duration-500 flex flex-col justify-between"
+            className="group relative rounded-2xl bg-white/60 border border-slate-200/60 shadow-[0_10px_30px_-15px_rgba(15,23,42,0.05),inset_0_1px_0_white] p-6 hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(15,23,42,0.1),inset_0_1px_0_white] transition-all duration-500 flex flex-col justify-between"
           >
             <div>
               {/* Star Rating */}

@@ -66,7 +66,7 @@ export default function Pricing() {
 
       <div className="max-w-4xl mx-auto">
         {/* Interactive Calculator Card */}
-        <div className="relative rounded-[2.5rem] bg-white/70 border border-white p-8 md:p-10 shadow-[0_30px_70px_-30px_rgba(15,23,42,0.15),inset_0_1px_0_white] backdrop-blur-md mb-12">
+        <div className="relative rounded-2xl bg-white/70 border border-white p-8 md:p-10 shadow-[0_30px_70px_-30px_rgba(15,23,42,0.15),inset_0_1px_0_white] backdrop-blur-md mb-12">
           <div className="absolute -top-4 left-6 px-4 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[10px] font-mono tracking-wider rounded-full shadow-[0_4px_12px_rgba(59,130,246,0.3),inset_0_1px_0_white] uppercase">
             Интерактивный калькулятор
           </div>
@@ -167,7 +167,7 @@ export default function Pricing() {
             <div
               key={idx}
               onClick={() => setCredits(pkg.credits)}
-              className={`cursor-pointer group relative rounded-[2rem] bg-white/60 border transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(15,23,42,0.1),inset_0_1px_0_white] p-6 flex flex-col justify-between ${
+              className={`cursor-pointer group relative rounded-2xl bg-white/60 border transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(15,23,42,0.1),inset_0_1px_0_white] p-6 flex flex-col justify-between ${
                 pkg.popular
                   ? "border-blue-300 shadow-[0_15px_30px_-15px_rgba(59,130,246,0.12),inset_0_1px_0_white] ring-1 ring-blue-100"
                   : "border-slate-200 shadow-[0_10px_20px_-15px_rgba(0,0,0,0.05),inset_0_1px_0_white]"

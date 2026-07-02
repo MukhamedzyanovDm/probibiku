@@ -48,7 +48,7 @@ export default function WhyItMatters() {
           {PROBLEM_CARDS.map((card, index) => (
             <div
               key={index}
-              className="group flex flex-col gap-4 rounded-[2rem] bg-white/62 border border-white p-6 shadow-[0_10px_28px_-20px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/82 transition-all duration-300"
+              className="group flex flex-col gap-4 rounded-2xl bg-white/62 border border-white p-6 shadow-[0_10px_28px_-20px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/82 transition-all duration-300"
             >
               <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500 shadow-[inset_0_1px_0_white]">
                 <card.icon className="w-[21px] h-[21px]" />

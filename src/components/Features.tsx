@@ -21,7 +21,7 @@ export default function Features() {
       {/* Capability Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 font-sans">
         {/* Capability 01 */}
-        <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
+        <div className="rounded-2xl bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
               <Sparkles className="w-[21px] h-[21px] text-blue-500" />
@@ -39,7 +39,7 @@ export default function Features() {
         </div>
 
         {/* Capability 02 */}
-        <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
+        <div className="rounded-2xl bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
               <Camera className="w-[21px] h-[21px] text-blue-500" />
@@ -57,7 +57,7 @@ export default function Features() {
         </div>
 
         {/* Capability 03 */}
-        <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
+        <div className="rounded-2xl bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
               <Fuel className="w-[21px] h-[21px] text-blue-500" />
@@ -76,7 +76,7 @@ export default function Features() {
         </div>
 
         {/* Capability 04 */}
-        <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
+        <div className="rounded-2xl bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
               <FileText className="w-[21px] h-[21px] text-blue-500" />
@@ -94,7 +94,7 @@ export default function Features() {
         </div>
 
         {/* Capability 05 */}
-        <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
+        <div className="rounded-2xl bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
               <MessageSquare className="w-[21px] h-[21px] text-blue-500" />
@@ -112,7 +112,7 @@ export default function Features() {
         </div>
 
         {/* Capability 06 */}
-        <div className="rounded-[2rem] bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
+        <div className="rounded-2xl bg-white/68 border border-white p-6 shadow-[0_10px_28px_-18px_rgba(15,23,42,0.24),inset_0_1px_0_white] hover:-translate-y-1 hover:bg-white/84 transition-all duration-300">
           <div className="flex items-center justify-between gap-4">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
               <Database className="w-[21px] h-[21px] text-blue-500" />

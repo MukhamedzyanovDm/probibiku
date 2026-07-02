@@ -227,7 +227,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
       />
 
       {/* Modal Box */}
-      <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-[2rem] bg-white border border-slate-100 shadow-[0_30px_70px_-15px_rgba(15,23,42,0.3)] flex flex-col max-h-[90vh]">
+      <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-[0_30px_70px_-15px_rgba(15,23,42,0.3)] flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
           <h3 className="text-base font-medium text-slate-900">

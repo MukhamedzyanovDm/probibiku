@@ -83,7 +83,7 @@ export default async function MaintenancePage({ params }: PageProps) {
           </a>
         </div>
 
-        <div className="bg-white/70 border border-white shadow-[0_20px_50px_-20px_rgba(15,23,42,0.1)] rounded-[2.5rem] p-6 sm:p-10 backdrop-blur-xl">
+        <div className="bg-white/70 border border-white shadow-[0_20px_50px_-20px_rgba(15,23,42,0.1)] rounded-2xl p-6 sm:p-10 backdrop-blur-xl">
           <span className="font-mono text-xs font-semibold tracking-wider text-blue-500 uppercase bg-blue-50/80 px-3 py-1 rounded-full border border-blue-100">
             Справочник ТО
           </span>
@@ -143,7 +143,7 @@ export default async function MaintenancePage({ params }: PageProps) {
           </div>
 
           {/* CTA Box */}
-          <div className="mt-12 rounded-[2rem] bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-700 p-6 sm:p-8 text-white relative overflow-hidden shadow-[0_15px_35px_-10px_rgba(59,130,246,0.3)]">
+          <div className="mt-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-700 p-6 sm:p-8 text-white relative overflow-hidden shadow-[0_15px_35px_-10px_rgba(59,130,246,0.3)]">
             <div className="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-white/10 blur-2xl pointer-events-none" />
             <h3 className="text-xl font-normal mb-2">Начните вести сервисную историю автоматически</h3>
             <p className="text-sm text-blue-100 mb-6 max-w-xl">

@@ -112,7 +112,7 @@ export default function LoginPage() {
       <Background />
 
       <main className="relative z-10 flex-1 flex items-center justify-center min-h-screen px-4 sm:px-6 pt-24 pb-16 font-sans">
-        <div className="relative w-full max-w-md rounded-[2.5rem] bg-white/70 border border-white shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl overflow-hidden p-6 sm:p-10 text-center">
+        <div className="relative w-full max-w-md rounded-2xl bg-white/70 border border-white shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl overflow-hidden p-6 sm:p-10 text-center">
           
           {/* Вернуться на главный экран */}
           <div className="flex justify-start mb-6 -mt-2">

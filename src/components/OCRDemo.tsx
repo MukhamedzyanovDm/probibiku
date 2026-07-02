@@ -20,8 +20,8 @@ export default function OCRDemo() {
         </p>
       </div>
 
-      <div className="relative max-w-5xl mx-auto rounded-[2.5rem] bg-white/50 border border-white/0 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_rgba(255,255,255,0.25)] backdrop-blur-xl overflow-hidden p-2 sm:p-4">
-        <div className="relative rounded-[2rem] overflow-hidden bg-slate-950 shadow-2xl aspect-video w-full flex items-center justify-center">
+      <div className="relative max-w-5xl mx-auto rounded-2xl bg-white/50 border border-white/0 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_rgba(255,255,255,0.25)] backdrop-blur-xl overflow-hidden p-2 sm:p-4">
+        <div className="relative rounded-2xl overflow-hidden bg-slate-950 shadow-2xl aspect-video w-full flex items-center justify-center">
           <video 
             src="/ocr-demo.mp4" 
             className="w-full h-full object-cover"

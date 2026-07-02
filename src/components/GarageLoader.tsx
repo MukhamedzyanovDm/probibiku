@@ -39,7 +39,7 @@ export default function GarageLoader({ isOpen }: GarageLoaderProps) {
         <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity duration-500 animate-[fadeIn_0.3s_ease-out]" />
 
         {/* Loader Box */}
-        <div className="relative z-10 w-full max-w-sm overflow-hidden rounded-[2.5rem] bg-white/95 border border-slate-100 p-8 shadow-[0_30px_70px_-15px_rgba(15,23,42,0.5)] flex flex-col items-center text-center gap-6 animate-[scaleIn_0.3s_ease-out]">
+        <div className="relative z-10 w-full max-w-sm overflow-hidden rounded-2xl bg-white/95 border border-slate-100 p-8 shadow-[0_30px_70px_-15px_rgba(15,23,42,0.5)] flex flex-col items-center text-center gap-6 animate-[scaleIn_0.3s_ease-out]">
           {/* Animated Icons Container */}
           <div className="relative w-24 h-24 flex items-center justify-center">
             {/* Spinning ring */}

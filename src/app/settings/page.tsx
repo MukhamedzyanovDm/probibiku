@@ -92,7 +92,7 @@ export default function SettingsPage() {
           </Link>
         </div>
 
-        <div className="rounded-[2.5rem] bg-white border border-slate-200/80 p-6 sm:p-10 shadow-[0_15px_40px_-20px_rgba(15,23,42,0.06)]">
+        <div className="rounded-2xl bg-white border border-slate-200/80 p-6 sm:p-10 shadow-[0_15px_40px_-20px_rgba(15,23,42,0.06)]">
           <h1 className="text-3xl font-normal tracking-tight text-slate-900 mb-8">Настройки профиля</h1>
 
           {saveSuccess && (

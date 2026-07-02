@@ -33,7 +33,7 @@ export default function Error({
             className="backdrop-blur-xl bg-white/60 border border-slate-200/80 shadow-[0_20px_50px_rgba(15,23,42,0.08)] rounded-[3rem] p-8 sm:p-10 flex flex-col items-center"
           >
             {/* Анимированный значок Check Engine */}
-            <div className="relative w-24 h-24 bg-amber-50/40 border border-amber-200/50 rounded-[2rem] flex items-center justify-center shadow-inner mb-8">
+            <div className="relative w-24 h-24 bg-amber-50/40 border border-amber-200/50 rounded-2xl flex items-center justify-center shadow-inner mb-8">
               <svg className="w-12 h-12 text-amber-500 fill-amber-500/10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 {/* Корпус двигателя */}
                 <path d="M4 10h3l2-3h6l2 3h3v5h-2l-1 2h-8l-1-2H4v-5z" />

@@ -225,7 +225,7 @@ export default function Privacy() {
         {/* Trust Cards */}
         <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-6 md:p-8 pt-4 md:pt-2 font-sans">
           {/* Trust Card 01 */}
-          <div className="relative overflow-hidden bg-white/78 border border-white rounded-[2rem] p-6 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.38),0_4px_14px_-12px_rgba(59,130,246,0.20),inset_0_1px_0_white]">
+          <div className="relative overflow-hidden bg-white/78 border border-white rounded-2xl p-6 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.38),0_4px_14px_-12px_rgba(59,130,246,0.20),inset_0_1px_0_white]">
             <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-blue-200/60 to-transparent" />
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-5 shadow-[inset_0_1px_0_white]">
               <Database className="w-[21px] h-[21px] text-blue-500" />
@@ -239,7 +239,7 @@ export default function Privacy() {
           </div>
 
           {/* Trust Card 02 */}
-          <div className="relative overflow-hidden bg-white/78 border border-white rounded-[2rem] p-6 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.38),0_4px_14px_-12px_rgba(59,130,246,0.20),inset_0_1px_0_white]">
+          <div className="relative overflow-hidden bg-white/78 border border-white rounded-2xl p-6 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.38),0_4px_14px_-12px_rgba(59,130,246,0.20),inset_0_1px_0_white]">
             <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-blue-200/60 to-transparent" />
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-5 shadow-[inset_0_1px_0_white]">
               <FolderLock className="w-[21px] h-[21px] text-blue-500" />
@@ -253,7 +253,7 @@ export default function Privacy() {
           </div>
 
           {/* Trust Card 03 */}
-          <div className="relative overflow-hidden bg-white/78 border border-white rounded-[2rem] p-6 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.38),0_4px_14px_-12px_rgba(59,130,246,0.20),inset_0_1px_0_white]">
+          <div className="relative overflow-hidden bg-white/78 border border-white rounded-2xl p-6 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.38),0_4px_14px_-12px_rgba(59,130,246,0.20),inset_0_1px_0_white]">
             <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-blue-200/60 to-transparent" />
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-5 shadow-[inset_0_1px_0_white]">
               <Sliders className="w-[21px] h-[21px] text-blue-500" />
@@ -267,7 +267,7 @@ export default function Privacy() {
           </div>
 
           {/* Trust Card 04 */}
-          <div className="bg-gradient-to-b from-blue-50 to-white border border-blue-100 rounded-[2rem] p-6 shadow-[0_16px_38px_-26px_rgba(59,130,246,0.28),inset_0_1px_0_white]">
+          <div className="bg-gradient-to-b from-blue-50 to-white border border-blue-100 rounded-2xl p-6 shadow-[0_16px_38px_-26px_rgba(59,130,246,0.28),inset_0_1px_0_white]">
             <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-5 shadow-[inset_0_1px_0_white]">
               <Trash2 className="w-[21px] h-[21px] text-blue-500" />
             </div>

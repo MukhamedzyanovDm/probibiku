@@ -135,7 +135,7 @@ export default function FAQ() {
           {/* Accordion List */}
           <div className="space-y-3 font-sans">
             {/* FAQ 01 */}
-            <details className="group rounded-[2rem] bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
+            <details className="group rounded-2xl bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
@@ -159,7 +159,7 @@ export default function FAQ() {
             </details>
 
             {/* FAQ 02 */}
-            <details className="group rounded-[2rem] bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
+            <details className="group rounded-2xl bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
@@ -183,7 +183,7 @@ export default function FAQ() {
             </details>
 
             {/* FAQ 03 */}
-            <details className="group rounded-[2rem] bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
+            <details className="group rounded-2xl bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
@@ -207,7 +207,7 @@ export default function FAQ() {
             </details>
 
             {/* FAQ 04 */}
-            <details className="group rounded-[2rem] bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
+            <details className="group rounded-2xl bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
@@ -231,7 +231,7 @@ export default function FAQ() {
             </details>
 
             {/* FAQ 05 */}
-            <details className="group rounded-[2rem] bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
+            <details className="group rounded-2xl bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">
@@ -255,7 +255,7 @@ export default function FAQ() {
             </details>
 
             {/* FAQ 06 */}
-            <details className="group rounded-[2rem] bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
+            <details className="group rounded-2xl bg-white/72 border border-white shadow-[0_14px_34px_-26px_rgba(15,23,42,0.32),inset_0_1px_0_white] overflow-hidden open:bg-white/90 transition-all">
               <summary className="cursor-pointer list-none px-5 md:px-6 py-5 flex items-center justify-between gap-5 select-none">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 shrink-0 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-[inset_0_1px_0_white]">

@@ -630,7 +630,7 @@ export default function CarDetailPage() {
         </div>
 
         {/* Car Details Summary card */}
-        <div className="rounded-[2.5rem] bg-white border border-slate-200/80 p-6 sm:p-8 shadow-[0_15px_40px_-20px_rgba(15,23,42,0.06)] mb-10 grid grid-cols-1 md:grid-cols-[1.5fr_1.8fr] gap-8 items-center">
+        <div className="rounded-2xl bg-white border border-slate-200/80 p-6 sm:p-8 shadow-[0_15px_40px_-20px_rgba(15,23,42,0.06)] mb-10 grid grid-cols-1 md:grid-cols-[1.5fr_1.8fr] gap-8 items-center">
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <span className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold tracking-wider text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
@@ -747,7 +747,7 @@ export default function CarDetailPage() {
           <div className="lg:col-span-8 space-y-8">
             
             {/* 1. AI Insights Panel */}
-            <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
+            <div className="rounded-2xl bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
               <div className="flex items-center gap-2 border-b border-slate-100 pb-4 mb-4">
                 <Sparkles className="w-5 h-5 text-blue-500" />
                 <h3 className="text-base font-medium text-slate-900">Умный помощник</h3>
@@ -826,7 +826,7 @@ export default function CarDetailPage() {
             {/* 2. Interactive SVG Charts */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               {/* Fuel chart */}
-              <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
+              <div className="rounded-2xl bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
                   <h4 className="text-xs font-medium text-slate-800">Расход топлива (средний)</h4>
                   <span className="text-[10px] font-mono text-blue-500 bg-blue-50 px-2 py-0.5 rounded">
@@ -837,7 +837,7 @@ export default function CarDetailPage() {
               </div>
 
               {/* Cost distribution donut */}
-              <div className="rounded-[2.5rem] bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl flex flex-col justify-between min-h-[220px]">
+              <div className="rounded-2xl bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl flex flex-col justify-between min-h-[220px]">
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
                     <h4 className="text-xs font-medium text-slate-800">Структура расходов авто</h4>
@@ -899,7 +899,7 @@ export default function CarDetailPage() {
 
             {/* Monthly Dynamics Area Chart */}
             {car && car.serviceHistory.length > 0 && (
-              <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl mt-8">
+              <div className="rounded-2xl bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl mt-8">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-5">
                   <div>
                     <h3 className="text-xs font-semibold text-slate-400">
@@ -993,7 +993,7 @@ export default function CarDetailPage() {
             )}
 
             {/* 3. Service History list */}
-            <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
+            <div className="rounded-2xl bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
               <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between border-b border-slate-100 pb-4 mb-6">
                 <h3 className="text-base font-medium text-slate-900 flex items-center gap-2">
                   <FileText className="w-5 h-5 text-blue-500" />
@@ -1131,7 +1131,7 @@ export default function CarDetailPage() {
           <div className="lg:col-span-4 space-y-8">
             
             {/* 1. Parts Checklist */}
-            <div className="rounded-[2.5rem] bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
+            <div className="rounded-2xl bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
               <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
                 <h3 className="text-base font-medium text-slate-900 flex items-center gap-2">
                   <Settings className="w-5 h-5 text-blue-500" />
@@ -1255,7 +1255,7 @@ export default function CarDetailPage() {
             </div>
 
             {/* 2. Fast Actions Card */}
-            <div className="rounded-[2rem] bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-700 p-6 text-white relative overflow-hidden shadow-[0_15px_35px_-10px_rgba(59,130,246,0.25)]">
+            <div className="rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-700 p-6 text-white relative overflow-hidden shadow-[0_15px_35px_-10px_rgba(59,130,246,0.25)]">
               <div className="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-white/10 blur-2xl pointer-events-none" />
               <h3 className="text-base font-normal mb-2 flex items-center gap-2">
                 <Sparkles className="w-4 h-4" />
@@ -1311,7 +1311,7 @@ export default function CarDetailPage() {
               />
               
               {/* Modal Content */}
-              <div className="relative w-full max-w-2xl rounded-[2.5rem] bg-white border border-slate-200/80 shadow-2xl p-6 sm:p-8 z-10 animate-in zoom-in-95 duration-200 max-h-[85vh] flex flex-col">
+              <div className="relative w-full max-w-2xl rounded-2xl bg-white border border-slate-200/80 shadow-2xl p-6 sm:p-8 z-10 animate-in zoom-in-95 duration-200 max-h-[85vh] flex flex-col">
                 {/* Modal Header */}
                 <div className="flex justify-between items-start gap-4 pb-4 border-b border-slate-100">
                   <div className="text-left">
@@ -1444,7 +1444,7 @@ export default function CarDetailPage() {
             />
             
             {/* Modal Content */}
-            <div className="relative w-full max-w-sm rounded-[2rem] bg-white border border-slate-200/80 shadow-2xl p-6 z-10 animate-in zoom-in-95 duration-200">
+            <div className="relative w-full max-w-sm rounded-2xl bg-white border border-slate-200/80 shadow-2xl p-6 z-10 animate-in zoom-in-95 duration-200">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-500 mb-4 shadow-[0_4px_12px_rgba(239,68,68,0.1)]">
                   <Trash2 className="w-5 h-5" />
@@ -1490,7 +1490,7 @@ export default function CarDetailPage() {
             />
             
             {/* Modal Content */}
-            <div className="relative w-full max-w-sm rounded-[2rem] bg-white border border-slate-200/80 shadow-2xl p-6 z-10 animate-in zoom-in-95 duration-200">
+            <div className="relative w-full max-w-sm rounded-2xl bg-white border border-slate-200/80 shadow-2xl p-6 z-10 animate-in zoom-in-95 duration-200">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-500 mb-4 shadow-[0_4px_12px_rgba(239,68,68,0.1)]">
                   <Trash2 className="w-5 h-5" />

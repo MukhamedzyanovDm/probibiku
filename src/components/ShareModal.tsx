@@ -36,7 +36,7 @@ export default function ShareModal({ isOpen, onClose, car }: ShareModalProps) {
       />
 
       {/* Modal Box */}
-      <div className="relative z-10 w-full max-w-sm overflow-hidden rounded-[2rem] bg-white border border-slate-100 shadow-[0_30px_70px_-15px_rgba(15,23,42,0.3)] p-6">
+      <div className="relative z-10 w-full max-w-sm overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-[0_30px_70px_-15px_rgba(15,23,42,0.3)] p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-base font-medium text-slate-900">Поделиться историей</h3>
           <button 
