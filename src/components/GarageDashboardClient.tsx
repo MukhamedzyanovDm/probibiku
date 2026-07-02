@@ -180,12 +180,12 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
 
       return {
         name: `${car.make} ${car.model}`,
-        "ТО": Math.round(categorySums["ТО"]),
-        "Ремонт": Math.round(categorySums["Ремонт"]),
-        "Запчасти": Math.round(categorySums["Запчасти"]),
-        "Тюнинг": Math.round(categorySums["Тюнинг"]),
-        "Прочее": Math.round(categorySums["Прочее"]),
-        totalSpent: Math.round(total),
+        "ТО": Math.round(categorySums["ТО"] * 100) / 100,
+        "Ремонт": Math.round(categorySums["Ремонт"] * 100) / 100,
+        "Запчасти": Math.round(categorySums["Запчасти"] * 100) / 100,
+        "Тюнинг": Math.round(categorySums["Тюнинг"] * 100) / 100,
+        "Прочее": Math.round(categorySums["Прочее"] * 100) / 100,
+        totalSpent: Math.round(total * 100) / 100,
       };
     }).sort((a, b) => b.totalSpent - a.totalSpent);
   }, [cars, timeframe]);
