@@ -92,8 +92,8 @@ export default function LoginPage() {
     <>
       <Background />
 
-      <main className="relative z-10 flex-1 flex items-center justify-center min-h-screen px-6 pt-24 pb-16 font-sans">
-        <div className="relative w-full max-w-md rounded-[2.5rem] bg-white/70 border border-white shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl overflow-hidden p-8 sm:p-10 text-center">
+      <main className="relative z-10 flex-1 flex items-center justify-center min-h-screen px-4 sm:px-6 pt-24 pb-16 font-sans">
+        <div className="relative w-full max-w-md rounded-[2.5rem] bg-white/70 border border-white shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl overflow-hidden p-6 sm:p-10 text-center">
           
           {/* Вернуться на главный экран */}
           <div className="flex justify-start mb-6 -mt-2">
@@ -150,7 +150,7 @@ export default function LoginPage() {
           ) : (
             <div className="space-y-6">
               {/* OTP Input Fields */}
-              <div className="flex justify-between gap-2">
+              <div className="flex justify-between gap-1.5 sm:gap-2">
                 {code.map((digit, idx) => (
                   <input
                     key={idx}
@@ -162,7 +162,7 @@ export default function LoginPage() {
                     autoFocus={idx === 0}
                     onChange={(e) => handleCodeChange(e.target, idx)}
                     onKeyDown={(e) => handleKeyDown(e, idx)}
-                    className="w-12 h-12 text-center text-lg font-mono font-medium border border-slate-200 focus:border-blue-500 bg-slate-50/50 focus:bg-white rounded-xl outline-none transition-all"
+                    className="w-full max-w-[3rem] aspect-square text-center text-lg font-mono font-medium border border-slate-200 focus:border-blue-500 bg-slate-50/50 focus:bg-white rounded-xl outline-none transition-all"
                   />
                 ))}
               </div>

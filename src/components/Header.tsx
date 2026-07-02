@@ -64,7 +64,7 @@ export function Header({
           {/* Nav Content */}
           <div className="relative z-10 flex items-center justify-between">
             {/* Brand */}
-            <a href="#" className="flex items-center gap-3 group">
+            <a href="/" className="flex items-center gap-3 group">
               <img 
                 src="/Probibiku_small_logo.svg" 
                 alt="ПРОБИБИКУ" 
@@ -82,7 +82,7 @@ export function Header({
               isScrolled ? "text-slate-600" : "text-white/90"
             }`}>
               <a
-                href="#features"
+                href="/#features"
                 className={`relative transition-colors duration-300 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
                   isScrolled 
                     ? "hover:text-blue-600 after:bg-blue-500" 
@@ -92,7 +92,7 @@ export function Header({
                 Возможности
               </a>
               <a
-                href="#demo"
+                href="/#demo"
                 className={`relative transition-colors duration-300 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
                   isScrolled 
                     ? "hover:text-blue-600 after:bg-blue-500" 
@@ -103,7 +103,7 @@ export function Header({
               </a>
 
               <a
-                href="#privacy"
+                href="/#privacy"
                 className={`relative transition-colors duration-300 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
                   isScrolled 
                     ? "hover:text-blue-600 after:bg-blue-500" 
@@ -113,7 +113,7 @@ export function Header({
                 Безопасность
               </a>
               <a
-                href="#pricing"
+                href="/#pricing"
                 className={`relative transition-colors duration-300 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
                   isScrolled 
                     ? "hover:text-blue-600 after:bg-blue-500" 
@@ -157,7 +157,7 @@ export function Header({
                       {dropdownOpen && (
                         <div className="absolute right-0 top-full mt-3 w-48 rounded-2xl bg-white border border-slate-200 shadow-[0_10px_30px_-10px_rgba(15,23,42,0.15)] py-1.5 z-40 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                             <a
-                              href="#pricing"
+                              href="/#pricing"
                               onClick={() => setDropdownOpen(false)}
                               className="flex items-center justify-between px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
                             >

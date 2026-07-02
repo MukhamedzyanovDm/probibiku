@@ -83,27 +83,19 @@ export default function HeroWithAI() {
               className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
             >
               {/* Avatar Stack */}
-              <div className="flex -space-x-2.5 overflow-hidden">
-                <img
-                  className="inline-block h-8 w-8 rounded-full ring-2 ring-slate-900 object-cover"
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80"
-                  alt="Пользователь"
-                />
-                <img
-                  className="inline-block h-8 w-8 rounded-full ring-2 ring-slate-900 object-cover"
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&h=100&q=80"
-                  alt="Пользователь"
-                />
-                <img
-                  className="inline-block h-8 w-8 rounded-full ring-2 ring-slate-900 object-cover"
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80"
-                  alt="Пользователь"
-                />
-                <img
-                  className="inline-block h-8 w-8 rounded-full ring-2 ring-slate-900 object-cover"
-                  src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&h=100&q=80"
-                  alt="Пользователь"
-                />
+              <div className="flex -space-x-2.5">
+                <div className="inline-flex h-8 w-8 rounded-full ring-2 ring-white bg-gradient-to-tr from-pink-500 to-rose-400 items-center justify-center text-[11px] font-semibold text-white select-none shrink-0">
+                  Е
+                </div>
+                <div className="inline-flex h-8 w-8 rounded-full ring-2 ring-white bg-gradient-to-tr from-blue-500 to-teal-400 items-center justify-center text-[11px] font-semibold text-white select-none shrink-0">
+                  Н
+                </div>
+                <div className="inline-flex h-8 w-8 rounded-full ring-2 ring-white bg-gradient-to-tr from-purple-500 to-indigo-500 items-center justify-center text-[11px] font-semibold text-white select-none shrink-0">
+                  М
+                </div>
+                <div className="inline-flex h-8 w-8 rounded-full ring-2 ring-white bg-gradient-to-tr from-amber-500 to-orange-400 items-center justify-center text-[11px] font-semibold text-white select-none shrink-0">
+                  В
+                </div>
               </div>
               {/* Caption */}
               <p className="text-xs text-slate-400 font-light font-sans text-center lg:text-left">

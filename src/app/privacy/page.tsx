@@ -84,7 +84,7 @@ export default function PrivacyPage() {
                   Вы являетесь полноправным владельцем своей истории обслуживания. В личном кабинете вы можете в любой момент изменить любые данные, удалить некорректно распознанные сметы, а также полностью удалить свой профиль и все связанные с ним документы из базы данных Сервиса в один клик.
                 </p>
 
-                <h2 className="text-xl md:text-2xl font-normal text-slate-950 pt-4 border-t border-slate-100">
+                <h2 id="contacts" className="text-xl md:text-2xl font-normal text-slate-950 pt-4 border-t border-slate-100">
                   6. Контакты для связи
                 </h2>
                 <p>

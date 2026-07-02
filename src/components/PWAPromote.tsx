@@ -18,30 +18,39 @@ export default function PWAPromote() {
           {/* Left Column: Interactive Phone Mockup */}
           <div className="flex justify-center md:justify-end order-2 md:order-1">
             <div className="relative w-[280px] h-[560px] bg-white/40 backdrop-blur-xl rounded-[3rem] p-3 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.15)] border-4 border-white/80 ring-1 ring-slate-200/50 flex flex-col overflow-hidden group">
-              {/* Speaker / Dynamic Island notch */}
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-30 flex items-center justify-between px-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-slate-800" />
-                <div className="w-12 h-1 bg-slate-900 rounded-full" />
-                <div className="w-2 h-2 rounded-full bg-blue-900/60" />
-              </div>
-
               {/* Phone screen internal container */}
               <div 
-                className="w-full h-full rounded-[2.3rem] overflow-hidden relative flex flex-col pt-8 pb-4 px-4 select-none border border-slate-800/50 bg-cover bg-center"
-                style={{
-                  backgroundImage: "url('/dlue-background.jpg')"
-                }}
+                className="w-full h-full rounded-[2.3rem] overflow-hidden relative flex flex-col pt-3.5 pb-4 px-4 select-none border border-slate-800/50 bg-gradient-to-b from-blue-400 via-blue-500 to-blue-600"
               >
-                {/* Soft overlay gradient for depth and readability */}
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/20 via-black/10 to-black/70 pointer-events-none" />
+                {/* Surface texture */}
+                <div
+                  className="absolute inset-0 z-0 opacity-[0.12]"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.35) 1px, transparent 0)",
+                    backgroundSize: "1.5rem 1.5rem",
+                  }}
+                />
 
-                {/* Status Bar */}
-                <div className="relative z-10 flex justify-between items-center text-[10px] font-semibold text-slate-300 px-2 mb-4 font-mono">
-                  <span>09:41</span>
-                  <div className="flex items-center gap-1">
+                {/* Decorative glows adapted for mobile screen */}
+                <div className="absolute top-[-20%] left-[-20%] z-0 w-[12rem] h-[12rem] rounded-full bg-white/20 blur-[2.5rem] pointer-events-none" />
+                <div className="absolute bottom-[-20%] right-[-10%] z-0 w-[10rem] h-[10rem] rounded-full bg-blue-900/20 blur-[2.5rem] pointer-events-none" />
+
+                {/* Status Bar / Notch Row */}
+                <div className="relative z-30 flex justify-between items-center text-[10px] font-semibold text-white px-2 mb-4 font-mono w-full h-6 shrink-0">
+                  <span className="w-12 text-left">09:41</span>
+                  
+                  {/* Speaker / Dynamic Island notch */}
+                  <div className="w-24 h-4.5 bg-black rounded-full flex items-center justify-between px-2.5 shadow-inner">
+                    <div className="w-1 h-1 rounded-full bg-slate-800" />
+                    <div className="w-10 h-0.5 bg-slate-900 rounded-full" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-900/60" />
+                  </div>
+
+                  <div className="flex items-center gap-1 w-12 justify-end">
                     <span>5G</span>
-                    <div className="w-4 h-2 border border-slate-400 rounded-sm p-0.5 flex items-center">
-                      <div className="w-full h-full bg-slate-300 rounded-2xs" />
+                    <div className="w-4 h-2 border border-white rounded-sm p-0.5 flex items-center">
+                      <div className="w-full h-full bg-white rounded-2xs" />
                     </div>
                   </div>
                 </div>
@@ -49,17 +58,17 @@ export default function PWAPromote() {
                 {/* Simulated HomeScreen */}
                 <div className="relative z-10 flex-1 flex flex-col justify-between">
                   {/* Fake widget */}
-                  <div className="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-3 shadow-lg backdrop-blur-md">
+                  <div className="bg-white/12 backdrop-blur-xl border border-white/20 rounded-2xl p-3 shadow-[0_8px_32px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.1)] relative z-10">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-md bg-blue-500 flex items-center justify-center text-[10px] text-white font-bold">
+                      <div className="w-6 h-6 rounded-md bg-blue-500 flex items-center justify-center text-[10px] text-white font-semibold">
                         П
                       </div>
                       <div className="leading-tight">
                         <p className="text-[10px] font-semibold text-white">Мой гараж</p>
-                        <p className="text-[8px] text-slate-400">Пробибику</p>
+                        <p className="text-[8px] text-slate-300">Пробибику</p>
                       </div>
                     </div>
-                    <div className="mt-2.5 pt-2 border-t border-slate-800/60 flex justify-between text-[8px] text-slate-400 font-mono">
+                    <div className="mt-2.5 pt-2 border-t border-white/16 flex justify-between text-[8px] text-slate-300 font-mono">
                       <span>Траты: 42 500 ₽</span>
                       <span className="text-emerald-400 font-semibold">Здоровье: 95%</span>
                     </div>
@@ -69,44 +78,44 @@ export default function PWAPromote() {
                   <div className="grid grid-cols-4 gap-x-2 gap-y-4 my-auto px-1">
                     {/* Fake apps */}
                     <div className="flex flex-col items-center gap-1">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-green-500 to-emerald-400 flex items-center justify-center shadow-md">
-                        <span className="text-[14px] text-white">💬</span>
+                      <div className="w-10 h-10">
+                        <img src="/Ikon-set/Samsung%20App%20Icons.svg" alt="Сообщения" className="w-full h-full object-contain" />
                       </div>
-                      <span className="text-[8px] text-slate-400">Чаты</span>
+                      <span className="text-[8px] text-white/90 font-light">Сообщения</span>
                     </div>
                     <div className="flex flex-col items-center gap-1">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-md">
-                        <span className="text-[14px] text-white">✈️</span>
+                      <div className="w-10 h-10">
+                        <img src="/Ikon-set/Samsung%20App%20Icons-2.svg" alt="Погода" className="w-full h-full object-contain" />
                       </div>
-                      <span className="text-[8px] text-slate-400">Почта</span>
+                      <span className="text-[8px] text-white/90 font-light">Погода</span>
                     </div>
                     <div className="flex flex-col items-center gap-1">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 flex items-center justify-center shadow-md">
-                        <span className="text-[14px] text-white">🎵</span>
+                      <div className="w-10 h-10">
+                        <img src="/Ikon-set/Samsung%20App%20Icons-1.svg" alt="Музыка" className="w-full h-full object-contain" />
                       </div>
-                      <span className="text-[8px] text-slate-400">Музыка</span>
+                      <span className="text-[8px] text-white/90 font-light">Музыка</span>
                     </div>
 
                     {/* Probibiku app icon */}
                     <div className="flex flex-col items-center gap-1 relative">
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping pointer-events-none" />
-                      <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/50 p-2 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)] animate-bounce">
-                        <img src="/Probibiku_small_logo.svg" alt="Пробибику" className="w-full h-full object-contain" />
+                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full animate-ping pointer-events-none" />
+                      <div className="w-10 h-10 rounded-2xl shadow-[0_0_15px_rgba(59,130,246,0.45)] animate-bounce">
+                        <img src="/Ikon-set/Probibku%20icon.svg" alt="Пробибику" className="w-full h-full object-contain" />
                       </div>
                       <span className="text-[8px] font-semibold text-white">Пробибику</span>
                     </div>
                   </div>
 
                   {/* Dock bar */}
-                  <div className="bg-slate-900/60 border border-slate-800/50 rounded-2xl p-2.5 backdrop-blur-md flex justify-around items-center">
-                    <div className="w-8 h-8 rounded-lg bg-slate-800" />
-                    <div className="w-8 h-8 rounded-lg bg-slate-800" />
-                    <div className="w-8 h-8 rounded-lg bg-slate-800" />
-                    <div className="w-8 h-8 rounded-lg bg-slate-800" />
+                  <div className="bg-white/12 backdrop-blur-xl border border-white/20 rounded-2xl p-2.5 shadow-[0_8px_32px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.1)] flex justify-around items-center">
+                    <div className="w-8 h-8 rounded-xl bg-white/15 border border-white/10" />
+                    <div className="w-8 h-8 rounded-xl bg-white/15 border border-white/10" />
+                    <div className="w-8 h-8 rounded-xl bg-white/15 border border-white/10" />
+                    <div className="w-8 h-8 rounded-xl bg-white/15 border border-white/10" />
                   </div>
                 </div>
 
-                <div className="relative z-10 w-24 h-1 bg-slate-500 rounded-full mx-auto mt-3" />
+                <div className="relative z-10 w-24 h-1 bg-white/80 rounded-full mx-auto mt-3" />
               </div>
             </div>
           </div>

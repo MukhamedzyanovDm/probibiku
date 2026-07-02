@@ -62,7 +62,7 @@ export default function Hero() {
           {/* Social Proof Row */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
             {/* Avatar Stack */}
-            <div className="flex -space-x-2.5 overflow-hidden">
+            <div className="flex -space-x-2.5">
               <img
                 className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover"
                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80"

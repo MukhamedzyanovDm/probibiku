@@ -8,21 +8,21 @@ const REVIEWS = [
   {
     author: "Екатерина В.",
     car: "Kia Rio",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80",
+    avatarBg: "from-pink-500 to-rose-400",
     rating: 5,
-    text: "Честно, скачала из-за подруги. Но теперь реально фотографирую каждый чек. Реально быстрее чем саой забивать",
+    text: "Честно, скачала из-за подруги. Но теперь реально фотографирую каждый чек. Реально быстрее чем самой забивать",
   },
   {
     author: "Мария К.",
     car: "Toyota RAV4",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80",
+    avatarBg: "from-blue-500 to-teal-400",
     rating: 5,
     text: "Всегда забывала что и когда меняли в машине. В бардачке лежала стопка бумажек — и всё. Теперь хотя бы знаю, что вообще делали с машиной",
   },
   {
     author: "Анна С.",
     car: "Mini Cooper",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&h=100&q=80",
+    avatarBg: "from-amber-500 to-orange-400",
     rating: 5,
     text: "Не люблю подписки, поэтому обрадовалась что можно просто купить сколько надо. Загрузила все чеки за два года — заняло минут двадцать и понятный, никаких лишних сложностей.",
   },
@@ -92,11 +92,9 @@ export default function Testimonials() {
 
             {/* Author info */}
             <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-              <img
-                src={rev.avatar}
-                alt={rev.author}
-                className="w-10 h-10 rounded-full object-cover ring-2 ring-slate-100"
-              />
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold text-white bg-gradient-to-tr ${rev.avatarBg} ring-2 ring-slate-100 shrink-0 select-none`}>
+                {rev.author.charAt(0)}
+              </div>
               <div>
                 <h4 className="text-xs font-semibold text-slate-800">{rev.author}</h4>
                 <p className="text-[10px] text-slate-400 font-mono mt-0.5">{rev.car}</p>

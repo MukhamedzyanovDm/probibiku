@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, ArrowLeft, CheckCircle2, Star, MessageCircle } from "lucide-react";
+import { Loader2, ArrowLeft, CheckCircle2, MessageCircle } from "lucide-react";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,6 @@ import Footer from "@/components/Footer";
 interface ProfileSettings {
   name: string;
   email: string;
-  phone: string;
   emailConsent: boolean;
   telegramConnected: boolean;
   telegramUsername: string;
@@ -22,7 +21,6 @@ interface ProfileSettings {
 const DEFAULT_PROFILE: ProfileSettings = {
   name: "Дмитрий",
   email: "dmitry@example.com",
-  phone: "+7 (999) 123-45-67",
   emailConsent: true,
   telegramConnected: true,
   telegramUsername: "@dmitry_owner",
@@ -33,7 +31,6 @@ export default function SettingsPage() {
   const router = useRouter();
   const [profile, setProfile] = useState<ProfileSettings | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [carCount, setCarCount] = useState(0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -48,17 +45,6 @@ export default function SettingsPage() {
         localStorage.setItem("probibiku_profile", JSON.stringify(DEFAULT_PROFILE));
         setProfile(DEFAULT_PROFILE);
       }
-
-      // Load cars to calculate gamification status
-      const storedCars = localStorage.getItem("probibiku_cars");
-      if (storedCars) {
-        try {
-          const parsed = JSON.parse(storedCars);
-          if (Array.isArray(parsed)) {
-            setCarCount(parsed.length);
-          }
-        } catch (e) {}
-      }
     }
   }, []);
 
@@ -71,25 +57,6 @@ export default function SettingsPage() {
         </div>
       </div>
     );
-  }
-
-  // Gamification Status Logic
-  let statusText = "Новичок";
-  let statusIcon = "";
-  let statusColor = "text-slate-600 bg-slate-50 border-slate-200";
-
-  if (carCount === 1) {
-    statusText = "Профессионал";
-    statusIcon = "/Ikon-set/single-car.png";
-    statusColor = "text-blue-700 bg-blue-50/50 border-blue-200/60 shadow-[0_2px_8px_rgba(59,130,246,0.04)]";
-  } else if (carCount > 1 && carCount < 4) {
-    statusText = "Мастер";
-    statusIcon = "/Ikon-set/two-cars.png";
-    statusColor = "text-indigo-700 bg-indigo-50/50 border-indigo-200/60 shadow-[0_2px_8px_rgba(99,102,241,0.04)]";
-  } else if (carCount >= 4) {
-    statusText = "Олигарх";
-    statusIcon = "/Ikon-set/trophy-cup.png";
-    statusColor = "text-amber-700 bg-amber-50/50 border-amber-200/60 shadow-[0_2px_8px_rgba(245,158,11,0.04)]";
   }
 
   const handleSave = (e: React.FormEvent) => {
@@ -147,15 +114,6 @@ export default function SettingsPage() {
                   <div className="relative w-20 h-20 rounded-full overflow-hidden border border-slate-200 bg-slate-50 shadow-inner">
                     <img src={profile.avatarUrl} alt="Аватар" className="w-full h-full object-cover" />
                   </div>
-                  {/* Gamification Badge */}
-                  <div className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[10px] font-medium border ${statusColor} select-none transition-all`}>
-                    {statusIcon ? (
-                      <img src={statusIcon} className="w-3.5 h-3.5 object-contain" alt={statusText} />
-                    ) : (
-                      <Star className="w-3.5 h-3.5 text-slate-400" />
-                    )}
-                    <span>{statusText}</span>
-                  </div>
                 </div>
                 <div className="flex-1 space-y-4 w-full">
                   <div className="grid sm:grid-cols-2 gap-4">
@@ -179,15 +137,6 @@ export default function SettingsPage() {
                         required
                       />
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs text-slate-500 font-light mb-1">Телефон</label>
-                    <input
-                      type="text"
-                      value={profile.phone}
-                      onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                      className="w-full text-base sm:text-sm border border-slate-200 rounded-xl px-3.5 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
-                    />
                   </div>
                 </div>
               </div>
