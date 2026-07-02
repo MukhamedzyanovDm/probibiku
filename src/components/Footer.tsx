@@ -10,7 +10,7 @@ export function Footer() {
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1.8fr] gap-10 lg:gap-16">
           {/* Brand / Summary */}
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+          <div className="flex flex-col items-start text-left">
             <a href="#" className="flex items-center gap-3 group">
               <img src="/Probibiku_main_logo.svg" alt="ПРОБИБИКУ" className="h-[22.4px] w-auto" />
             </a>
@@ -26,23 +26,20 @@ export function Footer() {
           </div>
 
           {/* Footer Link Groups */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 text-left">
             {/* Product */}
             <div>
               <p className="font-mono text-[10px] font-medium tracking-[-0.04em] text-slate-400 uppercase mb-4">
                 Продукт
               </p>
               <div className="flex flex-col gap-3 text-sm text-slate-500 font-light">
-                <a href="#features" className="hover:text-blue-600 transition-colors">
+                <a href="/#features" className="hover:text-blue-600 transition-colors">
                   Возможности
                 </a>
-                <a href="#workflow" className="hover:text-blue-600 transition-colors">
+                <a href="/#workflow" className="hover:text-blue-600 transition-colors">
                   Процесс
                 </a>
-                <a href="#built-for" className="hover:text-blue-600 transition-colors">
-                  Для кого
-                </a>
-                <a href="#pricing" className="hover:text-blue-600 transition-colors">
+                <a href="/#pricing" className="hover:text-blue-600 transition-colors">
                   Тарифы
                 </a>
               </div>
@@ -54,16 +51,16 @@ export function Footer() {
                 Функции
               </p>
               <div className="flex flex-col gap-3 text-sm text-slate-500 font-light">
-                <a href="#workflow" className="hover:text-blue-600 transition-colors">
+                <a href="/#demo" className="hover:text-blue-600 transition-colors">
                   Сканирование чеков
                 </a>
-                <a href="#features" className="hover:text-blue-600 transition-colors">
+                <a href="/#features" className="hover:text-blue-600 transition-colors">
                   Распознавание позиций
                 </a>
-                <a href="#features" className="hover:text-blue-600 transition-colors">
+                <a href="/#features" className="hover:text-blue-600 transition-colors">
                   ИИ-прогноз ТО
                 </a>
-                <a href="#features" className="hover:text-blue-600 transition-colors">
+                <a href="/#features" className="hover:text-blue-600 transition-colors">
                   Анализ расходов
                 </a>
               </div>
@@ -75,16 +72,16 @@ export function Footer() {
                 Безопасность
               </p>
               <div className="flex flex-col gap-3 text-sm text-slate-500 font-light">
-                <a href="#privacy" className="hover:text-blue-600 transition-colors">
+                <a href="/#privacy" className="hover:text-blue-600 transition-colors">
                   Защита данных
                 </a>
-                <a href="#privacy" className="hover:text-blue-600 transition-colors">
+                <a href="/#privacy" className="hover:text-blue-600 transition-colors">
                   Хранение чеков
                 </a>
-                <a href="#privacy" className="hover:text-blue-600 transition-colors">
+                <a href="/#privacy" className="hover:text-blue-600 transition-colors">
                   Управление архивом
                 </a>
-                <a href="#faq" className="hover:text-blue-600 transition-colors">
+                <a href="/#faq" className="hover:text-blue-600 transition-colors">
                   Вопросы и ответы
                 </a>
               </div>
@@ -93,7 +90,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Row */}
-        <div className="mt-12 pt-6 border-t border-slate-200/70 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mt-12 pt-6 border-t border-slate-200/70 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <p className="text-xs text-slate-400 font-light">
             © 2026 ПРОБИБИКУ. Все права защищены
           </p>
@@ -107,8 +104,8 @@ export function Footer() {
               Конфиденциальность
             </a>
             <span className="w-1 h-1 rounded-full bg-slate-300" />
-            <a href="#" className="hover:text-blue-600 transition-colors">
-              Контакты
+            <a href="mailto:support@probibiku.ru" className="hover:text-blue-600 transition-colors">
+              support@probibiku.ru
             </a>
           </div>
         </div>
