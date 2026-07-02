@@ -183,7 +183,7 @@ export function AddServiceRecordModal({
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "h-12 rounded-xl border-slate-200 justify-start text-left font-normal",
+                      "w-full h-12 rounded-xl border-slate-200 justify-start text-left font-normal",
                       !selectedDate && "text-muted-foreground"
                     )}
                   >

@@ -222,10 +222,19 @@ button,
 
 /* Date input styling to prevent WebKit / iOS Safari layout overflow */
 input[type="date"] {
+  -webkit-appearance: none !important;
+  appearance: none !important;
   min-width: 0 !important;
   max-width: 100% !important;
   width: 100% !important;
   box-sizing: border-box !important;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 1.25em !important;
+  width: 100% !important;
 }
 
 input[type="date"]::-webkit-datetime-edit {

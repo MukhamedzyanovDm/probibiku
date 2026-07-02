@@ -49,9 +49,28 @@ export default function LoginPage() {
     return () => clearInterval(interval);
   }, [step, timer]);
 
+  useEffect(() => {
+    const saved = localStorage.getItem("login_email_saved");
+    const expires = localStorage.getItem("login_email_expires");
+    if (saved && expires) {
+      if (Date.now() < Number(expires)) {
+        setEmail(saved);
+      } else {
+        localStorage.removeItem("login_email_saved");
+        localStorage.removeItem("login_email_expires");
+      }
+    }
+  }, []);
+
   const handleSendCode = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
+
+    // Сохраняем email на 30 дней
+    const expiryTime = Date.now() + 30 * 24 * 60 * 60 * 1000;
+    localStorage.setItem("login_email_saved", email);
+    localStorage.setItem("login_email_expires", String(expiryTime));
+
     setStep("code");
     setTimer(59);
   };
@@ -131,11 +150,14 @@ export default function LoginPage() {
                 </label>
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="yourname@domain.com"
                   className="w-full text-sm border border-slate-200 rounded-xl px-4 py-3 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
                   required
+                  autoFocus
                 />
               </div>
 
@@ -162,7 +184,7 @@ export default function LoginPage() {
                     autoFocus={idx === 0}
                     onChange={(e) => handleCodeChange(e.target, idx)}
                     onKeyDown={(e) => handleKeyDown(e, idx)}
-                    className="w-full max-w-[3rem] aspect-square text-center text-lg font-mono font-medium border border-slate-200 focus:border-blue-500 bg-slate-50/50 focus:bg-white rounded-xl outline-none transition-all"
+                    className="w-full max-w-[3rem] aspect-square text-center text-lg font-mono font-medium border border-slate-200 focus:border-blue-500 bg-slate-50/50 focus:bg-white rounded-[25%] outline-none transition-all"
                   />
                 ))}
               </div>
