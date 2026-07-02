@@ -1,6 +1,6 @@
 "use client";
 
-import { XCircle, Camera, Pencil, ChevronDown, PlusCircle, Trash2 } from "lucide-react";
+import { XCircle, Camera, Pencil, ChevronDown, PlusCircle, Trash2, Calendar } from "lucide-react";
 import Portal from "@/components/Portal";
 
 import React, { useState, useEffect } from "react";
@@ -480,19 +480,24 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs text-slate-500 font-light mb-1">Дата *</label>
-                <input
-                  type="date"
-                  value={date}
-                  onChange={(e) => {
-                    setDate(e.target.value);
-                    if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }));
-                    if (errors.duplicate) setErrors((prev) => ({ ...prev, duplicate: undefined }));
-                  }}
-                  className={`w-full min-w-0 text-base sm:text-sm border rounded-xl pl-3 pr-2 py-2.5 bg-slate-50/50 focus:bg-white outline-none transition-all ${
-                    errors.date ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-100" : "border-slate-200 focus:border-blue-500"
-                  }`}
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => {
+                      setDate(e.target.value);
+                      if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }));
+                      if (errors.duplicate) setErrors((prev) => ({ ...prev, duplicate: undefined }));
+                    }}
+                    className={`w-full min-w-0 text-base sm:text-sm border rounded-xl pl-3.5 pr-10 py-2.5 bg-slate-50/50 focus:bg-white outline-none transition-all ${
+                      errors.date ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-100" : "border-slate-200 focus:border-blue-500"
+                    }`}
+                    required
+                  />
+                  <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-slate-400">
+                    <Calendar className="w-4 h-4 text-slate-400" />
+                  </div>
+                </div>
                 {errors.date && (
                   <p className="text-[11px] text-red-500 font-light mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
                     {errors.date}

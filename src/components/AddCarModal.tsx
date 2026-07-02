@@ -1,6 +1,6 @@
 "use client";
 
-import { XCircle, Camera } from "lucide-react";
+import { XCircle, Camera, Calendar } from "lucide-react";
 import Portal from "@/components/Portal";
 import React, { useState, useEffect } from "react";
 
@@ -350,24 +350,34 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
 
             <div>
               <label className="block text-xs text-slate-500 font-light mb-1">Дата покупки</label>
-              <input
-                type="date"
-                value={purchaseDate}
-                onChange={(e) => setPurchaseDate(e.target.value)}
-                className="w-full min-w-0 text-base sm:text-sm border border-slate-200 rounded-xl pl-3 pr-2 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
-              />
+              <div className="relative">
+                <input
+                  type="date"
+                  value={purchaseDate}
+                  onChange={(e) => setPurchaseDate(e.target.value)}
+                  className="w-full min-w-0 text-base sm:text-sm border border-slate-200 rounded-xl pl-3.5 pr-10 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
+                />
+                <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-slate-400">
+                  <Calendar className="w-4 h-4 text-slate-400" />
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-slate-500 font-light mb-1">Дата окончания ОСАГО</label>
-              <input
-                type="date"
-                value={insuranceExpiry}
-                onChange={(e) => setInsuranceExpiry(e.target.value)}
-                className="w-full min-w-0 text-base sm:text-sm border border-slate-200 rounded-xl pl-3 pr-2 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
-              />
+              <div className="relative">
+                <input
+                  type="date"
+                  value={insuranceExpiry}
+                  onChange={(e) => setInsuranceExpiry(e.target.value)}
+                  className="w-full min-w-0 text-base sm:text-sm border border-slate-200 rounded-xl pl-3.5 pr-10 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
+                />
+                <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-slate-400">
+                  <Calendar className="w-4 h-4 text-slate-400" />
+                </div>
+              </div>
             </div>
           </div>
 
