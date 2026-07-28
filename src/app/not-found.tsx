@@ -61,7 +61,7 @@ export default function NotFound() {
             </p>
             
             <div className="flex flex-col gap-3 w-full">
-              <Link href="/dashboard/garage" className="w-full">
+              <Link href="/garage" className="w-full">
                 <Button 
                   className="w-full bg-blue-500 hover:bg-blue-600 border border-blue-700 text-white text-xs font-normal py-3.5 rounded-full shadow-[0_4px_12px_rgba(59,130,246,0.15)] transition-all cursor-pointer active:scale-95"
                 >

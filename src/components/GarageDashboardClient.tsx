@@ -30,6 +30,7 @@ import GarageLoader from "@/components/GarageLoader";
 import Portal from "@/components/Portal";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/figma/BrandLogo";
+import { PageTitle, SectionTitle, KpiValue, MutedText, MetaLabel, MicroLabel } from "@/components/ui/typography";
 
 interface Car {
   id: string;
@@ -270,10 +271,10 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
       {/* Dashboard Title & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
         <div>
-          <h1 className="text-3xl font-normal tracking-tight text-slate-900">Мой гараж</h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <PageTitle>Мой гараж</PageTitle>
+          <MutedText className="text-xs mt-1">
             Обзор личного автопарка и расходов
-          </p>
+          </MutedText>
         </div>
         
         <Button
@@ -291,29 +292,29 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
         
         {/* Card 1: Expenses */}
         <div className="rounded-2xl bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
-          <p className="text-xs text-slate-400 font-medium">Суммарные расходы</p>
-          <p className="text-2xl font-semibold text-slate-900 mt-2 font-mono">
+          <MetaLabel>Суммарные расходы</MetaLabel>
+          <KpiValue className="mt-2 block font-mono">
             {stats.totalSpent}
-          </p>
-          <p className="text-[10px] text-slate-600 mt-1">Включая все ТО, ремонтные работы и запчасти</p>
+          </KpiValue>
+          <MicroLabel className="mt-1 block">Включая все ТО, ремонтные работы и запчасти</MicroLabel>
         </div>
 
         {/* Card 2: Active Cars */}
         <div className="rounded-2xl bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
-          <p className="text-xs text-slate-400 font-medium">Активные автомобили</p>
-          <p className="text-2xl font-semibold text-slate-900 mt-2 font-mono">{activeCars}</p>
-          <p className="text-[10px] text-slate-600 mt-1">Доступно слотов в личном кабинете: 5</p>
+          <MetaLabel>Активные автомобили</MetaLabel>
+          <KpiValue className="mt-2 block font-mono">{activeCars}</KpiValue>
+          <MicroLabel className="mt-1 block">Доступно слотов в личном кабинете: 5</MicroLabel>
         </div>
 
         {/* Card 3: Days to Maintenance */}
         <div className="rounded-2xl bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
-          <p className="text-xs text-slate-400 font-medium">До ближайшего ТО</p>
-          <p className="text-2xl font-semibold text-blue-600 mt-2 font-mono">
+          <MetaLabel>До ближайшего ТО</MetaLabel>
+          <KpiValue className="mt-2 block font-mono text-blue-600">
             {stats.nextService}
-          </p>
-          <p className="text-[10px] text-slate-600 mt-1">
+          </KpiValue>
+          <MicroLabel className="mt-1 block">
             {activeCars > 0 ? "По расчетам ИИ на основе пробега" : "Добавьте автомобиль"}
-          </p>
+          </MicroLabel>
         </div>
 
       </div>
@@ -338,16 +339,16 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
         <div className="rounded-2xl bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl mb-10 animate-in fade-in duration-300">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5 mb-6">
             <div>
-              <h2 className="text-xl font-normal tracking-tight text-slate-900">Сравнение расходов автопарка</h2>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <SectionTitle>Сравнение расходов автопарка</SectionTitle>
+              <MetaLabel className="mt-0.5 block">
                 Распределение трат между всеми машинами в гараже
-              </p>
+              </MetaLabel>
             </div>
             
             <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-full border border-slate-200/50 self-start sm:self-auto">
               <button
                 onClick={() => setTimeframe("all")}
-                className={`text-[11px] font-medium px-3 py-1 rounded-full transition-all cursor-pointer ${
+                className={`text-xs font-medium px-3 py-1 rounded-full transition-all cursor-pointer ${
                   timeframe === "all" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
                 }`}
               >
@@ -355,7 +356,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
               </button>
               <button
                 onClick={() => setTimeframe("1y")}
-                className={`text-[11px] font-medium px-3 py-1 rounded-full transition-all cursor-pointer ${
+                className={`text-xs font-medium px-3 py-1 rounded-full transition-all cursor-pointer ${
                   timeframe === "1y" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
                 }`}
               >
@@ -363,7 +364,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
               </button>
               <button
                 onClick={() => setTimeframe("6m")}
-                className={`text-[11px] font-medium px-3 py-1 rounded-full transition-all cursor-pointer ${
+                className={`text-xs font-medium px-3 py-1 rounded-full transition-all cursor-pointer ${
                   timeframe === "6m" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
                 }`}
               >
@@ -374,7 +375,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
 
           {!hasAnyExpenses ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <p className="text-slate-400 text-xs font-light">
+              <p className="text-slate-400 text-xs font-normal">
                 Нет данных о расходах за выбранный период
               </p>
             </div>
@@ -416,7 +417,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
               </div>
 
               {/* Custom Legend */}
-              <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 border-t border-slate-100 pt-4 text-[11px] font-medium">
+              <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 border-t border-slate-100 pt-4 text-xs font-medium">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded shrink-0" style={{ backgroundColor: "#3b82f6" }} />
                   <span className="text-slate-600">ТО</span>
@@ -447,10 +448,10 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
       {cars.length === 0 ? (
         <div className="text-center py-20 bg-white/50 border border-slate-200 rounded-2xl p-10">
           <CarIcon className="w-12 h-12 text-slate-300 mb-4 mx-auto" />
-          <h3 className="text-lg font-medium text-slate-900">В вашем гараже пусто</h3>
-          <p className="text-sm text-slate-600 max-w-sm mx-auto mt-2 mb-6">
+          <SectionTitle>В вашем гараже пусто</SectionTitle>
+          <MutedText className="max-w-sm mx-auto mt-2 mb-6">
             Добавьте ваш первый автомобиль, чтобы начать отслеживать его расходы и прогнозировать регламент обслуживания
-          </p>
+          </MutedText>
           <Button
             onClick={handleOpenAddModal}
             variant="brand"
@@ -491,7 +492,7 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
                   )}
                   
                   {/* Floating Health Badge */}
-                  <div className="absolute top-4 left-4 rounded-xl bg-white/90 backdrop-blur border border-white px-3 py-1.5 shadow-md flex items-center gap-1.5">
+                  <div className="absolute top-4 left-4 rounded-full bg-white/90 backdrop-blur border border-white px-3 py-1.5 shadow-md flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     <span className="text-xs font-mono font-medium text-slate-800">Состояние: {car.health}%</span>
                   </div>
@@ -505,9 +506,9 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
                     const diffDays = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
                     if (diffDays <= 30) {
                       return (
-                        <div className="absolute top-4 right-4 rounded-xl bg-red-50/95 backdrop-blur border border-red-100 px-3 py-1.5 shadow-md flex items-center gap-1.5 animate-pulse">
+                        <div className="absolute top-4 right-4 rounded-full bg-red-50/95 backdrop-blur border border-red-100 px-3 py-1.5 shadow-md flex items-center gap-1.5 animate-pulse">
                           <ShieldAlert className="w-3.5 h-3.5 text-red-500" />
-                          <span className="text-[10px] font-mono font-medium text-red-700">
+                          <span className="text-2xs font-mono font-medium text-red-700">
                             ОСАГО: {diffDays < 0 ? "Истекла" : `${diffDays} дн.`}
                           </span>
                         </div>
@@ -521,10 +522,10 @@ export function GarageDashboardClient({ cars, stats }: GarageDashboardClientProp
                   
                   {/* Title Overlay */}
                   <div className="absolute bottom-4 left-5 right-5 text-white">
-                    <h2 className="text-xl font-normal tracking-tight">
+                    <SectionTitle className="text-white">
                       {car.make} {car.model}
-                    </h2>
-                    <p className="text-xs text-slate-200 font-light mt-0.5 font-mono uppercase tracking-wider">
+                    </SectionTitle>
+                    <p className="text-xs text-slate-200 font-normal mt-0.5 font-mono uppercase tracking-wider">
                       {car.licensePlate || "Без госномера"}
                     </p>
                   </div>

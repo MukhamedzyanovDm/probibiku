@@ -69,7 +69,7 @@ export default function Error({
               
               <Button 
                 variant="outline"
-                onClick={() => window.location.href = '/dashboard/garage'}
+                onClick={() => window.location.href = '/garage'}
                 className="w-full border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-normal py-3.5 rounded-full transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-1.5"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />

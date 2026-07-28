@@ -53,6 +53,7 @@ import Portal from "@/components/Portal";
 import ShareModal from "@/components/ShareModal";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/figma/BrandLogo";
+import { PageTitle, SectionTitle } from "@/components/ui/typography";
 
 const SEARCH_PROVIDERS: Record<string, string> = {
   "Яндекс": "https://yandex.ru/search/?text=",
@@ -419,7 +420,7 @@ export default function CarDetailPage() {
       <div className="min-h-screen flex items-center justify-center font-sans">
         <div className="text-center">
           <Loader2 className="text-4xl text-blue-500 animate-spin mx-auto" />
-          <p className="text-sm text-slate-500 font-light mt-3">Загрузка информации об автомобиле...</p>
+          <p className="text-sm text-slate-500 font-normal mt-3">Загрузка информации об автомобиле...</p>
         </div>
       </div>
     );
@@ -429,7 +430,7 @@ export default function CarDetailPage() {
     return (
       <div className="min-h-screen flex items-center justify-center font-sans">
         <div className="text-center">
-          <p className="text-sm text-red-500 font-light mb-4">Ошибка: {error || "Автомобиль не найден"}</p>
+          <p className="text-sm text-red-500 font-normal mb-4">Ошибка: {error || "Автомобиль не найден"}</p>
           <Link href="/garage" className="text-xs text-blue-500 hover:underline">
             Вернуться в гараж
           </Link>
@@ -588,7 +589,7 @@ export default function CarDetailPage() {
           <g key={idx}>
             <circle cx={p.x} cy={p.y} r="4.5" fill="#ffffff" stroke="#3b82f6" strokeWidth="2" />
             {idx === points.length - 1 && (
-              <text x={p.x - 20} y={p.y - 10} className="text-[10px] font-mono font-medium fill-slate-700">
+              <text x={p.x - 20} y={p.y - 10} className="text-2xs font-mono font-medium fill-slate-700">
                 {p.val} л
               </text>
             )}
@@ -640,15 +641,15 @@ export default function CarDetailPage() {
               
               <button
                 onClick={() => setIsShareOpen(true)}
-                className="inline-flex items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 text-[10px] font-normal px-3 py-1 transition-colors cursor-pointer"
+                className="inline-flex items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 text-2xs font-normal px-3 py-1 transition-colors cursor-pointer"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 Поделиться историей
               </button>
             </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-normal text-slate-900 tracking-tight mt-3 break-words">
+            <PageTitle className="mt-3 break-words">
               {car.make} {car.model} ({car.year})
-            </h1>
+            </PageTitle>
             <div className="flex flex-wrap gap-4 text-xs mt-3 text-slate-500">
               <span className="bg-slate-100 border border-slate-200/50 px-2.5 py-1 rounded font-mono uppercase font-medium text-slate-800">
                 {car.licensePlate || "Без госномера"}
@@ -698,15 +699,15 @@ export default function CarDetailPage() {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-8 pt-6 border-t border-slate-100">
               <div>
-                <p className="text-[10px] text-slate-400 font-medium">Общие траты</p>
+                <p className="text-2xs text-slate-400 font-medium">Общие траты</p>
                 <p className="text-xl font-semibold text-slate-900 mt-1 font-mono">{totalSpend.toLocaleString("ru-RU")} ₽</p>
               </div>
               <div>
-                <p className="text-[10px] text-slate-400 font-medium">Пробег после ТО</p>
+                <p className="text-2xs text-slate-400 font-medium">Пробег после ТО</p>
                 {mileageSinceLastService < 0 ? (
                   <div className="flex flex-col mt-1">
                     <p className="text-sm font-semibold text-red-500 font-mono">Ошибка в датах ТО</p>
-                    <span className="text-[9px] text-red-400 font-light mt-0.5 leading-normal">
+                    <span className="text-2xs text-red-400 font-normal mt-0.5 leading-normal">
                       Пробег последнего ТО ({lastServiceMileage.toLocaleString("ru-RU")} км) превышает текущий ({car.mileage.toLocaleString("ru-RU")} км). Возможно, неверно указана дата последнего ТО.
                     </span>
                   </div>
@@ -717,7 +718,7 @@ export default function CarDetailPage() {
             </div>
           </div>
 
-          <div className="hidden md:block relative h-56 w-full rounded-3xl overflow-hidden bg-slate-50 border border-slate-200/80 shadow-inner">
+          <div className="hidden md:block relative h-56 w-full rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 shadow-inner">
             {car.imageUrl && (car.imageUrl.startsWith("http") || car.imageUrl.startsWith("data:")) ? (
               <img
                 src={car.imageUrl}
@@ -750,14 +751,14 @@ export default function CarDetailPage() {
             <div className="rounded-2xl bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
               <div className="flex items-center gap-2 border-b border-slate-100 pb-4 mb-4">
                 <Sparkles className="w-5 h-5 text-blue-500" />
-                <h3 className="text-base font-medium text-slate-900">Умный помощник</h3>
+                <SectionTitle>Умный помощник</SectionTitle>
               </div>
 
               {car.serviceHistory.length === 0 ? (
                 <div className="flex flex-col items-center justify-center text-center py-8 px-4 bg-slate-50/40 border border-dashed border-slate-200 rounded-2xl">
                   <Sparkles className="w-8 h-8 text-blue-400 mb-2 animate-pulse" />
                   <h4 className="text-xs font-medium text-slate-900">Рекомендации формируются</h4>
-                  <p className="text-[11px] text-slate-600 mt-1.5 max-w-md">
+                  <p className="text-xs text-slate-600 mt-1.5 max-w-md">
                     Умный помощник начнет анализировать состояние автомобиля и давать персональные советы, как только вы добавите первую запись об обслуживании или расходах
                   </p>
                   <button
@@ -789,32 +790,32 @@ export default function CarDetailPage() {
                         <div key={index} className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4 flex flex-col justify-between">
                           <div>
                             <div className="flex flex-wrap items-center gap-2 mb-2">
-                              <span className="text-[9px] font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium">
+                              <span className="text-2xs font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium">
                                 {rec.category}
                               </span>
                               {rec.urgency === "critical" && (
-                                <span className="text-[9px] font-mono bg-red-50 text-red-600 border border-red-200/60 px-2 py-0.5 rounded font-medium animate-pulse">
+                                <span className="text-2xs font-mono bg-red-50 text-red-600 border border-red-200/60 px-2 py-0.5 rounded font-medium animate-pulse">
                                   Критично
                                 </span>
                               )}
                               {rec.urgency === "warning" && (
-                                <span className="text-[9px] font-mono bg-amber-50 text-amber-700 border border-amber-200/60 px-2 py-0.5 rounded font-medium">
+                                <span className="text-2xs font-mono bg-amber-50 text-amber-700 border border-amber-200/60 px-2 py-0.5 rounded font-medium">
                                   Внимание
                                 </span>
                               )}
                               {rec.urgency === "info" && (
-                                <span className="text-[9px] font-mono bg-slate-100 text-slate-500 border border-slate-200/40 px-2 py-0.5 rounded font-medium">
+                                <span className="text-2xs font-mono bg-slate-100 text-slate-500 border border-slate-200/40 px-2 py-0.5 rounded font-medium">
                                   Совет
                                 </span>
                               )}
                             </div>
                             <h4 className="text-xs font-medium text-slate-900 mt-2">{rec.title}</h4>
-                            <p className="text-[11px] text-slate-600 mt-1 leading-normal">{rec.description}</p>
+                            <p className="text-xs text-slate-600 mt-1 leading-normal">{rec.description}</p>
                           </div>
                         </div>
                       ))
                     ) : (
-                      <div className="col-span-2 text-center py-6 text-slate-400 text-xs font-light">
+                      <div className="col-span-2 text-center py-6 text-slate-400 text-xs font-normal">
                         Рекомендации загружаются...
                       </div>
                     )}
@@ -828,8 +829,8 @@ export default function CarDetailPage() {
               {/* Fuel chart */}
               <div className="rounded-2xl bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
-                  <h4 className="text-xs font-medium text-slate-800">Расход топлива (средний)</h4>
-                  <span className="text-[10px] font-mono text-blue-500 bg-blue-50 px-2 py-0.5 rounded">
+                  <SectionTitle>Расход топлива (средний)</SectionTitle>
+                  <span className="text-2xs font-mono text-blue-500 bg-blue-50 px-2 py-0.5 rounded">
                     л/100 км
                   </span>
                 </div>
@@ -840,14 +841,14 @@ export default function CarDetailPage() {
               <div className="rounded-2xl bg-white/70 border border-white p-5 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl flex flex-col justify-between min-h-[220px]">
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
-                    <h4 className="text-xs font-medium text-slate-800">Структура расходов авто</h4>
-                    <span className="text-[10px] font-mono text-slate-500">
+                    <SectionTitle>Структура расходов авто</SectionTitle>
+                    <span className="text-2xs font-mono text-slate-500">
                       Распределение по категориям
                     </span>
                   </div>
                   
                   {categoryChartData.length === 0 ? (
-                    <div className="flex items-center justify-center py-8 text-center text-slate-400 text-[11px] font-light">
+                    <div className="flex items-center justify-center py-8 text-center text-slate-400 text-xs font-normal">
                       Нет данных о расходах
                     </div>
                   ) : (
@@ -877,7 +878,7 @@ export default function CarDetailPage() {
                       {/* Legend Labels */}
                       <div className="flex-1 space-y-1 max-w-[140px]">
                         {categoryChartData.slice(0, 5).map((item, idx) => (
-                          <div key={idx} className="flex items-center justify-between text-[10px] border-b border-slate-100/50 pb-0.5">
+                          <div key={idx} className="flex items-center justify-between text-2xs border-b border-slate-100/50 pb-0.5">
                             <div className="flex items-center gap-1.5 min-w-0">
                               <span
                                 className="inline-block w-2 h-2 rounded-full shrink-0"
@@ -902,10 +903,10 @@ export default function CarDetailPage() {
               <div className="rounded-2xl bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl mt-8">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-5">
                   <div>
-                    <h3 className="text-xs font-semibold text-slate-400">
+                    <SectionTitle>
                       Динамика трат по месяцам
-                    </h3>
-                    <p className="text-[11px] text-slate-400 mt-0.5">
+                    </SectionTitle>
+                    <p className="text-xs text-slate-400 mt-0.5">
                       Хронология расходов на обслуживание
                     </p>
                   </div>
@@ -918,7 +919,7 @@ export default function CarDetailPage() {
                     <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-full border border-slate-200/50">
                       <button
                         onClick={() => setTimeframe("all")}
-                        className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full transition-all cursor-pointer ${
+                        className={`text-2xs font-medium px-2.5 py-0.5 rounded-full transition-all cursor-pointer ${
                           timeframe === "all" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
                         }`}
                       >
@@ -926,7 +927,7 @@ export default function CarDetailPage() {
                       </button>
                       <button
                         onClick={() => setTimeframe("1y")}
-                        className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full transition-all cursor-pointer ${
+                        className={`text-2xs font-medium px-2.5 py-0.5 rounded-full transition-all cursor-pointer ${
                           timeframe === "1y" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
                         }`}
                       >
@@ -934,7 +935,7 @@ export default function CarDetailPage() {
                       </button>
                       <button
                         onClick={() => setTimeframe("6m")}
-                        className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full transition-all cursor-pointer ${
+                        className={`text-2xs font-medium px-2.5 py-0.5 rounded-full transition-all cursor-pointer ${
                           timeframe === "6m" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-800"
                         }`}
                       >
@@ -946,7 +947,7 @@ export default function CarDetailPage() {
 
                 {monthlyChartData.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <p className="text-slate-400 text-xs font-light">
+                    <p className="text-slate-400 text-xs font-normal">
                       Нет данных о расходах за выбранный период
                     </p>
                   </div>
@@ -995,10 +996,10 @@ export default function CarDetailPage() {
             {/* 3. Service History list */}
             <div className="rounded-2xl bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
               <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between border-b border-slate-100 pb-4 mb-6">
-                <h3 className="text-base font-medium text-slate-900 flex items-center gap-2">
+                <SectionTitle className="flex items-center gap-2">
                   <FileText className="w-5 h-5 text-blue-500" />
                   История обслуживания
-                </h3>
+                </SectionTitle>
                 
                 <Button
                   onClick={() => {
@@ -1014,7 +1015,7 @@ export default function CarDetailPage() {
               </div>
 
               {car.serviceHistory.length === 0 ? (
-                <div className="text-center py-10 text-slate-400 text-xs font-light">
+                <div className="text-center py-10 text-slate-400 text-xs font-normal">
                   <ClipboardList className="w-8 h-8 mb-2 mx-auto" />
                   <p>Записей обслуживания не найдено. Загрузите первый чек!</p>
                 </div>
@@ -1029,7 +1030,7 @@ export default function CarDetailPage() {
                       <div className="flex justify-between items-start gap-3 mb-3">
                         <div className="flex-1 min-w-0 space-y-2">
                           <div className="flex items-center gap-2">
-                            <span className={`inline-flex items-center gap-1 rounded-full text-[10px] font-mono font-medium px-2 py-0.5 ${
+                            <span className={`inline-flex items-center gap-1 rounded-full text-2xs font-mono font-medium px-2 py-0.5 ${
                               rec.type === "ТО" ? "bg-blue-50 text-blue-600 border border-blue-100" :
                               rec.type === "Ремонт" ? "bg-indigo-50 text-indigo-600 border border-indigo-100" :
                               "bg-slate-50 text-slate-600 border border-slate-100"
@@ -1041,7 +1042,7 @@ export default function CarDetailPage() {
                           
                           {rec.receiptAttached && (
                             <div>
-                              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-2.5 py-0.5 text-[9px] font-medium shadow-[0_2px_8px_rgba(16,185,129,0.15)] hover:brightness-105 transition-all select-none cursor-default" onClick={(e) => e.stopPropagation()}>
+                              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-2.5 py-0.5 text-2xs font-medium shadow-[0_2px_8px_rgba(16,185,129,0.15)] hover:brightness-105 transition-all select-none cursor-default" onClick={(e) => e.stopPropagation()}>
                                 <BadgeCheck className="w-3 h-3 text-white" />
                                 Проверено ИИ (+10% доверия)
                               </span>
@@ -1050,7 +1051,7 @@ export default function CarDetailPage() {
                           
                           <div className="flex flex-col items-start sm:flex-row sm:items-baseline gap-0.5 sm:gap-2 mt-1">
                             <span className="text-sm font-semibold text-slate-900 font-mono whitespace-nowrap">{rec.cost.toLocaleString("ru-RU")} ₽</span>
-                            <span className="text-[10px] text-slate-400 font-mono whitespace-nowrap">на пробеге {rec.mileage.toLocaleString("ru-RU")} км</span>
+                            <span className="text-2xs text-slate-400 font-mono whitespace-nowrap">на пробеге {rec.mileage.toLocaleString("ru-RU")} км</span>
                           </div>
                         </div>
                         
@@ -1113,7 +1114,7 @@ export default function CarDetailPage() {
                       </div>
 
                       {rec.parts && (
-                        <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono uppercase min-w-0 mt-3 pt-2.5 border-t border-slate-100">
+                        <div className="flex items-center gap-2 text-2xs text-slate-400 font-mono uppercase min-w-0 mt-3 pt-2.5 border-t border-slate-100">
                           <Settings className="w-3.5 h-3.5 shrink-0" />
                           <span className="shrink-0">Запчасти:</span>
                           <span className="text-slate-600 lowercase font-sans normal-case truncate">{rec.parts}</span>
@@ -1133,10 +1134,10 @@ export default function CarDetailPage() {
             {/* 1. Parts Checklist */}
             <div className="rounded-2xl bg-white/70 border border-white p-6 shadow-[0_30px_70px_-25px_rgba(15,23,42,0.15),inset_0_2px_0_white] backdrop-blur-2xl">
               <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
-                <h3 className="text-base font-medium text-slate-900 flex items-center gap-2">
+                <SectionTitle className="flex items-center gap-2">
                   <Settings className="w-5 h-5 text-blue-500" />
                   Спецификация запчастей
-                </h3>
+                </SectionTitle>
                 <button
                   onClick={() => setIsSearchSettingsOpen(!isSearchSettingsOpen)}
                   className="w-6 h-6 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
@@ -1148,7 +1149,7 @@ export default function CarDetailPage() {
 
               {isSearchSettingsOpen && (
                 <div className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-3 mb-4 space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-200 text-left">
-                  <span className="text-[10px] font-semibold text-slate-400 block">Где искать запчасти?</span>
+                  <span className="text-2xs font-semibold text-slate-400 block">Где искать запчасти?</span>
                   
                   <div className="grid grid-cols-3 gap-1">
                     {Object.keys(SEARCH_PROVIDERS).map((prov) => (
@@ -1156,7 +1157,7 @@ export default function CarDetailPage() {
                         key={prov}
                         type="button"
                         onClick={() => handleSelectProvider(prov)}
-                        className={`text-[9px] py-1.5 px-2 rounded-lg border text-center transition-all cursor-pointer font-medium ${
+                        className={`text-2xs py-1.5 px-2 rounded-xl border text-center transition-all cursor-pointer font-medium ${
                           searchProvider === prov
                             ? "bg-blue-500 border-blue-600 text-white font-semibold"
                             : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
@@ -1169,7 +1170,7 @@ export default function CarDetailPage() {
 
                   {searchProvider === "Свой сайт" && (
                     <div className="space-y-1">
-                      <label className="text-[9px] text-slate-400 font-mono block">URL-шаблон (используйте {"{query}"} для запроса):</label>
+                      <label className="text-2xs text-slate-400 font-mono block">URL-шаблон (используйте {"{query}"} для запроса):</label>
                       <input
                         type="text"
                         placeholder="https://exist.ru/Price.axd?pcode={query}"
@@ -1178,7 +1179,7 @@ export default function CarDetailPage() {
                           setCustomSearchUrl(e.target.value);
                           localStorage.setItem("probibiku_custom_search_url", e.target.value);
                         }}
-                        className="w-full text-[10px] border border-slate-200 rounded-xl px-2.5 py-1.5 bg-white focus:border-blue-500 outline-none transition-all font-mono"
+                        className="w-full text-2xs border border-slate-200 rounded-xl px-2.5 py-1.5 bg-white focus:border-blue-500 outline-none transition-all font-mono"
                       />
                     </div>
                   )}
@@ -1186,7 +1187,7 @@ export default function CarDetailPage() {
               )}
               
               {car.parts.length === 0 ? (
-                <p className="text-xs text-slate-400 font-light text-center py-6">
+                <p className="text-xs text-slate-400 font-normal text-center py-6">
                   Удобно. Сюда можно добавить часто используемые расходники
                 </p>
               ) : (
@@ -1195,7 +1196,7 @@ export default function CarDetailPage() {
                     <div key={p.id} className="flex justify-between items-center gap-3 text-xs border-b border-slate-50 pb-2.5 last:border-b-0 last:pb-0">
                       <div className="min-w-0 flex-1">
                         <p className="font-normal text-slate-800 truncate">{p.name}</p>
-                        <p className="text-[10px] font-mono text-slate-400 mt-0.5 truncate">Артикул: {p.partNumber}</p>
+                        <p className="text-2xs font-mono text-slate-400 mt-0.5 truncate">Артикул: {p.partNumber}</p>
                       </div>
                       
                       <div className="flex items-center gap-1.5 shrink-0">
@@ -1257,17 +1258,17 @@ export default function CarDetailPage() {
             {/* 2. Fast Actions Card */}
             <div className="rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-700 p-6 text-white relative overflow-hidden shadow-[0_15px_35px_-10px_rgba(59,130,246,0.25)]">
               <div className="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-white/10 blur-2xl pointer-events-none" />
-              <h3 className="text-base font-normal mb-2 flex items-center gap-2">
+              <SectionTitle className="text-white mb-2 flex items-center gap-2">
                 <Sparkles className="w-4 h-4" />
                 Прогноз ТО готов
-              </h3>
-              <p className="text-xs text-blue-100 font-light mb-6 leading-relaxed">
+              </SectionTitle>
+              <p className="text-xs text-blue-100 font-normal mb-6 leading-relaxed">
                 Наш ИИ закончил анализ ваших последних чеков. Регламентные проверки согласованы с производителем
               </p>
               
               <button
                 onClick={() => alert("Уведомления успешно подключены в Telegram!")}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-full px-3 py-3 bg-white text-slate-800 text-[11px] sm:text-xs font-normal shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer whitespace-normal text-center"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-full px-3 py-3 bg-white text-slate-800 text-xs sm:text-xs font-normal shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer whitespace-normal text-center"
               >
                 <MessageCircle className="w-4 h-4 text-blue-500" />
                 Включить уведомления в Telegram
@@ -1316,7 +1317,7 @@ export default function CarDetailPage() {
                 <div className="flex justify-between items-start gap-4 pb-4 border-b border-slate-100">
                   <div className="text-left">
                     <div className="flex items-center gap-2 mb-1.5">
-                      <span className={`inline-flex items-center gap-1 rounded-full text-[10px] font-mono font-medium px-2.5 py-0.5 ${
+                      <span className={`inline-flex items-center gap-1 rounded-full text-2xs font-mono font-medium px-2.5 py-0.5 ${
                         viewingRecord.type === "ТО" ? "bg-blue-50 text-blue-600 border border-blue-100" :
                         viewingRecord.type === "Ремонт" ? "bg-indigo-50 text-indigo-600 border border-indigo-100" :
                         "bg-slate-50 text-slate-600 border border-slate-100"
@@ -1325,7 +1326,7 @@ export default function CarDetailPage() {
                       </span>
                       <span className="text-xs text-slate-400 font-mono">{viewingRecord.date}</span>
                     </div>
-                    <h3 className="text-base font-bold text-slate-900 leading-tight">
+                    <h3 className="text-base font-semibold text-slate-900 leading-tight">
                       Детали обслуживания
                     </h3>
                   </div>
@@ -1343,13 +1344,13 @@ export default function CarDetailPage() {
                   {/* General Info Grid */}
                   <div className="grid grid-cols-2 gap-4 bg-slate-50/50 border border-slate-100 rounded-2xl p-4">
                     <div>
-                      <span className="text-[10px] text-slate-400 block">СТО (Автосервис)</span>
+                      <span className="text-2xs text-slate-400 block">СТО (Автосервис)</span>
                       <span className="text-xs font-semibold text-slate-800 mt-0.5 block">
                         {viewingRecord.serviceCenterName || "Автосервис"}
                       </span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-400 block">Пробег</span>
+                      <span className="text-2xs text-slate-400 block">Пробег</span>
                       <span className="text-xs font-semibold text-slate-800 mt-0.5 block">
                         {viewingRecord.mileage.toLocaleString("ru-RU")} км
                       </span>
@@ -1358,7 +1359,7 @@ export default function CarDetailPage() {
 
                   {/* Work Items Table / List */}
                   <div>
-                    <h4 className="text-[10px] font-semibold text-slate-400 mb-3">
+                    <h4 className="text-2xs font-semibold text-slate-400 mb-3">
                       Выполненные работы и запчасти
                     </h4>
 
@@ -1371,7 +1372,7 @@ export default function CarDetailPage() {
                           return (
                             <div key={idx} className="bg-slate-50/50 border border-slate-100 rounded-xl p-3 flex flex-col gap-1 text-left">
                               <p className="font-normal text-slate-800 text-xs leading-relaxed">{item.description}</p>
-                              <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                              <div className="flex items-center justify-between text-2xs text-slate-400 font-mono">
                                 <span>{qty} шт.</span>
                                 <span className="font-semibold text-slate-700">Итого: {sum.toLocaleString("ru-RU")} ₽</span>
                               </div>
@@ -1391,7 +1392,7 @@ export default function CarDetailPage() {
                   {/* Parts List shortcut if present */}
                   {viewingRecord.parts && (
                     <div className="pt-2 border-t border-slate-100">
-                      <h4 className="text-[10px] font-semibold text-slate-400 mb-2">
+                      <h4 className="text-2xs font-semibold text-slate-400 mb-2">
                         Использованные детали
                       </h4>
                       <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/30 border border-slate-100 rounded-2xl p-4">
@@ -1404,8 +1405,8 @@ export default function CarDetailPage() {
                 {/* Modal Footer */}
                 <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-auto">
                   <div className="flex flex-col text-left">
-                    <span className="text-[10px] text-slate-400">Итоговая стоимость</span>
-                    <span className="text-lg font-bold text-slate-900 font-mono">
+                    <span className="text-2xs text-slate-400">Итоговая стоимость</span>
+                    <span className="text-lg font-semibold text-slate-900 font-mono">
                       {viewingRecord.cost.toLocaleString("ru-RU")} ₽
                     </span>
                   </div>
@@ -1450,7 +1451,7 @@ export default function CarDetailPage() {
                   <Trash2 className="w-5 h-5" />
                 </div>
                 <h3 className="text-sm font-semibold text-slate-900">Удалить запись обслуживания?</h3>
-                <p className="text-xs text-slate-500 font-light mt-2 leading-relaxed">
+                <p className="text-xs text-slate-500 font-normal mt-2 leading-relaxed">
                   Вы уверены, что хотите удалить эту запись? Данные о расходах будут безвозвратно стерты
                 </p>
                 
@@ -1496,7 +1497,7 @@ export default function CarDetailPage() {
                   <Trash2 className="w-5 h-5" />
                 </div>
                 <h3 className="text-sm font-semibold text-slate-900">Удалить запчасть?</h3>
-                <p className="text-xs text-slate-500 font-light mt-2 leading-relaxed">
+                <p className="text-xs text-slate-500 font-normal mt-2 leading-relaxed">
                   Вы уверены, что хотите удалить эту деталь из спецификации автомобиля?
                 </p>
                 

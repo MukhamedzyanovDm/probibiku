@@ -245,7 +245,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
         <form onSubmit={handleSubmit} className="overflow-y-auto p-6 space-y-4 flex-1" noValidate>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 font-light mb-1">Марка *</label>
+              <label className="block text-xs text-slate-500 font-medium mb-1">Марка *</label>
               <input
                 type="text"
                 value={make}
@@ -260,14 +260,14 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
                 required
               />
               {errors.make && (
-                <p className="text-[11px] text-red-500 font-light mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                <p className="text-xs text-red-500 font-normal mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
                   {errors.make}
                 </p>
               )}
             </div>
             
             <div>
-              <label className="block text-xs text-slate-500 font-light mb-1">Модель *</label>
+              <label className="block text-xs text-slate-500 font-medium mb-1">Модель *</label>
               <input
                 type="text"
                 value={model}
@@ -282,7 +282,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
                 required
               />
               {errors.model && (
-                <p className="text-[11px] text-red-500 font-light mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                <p className="text-xs text-red-500 font-normal mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
                   {errors.model}
                 </p>
               )}
@@ -291,7 +291,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 font-light mb-1">Год выпуска</label>
+              <label className="block text-xs text-slate-500 font-medium mb-1">Год выпуска</label>
               <input
                 type="number"
                 value={year}
@@ -319,12 +319,12 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
                 className="w-full text-base sm:text-sm border border-slate-200 rounded-xl px-3.5 py-2.5 bg-slate-50/50 focus:bg-white focus:border-blue-500 outline-none transition-all"
               />
               {errors.year && (
-                <p className="text-red-500 text-[10px] mt-1 font-light">{errors.year}</p>
+                <p className="text-red-500 text-2xs mt-1 font-normal">{errors.year}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-xs text-slate-500 font-light mb-1">Госномер</label>
+              <label className="block text-xs text-slate-500 font-medium mb-1">Госномер</label>
               <input
                 type="text"
                 value={licensePlate}
@@ -337,7 +337,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 font-light mb-1">Текущий пробег (км)</label>
+              <label className="block text-xs text-slate-500 font-medium mb-1">Текущий пробег (км)</label>
               <input
                 type="number"
                 value={mileage || ""}
@@ -349,7 +349,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
             </div>
 
             <div>
-              <label className="block text-xs text-slate-500 font-light mb-1">Дата покупки</label>
+              <label className="block text-xs text-slate-500 font-medium mb-1">Дата покупки</label>
               <div className="relative">
                 <input
                   type="date"
@@ -366,7 +366,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-500 font-light mb-1">Дата окончания ОСАГО</label>
+              <label className="block text-xs text-slate-500 font-medium mb-1">Дата окончания ОСАГО</label>
               <div className="relative">
                 <input
                   type="date"
@@ -382,7 +382,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
           </div>
 
           <div>
-            <label className="block text-xs text-slate-500 font-light mb-1.5">Фото автомобиля</label>
+            <label className="block text-xs text-slate-500 font-medium mb-1.5">Фото автомобиля</label>
             <div className="flex items-center gap-4">
               {previewUrl && (
                 <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">

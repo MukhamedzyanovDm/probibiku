@@ -8,6 +8,7 @@ import Link from "next/link";
 import Background from "@/components/Background";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { PageTitle } from "@/components/ui/typography";
 
 interface ProfileSettings {
   name: string;
@@ -53,7 +54,7 @@ export default function SettingsPage() {
       <div className="min-h-screen flex items-center justify-center font-sans">
         <div className="text-center">
           <Loader2 className="text-4xl text-blue-500 animate-spin mx-auto" />
-          <p className="text-sm text-slate-500 font-light mt-3">Загрузка настроек...</p>
+          <p className="text-sm text-slate-500 font-normal mt-3">Загрузка настроек...</p>
         </div>
       </div>
     );
@@ -93,7 +94,7 @@ export default function SettingsPage() {
         </div>
 
         <div className="rounded-2xl bg-white border border-slate-200/80 p-6 sm:p-10 shadow-[0_15px_40px_-20px_rgba(15,23,42,0.06)]">
-          <h1 className="text-3xl font-normal tracking-tight text-slate-900 mb-8">Настройки профиля</h1>
+          <PageTitle className="mb-8">Настройки профиля</PageTitle>
 
           {saveSuccess && (
             <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-4 mb-8 text-xs text-emerald-800 flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
@@ -118,7 +119,7 @@ export default function SettingsPage() {
                 <div className="flex-1 space-y-4 w-full">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-slate-500 font-light mb-1">Имя *</label>
+                      <label className="block text-xs text-slate-500 font-medium mb-1">Имя *</label>
                       <input
                         type="text"
                         value={profile.name}
@@ -128,7 +129,7 @@ export default function SettingsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-slate-500 font-light mb-1">Email *</label>
+                      <label className="block text-xs text-slate-500 font-medium mb-1">Email *</label>
                       <input
                         type="email"
                         value={profile.email}
@@ -153,7 +154,7 @@ export default function SettingsPage() {
                 <div className="flex items-start justify-between p-4 bg-slate-50/50 border border-slate-100 rounded-2xl">
                   <div className="space-y-1 pr-4">
                     <h4 className="text-sm font-normal text-slate-800">Напоминания по почте</h4>
-                    <p className="text-[11px] text-slate-500 font-light leading-relaxed">
+                    <p className="text-xs text-slate-500 font-normal leading-relaxed">
                       Согласие получать уведомления о приближающемся сроке ТО, окончании страховки ОСАГО и рекомендациях умного помощника на указанный почтовый адрес
                     </p>
                   </div>
@@ -172,12 +173,12 @@ export default function SettingsPage() {
                 <div className="flex items-start justify-between p-4 bg-slate-50/50 border border-slate-100 rounded-2xl">
                   <div className="space-y-1 pr-4">
                     <h4 className="text-sm font-normal text-slate-800">Интеграция с Telegram-ботом</h4>
-                    <p className="text-[11px] text-slate-500 font-light leading-relaxed">
+                    <p className="text-xs text-slate-500 font-normal leading-relaxed">
                       Дублировать критически важные напоминания в мессенджер через официального бота ПРОБИБИКУ
                     </p>
                     {profile.telegramConnected && (
                       <div className="pt-2">
-                        <span className="inline-flex items-center gap-1 text-[10px] font-mono text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded">
+                        <span className="inline-flex items-center gap-1 text-2xs font-mono text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded">
                           <MessageCircle className="w-3.5 h-3.5" />
                           Подключено: {profile.telegramUsername}
                         </span>
@@ -203,9 +204,9 @@ export default function SettingsPage() {
                 Мой баланс
               </h3>
 
-              <div className="flex items-center justify-between p-5 rounded-3xl bg-gradient-to-br from-amber-500 to-amber-600 border border-amber-600 shadow-sm text-white">
+              <div className="flex items-center justify-between p-5 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 border border-amber-600 shadow-sm text-white">
                 <div>
-                  <p className="text-[10px] text-amber-100">Доступные кредиты</p>
+                  <p className="text-2xs text-amber-100">Доступные кредиты</p>
                   <p className="text-3xl font-semibold mt-1 font-mono">10</p>
                 </div>
                 <button
@@ -224,10 +225,10 @@ export default function SettingsPage() {
                 Опасная зона
               </h3>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-red-50/30 border border-red-100/60 rounded-3xl gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-red-50/30 border border-red-100/60 rounded-2xl gap-4">
                 <div className="space-y-0.5">
                   <h4 className="text-sm font-normal text-slate-800">Удалить аккаунт</h4>
-                  <p className="text-[11px] text-slate-500 font-light leading-relaxed">
+                  <p className="text-xs text-slate-500 font-normal leading-relaxed">
                     Все ваши данные будут полностью стерты. Действие необратимо
                   </p>
                 </div>

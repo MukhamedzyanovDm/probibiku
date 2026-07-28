@@ -449,7 +449,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
           <button
             type="button"
             onClick={() => setActiveTab("scan")}
-            className={`flex-1 py-2.5 sm:py-3.5 text-[11px] sm:text-xs font-medium border-b-2 transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2.5 sm:py-3.5 text-xs sm:text-xs font-medium border-b-2 transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeTab === "scan"
                 ? "border-blue-500 text-blue-600 font-semibold"
                 : "border-transparent text-slate-400 hover:text-slate-600"
@@ -461,7 +461,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
           <button
             type="button"
             onClick={() => setActiveTab("manual")}
-            className={`flex-1 py-2.5 sm:py-3.5 text-[11px] sm:text-xs font-medium border-b-2 transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2.5 sm:py-3.5 text-xs sm:text-xs font-medium border-b-2 transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeTab === "manual"
                 ? "border-blue-500 text-blue-600 font-semibold"
                 : "border-transparent text-slate-400 hover:text-slate-600"
@@ -479,7 +479,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
             {/* Common Fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-slate-500 font-light mb-1">Дата *</label>
+                <label className="block text-xs text-slate-500 font-medium mb-1">Дата *</label>
                 <div className="relative">
                   <input
                     type="date"
@@ -499,14 +499,14 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
                   </div>
                 </div>
                 {errors.date && (
-                  <p className="text-[11px] text-red-500 font-light mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <p className="text-xs text-red-500 font-normal mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
                     {errors.date}
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-xs text-slate-500 font-light mb-1">Тип ремонта *</label>
+                <label className="block text-xs text-slate-500 font-medium mb-1">Тип ремонта *</label>
                 <div className="relative">
                   <select
                     value={type}
@@ -527,7 +527,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="col-span-2">
-                <label className="block text-xs text-slate-500 font-light mb-1">Пробег (км) *</label>
+                <label className="block text-xs text-slate-500 font-medium mb-1">Пробег (км) *</label>
                 <input
                   type="number"
                   value={mileage}
@@ -542,7 +542,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
                   required
                 />
                 {errors.mileage && (
-                  <p className="text-[11px] text-red-500 font-light mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <p className="text-xs text-red-500 font-normal mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
                     {errors.mileage}
                   </p>
                 )}
@@ -566,7 +566,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
                     </div>
                     <div>
                       <h4 className="text-sm font-medium text-slate-800">Загрузите или сфотографируйте чек</h4>
-                      <p className="text-xs text-slate-500 font-light mt-1 max-w-xs leading-relaxed">
+                      <p className="text-xs text-slate-500 font-normal mt-1 max-w-xs leading-relaxed">
                         Наш искусственный интеллект распознает смету и автоматически заполнит позиции в деталях
                       </p>
                     </div>
@@ -591,10 +591,10 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
               <div className="space-y-4 pt-4 border-t border-slate-100 animate-in fade-in duration-300">
                 <div className="flex items-end justify-between">
                   <div>
-                    <p className="text-xs font-semibold text-slate-700 uppercase tracking-wider font-mono">
+                    <p className="text-xs font-semibold text-slate-700">
                       Позиции из чека
                     </p>
-                    <span className="text-[10px] text-slate-400 font-light font-mono block mt-0.5">
+                    <span className="text-2xs text-slate-400 font-medium font-mono block mt-0.5">
                       Хотя бы 1 позиция
                     </span>
                   </div>
@@ -639,7 +639,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
                         <div className="flex gap-3 items-center">
                           {/* Quantity */}
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[10px] text-slate-400 font-light font-mono uppercase">Кол-во:</span>
+                            <span className="text-2xs text-slate-400 font-medium font-mono uppercase">Кол-во:</span>
                             <input
                               type="number"
                               value={item.quantity}
@@ -652,7 +652,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
 
                           {/* Price */}
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[10px] text-slate-400 font-light font-mono uppercase">Цена (₽):</span>
+                            <span className="text-2xs text-slate-400 font-medium font-mono uppercase">Цена (₽):</span>
                             <input
                               type="number"
                               value={item.price || ""}
@@ -667,7 +667,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
 
                         {/* Subtotal */}
                         <div className="text-right shrink-0">
-                          <span className="text-[9px] text-slate-400 font-light font-mono uppercase block">Итого:</span>
+                          <span className="text-2xs text-slate-400 font-medium font-mono uppercase block">Итого:</span>
                           <span className="text-xs font-semibold text-slate-700 font-mono">
                             {(item.quantity * item.price).toLocaleString("ru-RU")} ₽
                           </span>
@@ -680,7 +680,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
 
 
                 {errors.description && (
-                  <p className="text-[11px] text-red-500 font-light mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <p className="text-xs text-red-500 font-normal mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
                     {errors.description}
                   </p>
                 )}
@@ -688,14 +688,14 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
                 {/* Total Calculated Cost Card */}
                 <div className="rounded-2xl bg-blue-50/50 border border-blue-100/50 p-4 flex items-center justify-between">
                   <span className="text-xs text-slate-600 font-medium">Общая стоимость чека:</span>
-                  <span className="text-lg font-bold text-blue-600 font-mono">
+                  <span className="text-lg font-semibold text-blue-600 font-mono">
                     {items.reduce((sum, item) => sum + Math.round(item.quantity * item.price * 100) / 100, 0).toLocaleString("ru-RU")} ₽
                   </span>
                 </div>
 
                 {/* Note */}
                 <div>
-                  <label className="block text-xs text-slate-500 font-light mb-1">Дополнительные примечания (опционально)</label>
+                  <label className="block text-xs text-slate-500 font-medium mb-1">Дополнительные примечания (опционально)</label>
                   <textarea
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
@@ -708,7 +708,7 @@ export default function AddRecordModal({ isOpen, onClose, onSave, car, recordToE
             )}
 
             {errors.duplicate && (
-              <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200/60 text-red-600 text-xs font-light text-center leading-relaxed animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200/60 text-red-600 text-xs font-normal text-center leading-relaxed animate-in fade-in slide-in-from-top-2 duration-300">
                 {errors.duplicate}
               </div>
             )}

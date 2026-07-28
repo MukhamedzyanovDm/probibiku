@@ -35,7 +35,7 @@ export default function LoginPage() {
       console.error("Login failed:", e);
     } finally {
       setIsLoggingIn(false);
-      router.push("/dashboard/garage");
+      router.push("/garage");
     }
   };
 
