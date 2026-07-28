@@ -2,7 +2,29 @@
 
 import { XCircle, Camera, Calendar } from "lucide-react";
 import Portal from "@/components/Portal";
-import React, { useState, useEffect } from "react";
+import { Combobox, type ComboboxHandle, type ComboboxOption } from "@/components/ui/combobox";
+import React, { useState, useEffect, useMemo } from "react";
+
+interface CarCatalogModel {
+  name: string;
+  cyrillic: string;
+}
+
+interface CarCatalogMake {
+  name: string;
+  cyrillic: string;
+  models: CarCatalogModel[];
+}
+
+let catalogPromise: Promise<CarCatalogMake[]> | null = null;
+function loadCarCatalog(): Promise<CarCatalogMake[]> {
+  if (!catalogPromise) {
+    catalogPromise = import("@/data/carCatalog.json").then(
+      (mod) => mod.default as CarCatalogMake[]
+    );
+  }
+  return catalogPromise;
+}
 
 interface Car {
   id: string;
@@ -75,6 +97,49 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
   
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ make?: string; model?: string; year?: string }>({});
+  const [catalog, setCatalog] = useState<CarCatalogMake[]>([]);
+
+  useEffect(() => {
+    if (isOpen && catalog.length === 0) {
+      loadCarCatalog()
+        .then(setCatalog)
+        .catch((err) => console.error("Failed to load car catalog:", err));
+    }
+  }, [isOpen, catalog.length]);
+
+  const makeOptions: ComboboxOption[] = useMemo(
+    () => catalog.map((entry) => ({ value: entry.name, keywords: [entry.cyrillic] })),
+    [catalog]
+  );
+
+  const selectedMakeEntry = useMemo(
+    () => catalog.find((entry) => entry.name.toLowerCase() === make.trim().toLowerCase()),
+    [catalog, make]
+  );
+
+  const modelOptions: ComboboxOption[] = useMemo(
+    () =>
+      selectedMakeEntry?.models.map((model) => ({
+        value: model.name,
+        keywords: [model.cyrillic],
+      })) ?? [],
+    [selectedMakeEntry]
+  );
+
+  // Tracks the make a model suggestion was last selected for, so switching
+  // makes clears an incompatible model without wiping it on every keystroke
+  // while the user is still typing (make/model state updates before this
+  // handler's closure would otherwise see the new value as "unchanged").
+  const lastConfirmedMakeRef = React.useRef("");
+  const modelComboboxRef = React.useRef<ComboboxHandle>(null);
+
+  const handleMakeSelect = (newMake: string) => {
+    if (newMake.trim().toLowerCase() !== lastConfirmedMakeRef.current.trim().toLowerCase()) {
+      setModel("");
+    }
+    lastConfirmedMakeRef.current = newMake;
+    modelComboboxRef.current?.focus();
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -88,6 +153,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
         setPurchaseDate(carToEdit.purchaseDate || "");
         setPreviewUrl(carToEdit.imageUrl || "");
         setInsuranceExpiry(carToEdit.insuranceExpiry || "");
+        lastConfirmedMakeRef.current = carToEdit.make;
       } else {
         setMake("");
         setModel("");
@@ -97,6 +163,7 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
         setPurchaseDate(new Date().toISOString().split("T")[0]);
         setPreviewUrl("");
         setInsuranceExpiry("");
+        lastConfirmedMakeRef.current = "";
       }
       setErrors({});
     }
@@ -246,18 +313,20 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-slate-500 font-medium mb-1">Марка *</label>
-              <input
-                type="text"
+              <Combobox
+                name="make"
+                ariaLabel="Марка автомобиля"
                 value={make}
-                onChange={(e) => {
-                  setMake(e.target.value);
+                onValueChange={(val) => {
+                  setMake(val);
                   if (errors.make) setErrors((prev) => ({ ...prev, make: undefined }));
                 }}
+                onSelectOption={handleMakeSelect}
+                options={makeOptions}
                 placeholder="Например, Kia, Toyota"
-                className={`w-full text-base sm:text-sm border rounded-xl px-3.5 py-2.5 bg-slate-50/50 focus:bg-white outline-none transition-all ${
-                  errors.make ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-100" : "border-slate-200 focus:border-blue-500"
-                }`}
-                required
+                emptyText="Марка не найдена в справочнике — можно ввести вручную"
+                error={!!errors.make}
+                autoFocus
               />
               {errors.make && (
                 <p className="text-xs text-red-500 font-normal mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
@@ -268,18 +337,23 @@ export default function AddCarModal({ isOpen, onClose, onSave, carToEdit }: AddC
             
             <div>
               <label className="block text-xs text-slate-500 font-medium mb-1">Модель *</label>
-              <input
-                type="text"
+              <Combobox
+                ref={modelComboboxRef}
+                name="model"
+                ariaLabel="Модель автомобиля"
                 value={model}
-                onChange={(e) => {
-                  setModel(e.target.value);
+                onValueChange={(val) => {
+                  setModel(val);
                   if (errors.model) setErrors((prev) => ({ ...prev, model: undefined }));
                 }}
+                options={modelOptions}
                 placeholder="Например, Sportage, RAV4"
-                className={`w-full text-base sm:text-sm border rounded-xl px-3.5 py-2.5 bg-slate-50/50 focus:bg-white outline-none transition-all ${
-                  errors.model ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-100" : "border-slate-200 focus:border-blue-500"
-                }`}
-                required
+                emptyText={
+                  selectedMakeEntry
+                    ? "Модель не найдена в справочнике — можно ввести вручную"
+                    : "Сначала укажите марку, или введите модель вручную"
+                }
+                error={!!errors.model}
               />
               {errors.model && (
                 <p className="text-xs text-red-500 font-normal mt-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
